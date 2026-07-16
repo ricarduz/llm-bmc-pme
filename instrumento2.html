@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instrumento 2 — Matriz LLM × BMC · LLMemPME</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLMemPME<span>Framework LLM × BMC</span></a>
+    <div class="mapa-bmc" id="mapa" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <span class="eyebrow">Instrumento 2 de 3</span>
+    <h1>Matriz LLM × BMC</h1>
+    <p class="lead">
+      Com base no diagnóstico, estes são os blocos com potencial identificado.
+      Para cada um, a Matriz mapeia aplicações, oportunidades e riscos. Selecione
+      os blocos que pretende aprofundar no Instrumento 3.
+    </p>
+
+    <div id="sem-blocos" class="cartao" hidden>
+      <p class="nota">Nenhum bloco foi classificado como Prioritário ou Relevante no diagnóstico. Pode rever o <a href="instrumento1.html">Instrumento 1</a> ou avançar diretamente para a síntese.</p>
+    </div>
+
+    <div id="lista-blocos"></div>
+
+    <div class="acoes-rodape">
+      <a class="botao secundario" href="instrumento1.html">← Rever diagnóstico</a>
+      <button class="botao" id="continuar">Continuar para as Fichas de Decisão →</button>
+    </div>
+  </div>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/instrumento2.js"></script>
+</body>
+</html>

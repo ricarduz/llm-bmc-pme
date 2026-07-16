@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Síntese da sessão · LLMemPME</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLMemPME<span>Framework LLM × BMC</span></a>
+    <div class="mapa-bmc" id="mapa" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <span class="eyebrow">Síntese</span>
+    <h1>Resultados da sessão</h1>
+    <p class="lead">
+      Resumo do percurso completo. Pode exportar este registo para o citar
+      no relato do Capítulo 6, ou reiniciar para uma nova sessão.
+    </p>
+
+    <div class="cartao">
+      <h3>Perfil de prioridade por bloco</h3>
+      <table id="tabela-diagnostico"></table>
+    </div>
+
+    <div class="cartao">
+      <h3>Blocos selecionados para aprofundamento</h3>
+      <div id="blocos-aprofundados"></div>
+    </div>
+
+    <div class="cartao" id="cartao-envio" style="border-color: var(--ink);">
+      <h3>Exportar / submeter resultados</h3>
+      <p class="nota">
+        A exportação em JSON não contém nenhum dado pessoal identificativo —
+        apenas as classificações e seleções desta sessão.
+      </p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
+        <button class="botao" id="exportar">Exportar resultados (JSON)</button>
+        <button class="botao secundario" id="reiniciar">Reiniciar sessão</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/resultados.js"></script>
+</body>
+</html>
