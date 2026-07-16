@@ -14,7 +14,7 @@ const TRADUCOES = {
     'meta-descricao': 'Ferramenta interativa de demonstração do framework de adoção de Large Language Models por PME, estruturado no Business Model Canvas.',
     'eyebrow': 'Instrumento de demonstração · dissertação de Mestrado',
     'h1': 'Um percurso guiado para decidir onde os LLM fazem sentido na sua PME',
-    'lead': 'Esta ferramenta instancia sequencialmente os três instrumentos do framework de apoio à adoção de Large Language Models (LLM) por Pequenas e Médias Empresas, estruturado no Business Model Canvas (BMC). Responde, por esta ordem, a três perguntas.',
+    'lead': 'Esta ferramenta instancia sequencialmente os três instrumentos do framework de apoio à adoção de Large Language Models (LLM) por Pequenas e Médias Empresas, estruturado no Business Model Canvas (BMC). Responda a estes passos iniciais.',
     'card1-titulo': '1. A minha empresa está pronta?',
     'card1-nota': 'Instrumento 1 — Diagnóstico de Pré-requisitos. Avalia, bloco a bloco, a prontidão operacional e a criticidade de cada área do seu negócio.',
     'card2-titulo': '2. Onde faz sentido para a minha PME?',
@@ -22,7 +22,7 @@ const TRADUCOES = {
     'card3-titulo': '3. Como avanço neste bloco?',
     'card3-nota': 'Instrumento 3 — Fichas de Decisão. Orientação tecnológica e ações concretas para os blocos com maior densidade de evidência empírica.',
     'antes-titulo': 'Antes de começar',
-    'antes-texto': 'As respostas ficam guardadas apenas neste navegador enquanto usa a ferramenta. No final, pode exportar os resultados; nenhum dado pessoal identificativo é recolhido por defeito.',
+    'antes-texto': 'As respostas ficam guardadas neste navegador enquanto usa este instrumento. No final, pode descarregar um resumo dos resultados; os dados do diagnóstico (sem identificação pessoal) serão usados para apoio à investigação. Não é recolhido nenhum dado pessoal identificativo, a não ser que opte por deixar o seu e-mail para receber os resultados do estudo (no máximo até 31 de agosto de 2027).',
     'antes-consentimento': 'Li o parágrafo acima e pretendo iniciar o diagnóstico.',
     'botao-iniciar': 'Iniciar diagnóstico →',
     'rodape-texto': 'Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)',
@@ -37,14 +37,110 @@ const TRADUCOES = {
     'i1-continuar': 'Continuar para a Matriz LLM × BMC →',
     'i1-limpar': 'Limpar respostas',
     'i1-limpar-confirmar': 'Isto apaga todas as respostas do diagnóstico guardadas neste navegador. Continuar?',
+    'seguinte': 'Seguinte →',
+    'voltar': '← Voltar',
+    'passo1-titulo': 'Passo 1 — Perfil da empresa',
+    'passo1-lead': 'Estes dados servem apenas para caracterizar a sua PME e garantir a qualidade da análise — não são recolhidos dados pessoais.',
+    'perfil-setor-label': 'Setor de atividade',
+    'perfil-opcao-escolher': 'Escolha uma opção',
+    'perfil-setor-comercio': 'Comércio',
+    'perfil-setor-servicos': 'Serviços',
+    'perfil-setor-industria': 'Indústria e Produção',
+    'perfil-setor-construcao': 'Construção',
+    'perfil-setor-tecnologia': 'Tecnologia e Informação',
+    'perfil-setor-turismo': 'Turismo e Restauração',
+    'perfil-setor-agricultura': 'Agricultura e Pescas',
+    'perfil-setor-saude': 'Saúde e Ação Social',
+    'perfil-setor-educacao': 'Educação',
+    'perfil-setor-outro': 'Outro',
+    'perfil-pais-label': 'País',
+    'perfil-pais-pt': 'Portugal',
+    'perfil-pais-europa': 'Outro país da Europa',
+    'perfil-limpar': 'Limpar respostas',
+    'perfil-limpar-confirmar': 'Isto apaga os dados do perfil da empresa preenchidos nesta sessão. Continuar?',
+    'perfil-colaboradores-label': 'Número de colaboradores',
+    'perfil-faturacao-label': 'Faturação anual — escolha o critério que preferir reportar (Recomendação 2003/361/CE)',
+    'perfil-criterio-volume': 'Volume de negócios',
+    'perfil-criterio-balanco': 'Balanço total',
+    'perfil-escalao-micro': '≤ 2 milhões € (micro)',
+    'perfil-escalao-pequena': '≤ 10 milhões € (pequena)',
+    'perfil-escalao-media-volume': '≤ 50 milhões € (média)',
+    'perfil-escalao-media-balanco': '≤ 43 milhões € (média)',
+    'perfil-escalao-grande-volume': '> 50 milhões €',
+    'perfil-escalao-grande-balanco': '> 43 milhões €',
+    'classificacao-micro': 'Classificação estimada: micro empresa',
+    'classificacao-pequena': 'Classificação estimada: pequena empresa',
+    'classificacao-media': 'Classificação estimada: média empresa',
+    'classificacao-grande': 'Classificação estimada: acima do limiar de PME',
+    'classificacao-label': 'Classificação estimada',
+    'classificacao-valor-micro': 'Micro empresa',
+    'classificacao-valor-pequena': 'Pequena empresa',
+    'classificacao-valor-media': 'Média empresa',
+    'classificacao-valor-grande': 'Acima do limiar de PME',
+    'perfil-regiao-label': 'Região (NUTS II)',
+    'perfil-regiao-norte': 'Norte',
+    'perfil-regiao-centro': 'Centro',
+    'perfil-regiao-lisboa': 'Área Metropolitana de Lisboa',
+    'perfil-regiao-alentejo': 'Alentejo',
+    'perfil-regiao-algarve': 'Algarve',
+    'perfil-regiao-acores': 'Região Autónoma dos Açores',
+    'perfil-regiao-madeira': 'Região Autónoma da Madeira',
+    'passo2-titulo': 'Passo 2 — Os nove blocos do Business Model Canvas',
+    'passo2-lead': 'O diagnóstico do Instrumento 1 vai perguntar-lhe sobre cada um destes blocos. Esta grelha explica o que cada um significa, para orientar as suas respostas.',
+    'passo3-titulo': 'Passo 3 — Os três instrumentos',
+    'sintese-eyebrow': 'Síntese',
+    'sintese-h1': 'Resultados da sessão',
+    'sintese-lead': 'Resumo do percurso completo. Pode descarregar este registo, ou terminar a sessão.',
+    'sintese-tabela-titulo': 'Perfil de prioridade por bloco',
+    'sintese-aprofundados-titulo': 'Blocos selecionados para aprofundamento',
+    'sintese-nenhum-bloco': 'Nenhum bloco foi selecionado para aprofundamento na Matriz.',
+    'sintese-nenhum-avaliado': 'Nenhum bloco avaliado.',
+    'sintese-com-ficha': ' — com Ficha de Decisão',
+    'sintese-download-titulo': 'Descarregar o seu resumo',
+    'sintese-download-nota': 'Um ficheiro simples, pronto a abrir em qualquer computador — sem necessidade de programas técnicos.',
+    'sintese-download-botao': 'Descarregar resumo →',
+    'sintese-json-nota': 'Para fins de investigação, também é possível exportar os dados técnicos (JSON) desta sessão.',
+    'sintese-json-botao': 'Exportar dados técnicos (JSON)',
+    'contacto-titulo': 'Receber os resultados do estudo',
+    'contacto-nota': 'Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu e-mail. É usado exclusivamente para esse fim e não é partilhado com terceiros. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).',
+    'contacto-email-label': 'E-mail',
+    'contacto-consentimento': 'Aceito que o meu e-mail seja utilizado exclusivamente para me contactar com os resultados finais deste estudo.',
+    'contacto-guardar-botao': 'Guardar contacto',
+    'contacto-confirmacao': 'Obrigado — guardámos o seu contacto para lhe enviarmos os resultados finais deste estudo até 31 de agosto de 2027.',
+    'contacto-email-invalido': 'Introduza um e-mail válido e aceite a condição acima.',
+    'sessao-recomecar': 'Recomeçar',
+    'sessao-recomecar-confirmar': 'Isto apaga todos os dados desta sessão guardados neste navegador. Continuar?',
+    'sessao-terminar': 'Terminar sessão',
+    'sessao-terminar-confirmar': 'Tem a certeza? Os resultados serão apagados deste navegador e não poderá recuperá-los depois. Se ainda não descarregou o resumo, faça-o antes de continuar.',
+    'sessao-terminada-titulo': 'Sessão terminada',
+    'sessao-terminada-texto': 'Os dados desta sessão foram apagados deste navegador. Pode fechar esta janela.',
+    'r-passo1-titulo': 'Passo 1 — A sua opinião',
+    'r-passo2-titulo': 'Passo 2 — Resultado do diagnóstico',
+    'satisfacao-titulo': 'Antes de ver o resultado',
+    'satisfacao-percebeu': 'Percebeu claramente o resultado deste diagnóstico?',
+    'satisfacao-util': 'Considera que este instrumento será útil para a sua empresa?',
+    'sim': 'Sim',
+    'nao': 'Não',
+    'i2-eyebrow': 'Instrumento 2 de 3',
+    'i2-h1': 'Matriz LLM × BMC',
+    'i2-lead': 'Com base no diagnóstico, estes são os blocos com potencial identificado. Para cada um, a Matriz mapeia aplicações, oportunidades e riscos. Selecione os blocos que pretende aprofundar no Instrumento 3.',
+    'i2-sem-blocos': 'Nenhum bloco foi classificado como Prioritário ou Relevante no diagnóstico. Pode rever o <a href="instrumento1.html">Instrumento 1</a> ou avançar diretamente para a síntese.',
+    'i2-rever-diagnostico': '← Rever diagnóstico',
+    'i2-continuar-fichas': 'Continuar para as Fichas de Decisão →',
+    'i2-continuar-sintese': 'Continuar para a síntese →',
+    'i2-limpar': 'Limpar seleção',
+    'i2-limpar-confirmar': 'Isto limpa a seleção de blocos a aprofundar nesta sessão. Continuar?',
+    'th-aplicacoes': 'Aplicações',
+    'th-oportunidades': 'Oportunidades',
+    'th-riscos': 'Riscos',
+    'i2-aprofundar': 'Aprofundar este bloco na Ficha de Decisão',
+    'i2-sem-ficha': 'Sem Ficha de Decisão disponível — a Matriz é o nível máximo de orientação para este bloco',
     'i1-resumo-titulo': 'Resultado global do diagnóstico',
     'i1-resumo-lead': 'Perfil de prioridade dos nove blocos do BMC, resultante das suas respostas.',
     'th-bloco': 'Bloco BMC',
     'th-prontidao': 'Prontidão',
     'th-impacto': 'Impacto',
     'th-prioridade': 'Prioridade',
-    'aviso-consentimento': 'Confirme que leu o texto acima para poder iniciar.',
-    'aviso-diagnostico': 'Responda aos 9 blocos para ver o resultado global e continuar.',
     'sobre-titulo': 'Sobre este projeto',
     'sobre-autor-titulo': 'Sobre o autor',
     'sobre-autor-texto': '[Escreva aqui uma breve apresentação sua — percurso profissional e motivação para investigar este tema.]',
@@ -63,7 +159,7 @@ const TRADUCOES = {
     'meta-descricao': 'Interactive demonstration tool for a framework supporting SME adoption of Large Language Models, structured around the Business Model Canvas.',
     'eyebrow': 'Demonstration instrument · MSc dissertation',
     'h1': 'A guided path to deciding where LLMs make sense in your SME',
-    'lead': 'This tool sequentially instantiates the three instruments of the framework supporting the adoption of Large Language Models (LLMs) by Small and Medium-sized Enterprises (SMEs), structured around the Business Model Canvas (BMC). It answers, in this order, three questions.',
+    'lead': 'This tool sequentially instantiates the three instruments of the framework supporting the adoption of Large Language Models (LLMs) by Small and Medium-sized Enterprises (SMEs), structured around the Business Model Canvas (BMC). Answer these initial steps.',
     'card1-titulo': '1. Is my company ready?',
     'card1-nota': 'Instrument 1 — Prerequisite Diagnostic. Assesses, block by block, operational readiness and the criticality of each area of your business.',
     'card2-titulo': '2. Where does it make sense for my SME?',
@@ -71,7 +167,7 @@ const TRADUCOES = {
     'card3-titulo': '3. How do I move forward on this block?',
     'card3-nota': 'Instrument 3 — Decision Sheets. Technology guidance and concrete actions for the blocks with the strongest empirical evidence base.',
     'antes-titulo': 'Before you start',
-    'antes-texto': 'Your answers are stored only in this browser while you use the tool. At the end, you can export the results; no identifying personal data is collected by default.',
+    'antes-texto': 'Your answers are stored in this browser while you use this instrument. At the end, you can download a summary of the results; the diagnostic data (with no personal identification) will be used to support the research. No identifying personal data is collected, unless you choose to leave your email to receive the study results (by 31 August 2027 at the latest).',
     'antes-consentimento': 'I have read the paragraph above and wish to start the diagnostic.',
     'botao-iniciar': 'Start diagnostic →',
     'rodape-texto': 'MSc Dissertation in Computer Engineering and Web Technology (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)',
@@ -86,14 +182,110 @@ const TRADUCOES = {
     'i1-continuar': 'Continue to the LLM × BMC Matrix →',
     'i1-limpar': 'Clear answers',
     'i1-limpar-confirmar': 'This clears all diagnostic answers saved in this browser. Continue?',
+    'seguinte': 'Next →',
+    'voltar': '← Back',
+    'passo1-titulo': 'Step 1 — Company profile',
+    'passo1-lead': 'This data is only used to characterise your SME and ensure the quality of the analysis — no personal data is collected.',
+    'perfil-setor-label': 'Sector of activity',
+    'perfil-opcao-escolher': 'Choose an option',
+    'perfil-setor-comercio': 'Trade and Retail',
+    'perfil-setor-servicos': 'Services',
+    'perfil-setor-industria': 'Industry and Manufacturing',
+    'perfil-setor-construcao': 'Construction',
+    'perfil-setor-tecnologia': 'Technology and IT',
+    'perfil-setor-turismo': 'Tourism and Hospitality',
+    'perfil-setor-agricultura': 'Agriculture and Fisheries',
+    'perfil-setor-saude': 'Health and Social Care',
+    'perfil-setor-educacao': 'Education',
+    'perfil-setor-outro': 'Other',
+    'perfil-pais-label': 'Country',
+    'perfil-pais-pt': 'Portugal',
+    'perfil-pais-europa': 'Another European country',
+    'perfil-limpar': 'Clear answers',
+    'perfil-limpar-confirmar': 'This clears the company profile data filled in this session. Continue?',
+    'perfil-colaboradores-label': 'Number of employees',
+    'perfil-faturacao-label': 'Annual turnover — choose which criterion you prefer to report (Recommendation 2003/361/EC)',
+    'perfil-criterio-volume': 'Turnover',
+    'perfil-criterio-balanco': 'Balance sheet total',
+    'perfil-escalao-micro': '≤ €2 million (micro)',
+    'perfil-escalao-pequena': '≤ €10 million (small)',
+    'perfil-escalao-media-volume': '≤ €50 million (medium)',
+    'perfil-escalao-media-balanco': '≤ €43 million (medium)',
+    'perfil-escalao-grande-volume': '> €50 million',
+    'perfil-escalao-grande-balanco': '> €43 million',
+    'classificacao-micro': 'Estimated classification: micro enterprise',
+    'classificacao-pequena': 'Estimated classification: small enterprise',
+    'classificacao-media': 'Estimated classification: medium enterprise',
+    'classificacao-grande': 'Estimated classification: above the SME threshold',
+    'classificacao-label': 'Estimated classification',
+    'classificacao-valor-micro': 'Micro enterprise',
+    'classificacao-valor-pequena': 'Small enterprise',
+    'classificacao-valor-media': 'Medium enterprise',
+    'classificacao-valor-grande': 'Above the SME threshold',
+    'perfil-regiao-label': 'Region (NUTS II)',
+    'perfil-regiao-norte': 'North',
+    'perfil-regiao-centro': 'Centre',
+    'perfil-regiao-lisboa': 'Lisbon Metropolitan Area',
+    'perfil-regiao-alentejo': 'Alentejo',
+    'perfil-regiao-algarve': 'Algarve',
+    'perfil-regiao-acores': 'Azores Autonomous Region',
+    'perfil-regiao-madeira': 'Madeira Autonomous Region',
+    'passo2-titulo': 'Step 2 — The nine Business Model Canvas blocks',
+    'passo2-lead': 'The Instrument 1 diagnostic will ask you about each of these blocks. This grid explains what each one means, to guide your answers.',
+    'passo3-titulo': 'Step 3 — The three instruments',
+    'sintese-eyebrow': 'Summary',
+    'sintese-h1': 'Session results',
+    'sintese-lead': 'Summary of the full journey. You can download this record, or end the session.',
+    'sintese-tabela-titulo': 'Priority profile by block',
+    'sintese-aprofundados-titulo': 'Blocks selected for further exploration',
+    'sintese-nenhum-bloco': 'No block was selected for further exploration in the Matrix.',
+    'sintese-nenhum-avaliado': 'No block assessed.',
+    'sintese-com-ficha': ' — with Decision Sheet',
+    'sintese-download-titulo': 'Download your summary',
+    'sintese-download-nota': 'A simple file, ready to open on any computer — no technical software required.',
+    'sintese-download-botao': 'Download summary →',
+    'sintese-json-nota': 'For research purposes, it is also possible to export this session\'s technical data (JSON).',
+    'sintese-json-botao': 'Export technical data (JSON)',
+    'contacto-titulo': 'Receive the study results',
+    'contacto-nota': 'If you would like to be contacted with the final conclusions of this research, leave your email. It is used exclusively for that purpose and is not shared with third parties. It will be sent by 31 August 2027 (the deadline for the defence of this dissertation).',
+    'contacto-email-label': 'E-mail',
+    'contacto-consentimento': 'I agree that my email will be used exclusively to contact me with the final results of this study.',
+    'contacto-guardar-botao': 'Save contact',
+    'contacto-confirmacao': 'Thank you — we saved your contact to send you the final results of this study by 31 August 2027.',
+    'contacto-email-invalido': 'Enter a valid email and accept the condition above.',
+    'sessao-recomecar': 'Restart',
+    'sessao-recomecar-confirmar': 'This clears all session data saved in this browser. Continue?',
+    'sessao-terminar': 'End session',
+    'sessao-terminar-confirmar': 'Are you sure? The results will be deleted from this browser and cannot be recovered afterwards. If you have not downloaded the summary yet, do so before continuing.',
+    'sessao-terminada-titulo': 'Session ended',
+    'sessao-terminada-texto': 'This session\'s data has been deleted from this browser. You may close this window.',
+    'r-passo1-titulo': 'Step 1 — Your opinion',
+    'r-passo2-titulo': 'Step 2 — Diagnostic result',
+    'satisfacao-titulo': 'Before you see the result',
+    'satisfacao-percebeu': 'Did you clearly understand the result of this diagnostic?',
+    'satisfacao-util': 'Do you think this tool will be useful for your company?',
+    'sim': 'Yes',
+    'nao': 'No',
+    'i2-eyebrow': 'Instrument 2 of 3',
+    'i2-h1': 'LLM × BMC Matrix',
+    'i2-lead': 'Based on the diagnostic, these are the blocks with identified potential. For each one, the Matrix maps applications, opportunities and risks. Select the blocks you want to explore further in Instrument 3.',
+    'i2-sem-blocos': 'No block was classified as Priority or Relevant in the diagnostic. You can review <a href="instrumento1.html">Instrument 1</a> or go straight to the summary.',
+    'i2-rever-diagnostico': '← Review diagnostic',
+    'i2-continuar-fichas': 'Continue to the Decision Sheets →',
+    'i2-continuar-sintese': 'Continue to the summary →',
+    'i2-limpar': 'Clear selection',
+    'i2-limpar-confirmar': 'This clears the selection of blocks to explore further in this session. Continue?',
+    'th-aplicacoes': 'Applications',
+    'th-oportunidades': 'Opportunities',
+    'th-riscos': 'Risks',
+    'i2-aprofundar': 'Explore this block further in the Decision Sheet',
+    'i2-sem-ficha': 'No Decision Sheet available — the Matrix is the highest level of guidance for this block',
     'i1-resumo-titulo': 'Overall diagnostic result',
     'i1-resumo-lead': 'Priority profile for the nine BMC blocks, based on your answers.',
     'th-bloco': 'BMC Block',
     'th-prontidao': 'Readiness',
     'th-impacto': 'Impact',
     'th-prioridade': 'Priority',
-    'aviso-consentimento': 'Confirm you have read the text above to start.',
-    'aviso-diagnostico': 'Answer all 9 blocks to see the overall result and continue.',
     'sobre-titulo': 'About this project',
     'sobre-autor-titulo': 'About the author',
     'sobre-autor-texto': '[Write a short introduction here — professional background and motivation for researching this topic.]',
@@ -125,6 +317,24 @@ const TRADUCOES_I1_EN = {
   blocos: {
     'segmentos-clientes': {
       nome: 'Customer Segments',
+      matriz: {
+        aplicacoes: [
+        "Semantic segmentation from CRM data and interactions",
+        "Automatic analysis of profiles and behaviours",
+        "Feedback synthesis for segment characterisation"
+      ],
+        oportunidades: [
+        "Segment-based personalisation of the offer without manual effort",
+        "Identification of new segments from existing data",
+        "Support for targeting decisions"
+      ],
+        riscos: [
+        "Quality and structure of customer data",
+        "Biases in models reproduced in segmentation",
+        "Privacy and compliance in the use of personal data"
+      ]
+      },
+            descricao: "The customer groups the company serves. Different segments may have distinct needs.",
       indicadores: [
         'Is there structured customer data (e.g., CRM)?',
         'Do you segment or differentiate customers by profile or need?',
@@ -133,6 +343,24 @@ const TRADUCOES_I1_EN = {
     },
     'proposta-valor': {
       nome: 'Value Proposition',
+      matriz: {
+        aplicacoes: [
+        "Generation of personalised commercial content (proposals, descriptions)",
+        "Automatic adaptation of the value message by segment",
+        "Support for creating and updating marketing materials"
+      ],
+        oportunidades: [
+        "Differentiation through personalisation at reduced cost",
+        "Reduced content production time",
+        "Scaling communication without growing the creative team"
+      ],
+        riscos: [
+        "Risk of hallucinations in factual or technical content",
+        "Inconsistency in tone and brand identity",
+        "Dependence on human validation for publishable content"
+      ]
+      },
+            descricao: "What the company offers to solve a problem or satisfy a customer need.",
       indicadores: [
         'Does the value proposition include personalisation or differentiated service?',
         'Is there regular production of commercial content?',
@@ -141,6 +369,24 @@ const TRADUCOES_I1_EN = {
     },
     'canais': {
       nome: 'Channels',
+      matriz: {
+        aplicacoes: [
+        "Chatbots and virtual assistants for multichannel support",
+        "Communication automation",
+        "Real-time generation of personalised responses"
+      ],
+        oportunidades: [
+        "24/7 availability without increasing headcount",
+        "Reduced customer response time",
+        "Communication adapted to the user's profile and language"
+      ],
+        riscos: [
+        "Quality failures exposed directly to the customer",
+        "Technological lock-in",
+        "GDPR compliance in handling interaction data"
+      ]
+      },
+            descricao: "How the company communicates and delivers value to customers — website, social media, store, customer support.",
       indicadores: [
         'Do you use digital channels to communicate with customers (email, social media)?',
         'Are there service or communication platforms already in place?',
@@ -149,6 +395,24 @@ const TRADUCOES_I1_EN = {
     },
     'relacionamento-clientes': {
       nome: 'Customer Relationships',
+      matriz: {
+        aplicacoes: [
+        "Personalised and proactive automated support",
+        "Sentiment analysis in feedback and complaints",
+        "AI-assisted after-sales support"
+      ],
+        oportunidades: [
+        "Service scalability without linear cost growth",
+        "Improved data-driven experience and loyalty",
+        "Early identification of dissatisfaction"
+      ],
+        riscos: [
+        "Risk of hallucinations in responses",
+        "Loss of human closeness in relational contexts",
+        "Need for continuous validation and supervision of outputs"
+      ]
+      },
+            descricao: "The type of relationship established with each segment — support, loyalty, after-sales follow-up.",
       indicadores: [
         'Is there a customer support service with a regular volume of interactions?',
         'Are there defined after-sales follow-up or loyalty processes?',
@@ -157,6 +421,24 @@ const TRADUCOES_I1_EN = {
     },
     'fontes-receita': {
       nome: 'Revenue Streams',
+      matriz: {
+        aplicacoes: [
+        "Creation of new services based on AI analysis and content generation",
+        "Offer personalisation supporting premium or subscription models",
+        "Improved conversion rates through more effective communication"
+      ],
+        oportunidades: [
+        "Revenue diversification through scalable digital services",
+        "Increased commercial conversion without proportional cost increase",
+        "Building sustainable, data-based competitive advantage"
+      ],
+        riscos: [
+        "Uncertainty in measuring return on investment in early stages",
+        "Difficulty monetising indirect efficiency benefits",
+        "Risk of cannibalising existing services through automation"
+      ]
+      },
+            descricao: "How the company generates income from each customer segment — sales, subscriptions, services.",
       indicadores: [
         'Are there digital services with potential to scale?',
         'Can you introduce new data-based service models?',
@@ -165,6 +447,24 @@ const TRADUCOES_I1_EN = {
     },
     'atividades-chave': {
       nome: 'Key Activities',
+      matriz: {
+        aplicacoes: [
+        "Automatic generation of reports and document summaries",
+        "Summarisation and categorisation of unstructured information",
+        "Support for software development and technical documentation"
+      ],
+        oportunidades: [
+        "Reduced administrative burden in language-intensive tasks",
+        "Faster knowledge management processes",
+        "Support for decision-making based on document analysis"
+      ],
+        riscos: [
+        "Need for human validation of generated outputs",
+        "Variable quality in specialised technical domains",
+        "Integration with existing systems and workflows"
+      ]
+      },
+            descricao: "The most important tasks for the business model to work — production, operations, communication.",
       indicadores: [
         'Are there language-intensive activities (reports, communications)?',
         'Are there repetitive administrative tasks with a high volume of documents?',
@@ -173,6 +473,24 @@ const TRADUCOES_I1_EN = {
     },
     'recursos-chave': {
       nome: 'Key Resources',
+      matriz: {
+        aplicacoes: [
+        "Integration of LLM APIs as a core technological resource",
+        "Building an AI-assisted organisational knowledge base",
+        "Strengthening intellectual capital through productivity tools"
+      ],
+        oportunidades: [
+        "Access to advanced capabilities without in-house development",
+        "Strengthening technological capital with reduced initial investment",
+        "Democratising tools previously exclusive to large companies"
+      ],
+        riscos: [
+        "Dependence on external suppliers and recurring API costs",
+        "Shortage of internal skills to operationalise solutions",
+        "Risk of lock-in and difficulty migrating between providers"
+      ]
+      },
+            descricao: "The most important assets the company needs — people, equipment, knowledge, infrastructure.",
       indicadores: [
         'Do you have basic digital infrastructure (computers, internet access)?',
         'Does at least one employee have the digital literacy to operate an LLM?',
@@ -181,6 +499,24 @@ const TRADUCOES_I1_EN = {
     },
     'parcerias-chave': {
       nome: 'Key Partnerships',
+      matriz: {
+        aplicacoes: [
+        "Integration with LLM platform providers (commercial APIs)",
+        "Collaboration with digital transformation and AI consultancies",
+        "Access to cloud technology partner ecosystems"
+      ],
+        oportunidades: [
+        "Access to cutting-edge technology without in-house development",
+        "Reduced implementation risk with specialised support",
+        "Faster organisational learning curve"
+      ],
+        riscos: [
+        "Critical dependence on a single technology partner",
+        "High switching costs in case of discontinuation",
+        "Aligning interests and long-term contractual conditions"
+      ]
+      },
+            descricao: "The external suppliers and partners the company works with to complement resources or reduce risk.",
       indicadores: [
         'Do you work with technology suppliers or external consultants?',
         'Are there relationships with cloud or Software-as-a-Service (SaaS) platforms?',
@@ -189,6 +525,24 @@ const TRADUCOES_I1_EN = {
     },
     'estrutura-custos': {
       nome: 'Cost Structure',
+      matriz: {
+        aplicacoes: [
+        "Automation of manual tasks with high operating cost",
+        "Optimisation of repetitive processes with fewer errors",
+        "Partial replacement of outsourcing in content and analysis tasks"
+      ],
+        oportunidades: [
+        "Reduced operating costs through scalable automation",
+        "Freeing up human resources for higher-value activities",
+        "Growing efficiency with volume without proportional cost increase"
+      ],
+        riscos: [
+        "Unpredictable recurring subscription and API costs with volume",
+        "Initial investment in training and process adaptation",
+        "Difficulty controlling budgets under usage-based pricing models"
+      ]
+      },
+            descricao: "The main costs involved in operating the business model.",
       indicadores: [
         'Are there high costs associated with manual or repetitive tasks?',
         'Can you absorb recurring subscription costs (SaaS)?',
@@ -225,8 +579,10 @@ function tArea(id) {
 }
 
 function tBloco(bloco) {
-  if (obterIdioma() === 'en' && TRADUCOES_I1_EN.blocos[bloco.id]) return TRADUCOES_I1_EN.blocos[bloco.id];
-  return { nome: bloco.nome, indicadores: bloco.indicadores };
+  if (obterIdioma() === 'en' && TRADUCOES_I1_EN.blocos[bloco.id]) {
+    return { descricao: bloco.descricao, matriz: bloco.matriz, ...TRADUCOES_I1_EN.blocos[bloco.id] };
+  }
+  return { nome: bloco.nome, indicadores: bloco.indicadores, descricao: bloco.descricao, matriz: bloco.matriz };
 }
 
 function tEscala(eixo, valor) {
