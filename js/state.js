@@ -10,6 +10,7 @@ function estadoInicial() {
   return {
     iniciadoEm: new Date().toISOString(),
     consentimento: false,
+    perfilEmpresa: {},  // setor, colaboradores, criterioFinanceiro, escalaoFinanceiro, pais, regiao
     diagnostico: {},   // { blocoId: { prontidao, impacto, prioridade } }
     blocosSelecionados: [] // blocoId[] escolhidos no Instrumento 2 para aprofundar
   };
@@ -19,7 +20,9 @@ function lerEstado() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return estadoInicial();
-    return JSON.parse(raw);
+    const estado = JSON.parse(raw);
+    if (!estado.perfilEmpresa) estado.perfilEmpresa = {};
+    return estado;
   } catch (e) {
     console.error('Não foi possível ler o estado guardado:', e);
     return estadoInicial();
@@ -55,6 +58,13 @@ function limparDiagnostico() {
   const estado = lerEstado();
   estado.diagnostico = {};
   estado.blocosSelecionados = []; // dependem da classificação, ficariam órfãos
+  guardarEstado(estado);
+  return estado;
+}
+
+function limparSelecao() {
+  const estado = lerEstado();
+  estado.blocosSelecionados = [];
   guardarEstado(estado);
   return estado;
 }
