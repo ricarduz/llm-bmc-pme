@@ -13,41 +13,108 @@
 <header class="topo">
   <div class="topo-inner">
     <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
-    <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
-      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-    </button>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="seletor-idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </button>
+    </div>
   </div>
 </header>
 
 <main>
   <div class="container">
-    <span class="eyebrow">Síntese</span>
-    <h1>Resultados da sessão</h1>
-    <p class="lead">
-      Resumo do percurso completo. Pode exportar este registo para o citar
-      no relato do Capítulo 6, ou reiniciar para uma nova sessão.
-    </p>
+    <div id="conteudo-sessao">
+      <span class="eyebrow" data-i18n="sintese-eyebrow">Síntese</span>
+      <h1 data-i18n="sintese-h1">Resultados da sessão</h1>
+      <p class="lead" data-i18n="sintese-lead">Resumo do percurso completo. Pode descarregar este registo, ou terminar a sessão.</p>
 
-    <div class="cartao">
-      <h3>Perfil de prioridade por bloco</h3>
-      <table id="tabela-diagnostico"></table>
-    </div>
-
-    <div class="cartao">
-      <h3>Blocos selecionados para aprofundamento</h3>
-      <div id="blocos-aprofundados"></div>
-    </div>
-
-    <div class="cartao" id="cartao-envio" style="border-color: var(--ink);">
-      <h3>Exportar / submeter resultados</h3>
-      <p class="nota">
-        A exportação em JSON não contém nenhum dado pessoal identificativo —
-        apenas as classificações e seleções desta sessão.
-      </p>
-      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
-        <button class="botao" id="exportar">Exportar resultados (JSON)</button>
-        <button class="botao secundario" id="reiniciar">Reiniciar sessão</button>
+      <div class="passos" aria-hidden="true">
+        <span id="passo-dot-1"></span><span id="passo-dot-2"></span>
       </div>
+
+      <!-- PASSO 1 — Satisfação e contacto -->
+      <section id="r-passo-1">
+        <h2 data-i18n="r-passo1-titulo">Passo 1 — A sua opinião</h2>
+
+        <div class="cartao">
+          <div class="campo">
+            <label data-i18n="satisfacao-percebeu">Percebeu claramente o resultado deste diagnóstico?</label>
+            <div class="opcoes-inline">
+              <label><input type="radio" name="satisfacao-percebeu" value="sim"><span data-i18n="sim">Sim</span></label>
+              <label><input type="radio" name="satisfacao-percebeu" value="nao"><span data-i18n="nao">Não</span></label>
+            </div>
+          </div>
+          <div class="campo" style="margin-bottom:0;">
+            <label data-i18n="satisfacao-util">Considera que este instrumento será útil para a sua empresa?</label>
+            <div class="opcoes-inline">
+              <label><input type="radio" name="satisfacao-util" value="sim"><span data-i18n="sim">Sim</span></label>
+              <label><input type="radio" name="satisfacao-util" value="nao"><span data-i18n="nao">Não</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="cartao">
+          <h3 data-i18n="contacto-titulo">Receber os resultados do estudo</h3>
+          <p class="nota" data-i18n="contacto-nota">Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu e-mail. É usado exclusivamente para esse fim e não é partilhado com terceiros. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).</p>
+
+          <div class="campo" style="margin-top:16px;">
+            <label for="contacto-email" data-i18n="contacto-email-label">E-mail</label>
+            <input type="email" id="contacto-email" placeholder="nome@exemplo.com">
+          </div>
+
+          <label style="display:flex; gap:10px; align-items:flex-start; margin-bottom:16px; cursor:pointer;">
+            <input type="checkbox" id="contacto-consentimento" style="margin-top:4px;">
+            <span data-i18n="contacto-consentimento">Aceito que o meu e-mail seja utilizado exclusivamente para me contactar com os resultados finais deste estudo.</span>
+          </label>
+
+          <button type="button" class="botao" id="guardar-contacto" data-i18n="contacto-guardar-botao">Guardar contacto</button>
+          <p class="nota" id="contacto-mensagem" style="margin-top:12px;" hidden></p>
+        </div>
+
+        <div class="acoes-rodape">
+          <button type="button" class="botao secundario" id="recomecar" data-i18n="sessao-recomecar">Recomeçar</button>
+          <button type="button" class="botao" id="ir-passo-2" data-i18n="seguinte" disabled>Seguinte →</button>
+        </div>
+      </section>
+
+      <!-- PASSO 2 — Resultado do instrumento -->
+      <section id="r-passo-2" hidden>
+        <h2 data-i18n="r-passo2-titulo">Passo 2 — Resultado do diagnóstico</h2>
+
+        <div class="cartao">
+          <h3 data-i18n="sintese-tabela-titulo">Perfil de prioridade por bloco</h3>
+          <table id="tabela-diagnostico"></table>
+        </div>
+
+        <div class="cartao">
+          <h3 data-i18n="sintese-aprofundados-titulo">Blocos selecionados para aprofundamento</h3>
+          <div id="blocos-aprofundados"></div>
+        </div>
+
+        <div class="cartao" style="border-color: var(--ink);">
+          <h3 data-i18n="sintese-download-titulo">Descarregar o seu resumo</h3>
+          <p class="nota" data-i18n="sintese-download-nota">Um ficheiro simples, pronto a abrir em qualquer computador — sem necessidade de programas técnicos.</p>
+          <div style="margin-top:16px;">
+            <button class="botao" id="descarregar-resumo" data-i18n="sintese-download-botao">Descarregar resumo →</button>
+          </div>
+          <p class="nota" style="margin-top:20px;" data-i18n="sintese-json-nota">Para fins de investigação, também é possível exportar os dados técnicos (JSON) desta sessão.</p>
+          <button type="button" class="botao secundario" id="exportar" data-i18n="sintese-json-botao">Exportar dados técnicos (JSON)</button>
+        </div>
+
+        <div class="acoes-rodape">
+          <button type="button" class="botao secundario" id="voltar-passo-1" data-i18n="voltar">← Voltar</button>
+          <button type="button" class="botao" id="terminar" data-i18n="sessao-terminar">Terminar sessão</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="cartao" id="ecra-fim" style="text-align:center; padding:56px 28px;" hidden>
+      <h2 data-i18n="sessao-terminada-titulo">Sessão terminada</h2>
+      <p class="nota" data-i18n="sessao-terminada-texto">Os dados desta sessão foram apagados deste navegador. Pode fechar esta janela.</p>
     </div>
   </div>
 </main>
