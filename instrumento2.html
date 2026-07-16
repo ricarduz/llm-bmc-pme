@@ -3,17 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Instrumento 2 — Matriz LLM × BMC · LLMemPME</title>
+<title>Instrumento 2 — Matriz LLM × BMC · LLM em PME</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="topo">
   <div class="topo-inner">
-    <a class="marca" href="index.html">LLMemPME<span>Framework LLM × BMC</span></a>
-    <div class="mapa-bmc" id="mapa" aria-hidden="true">
+    <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
+    <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
       <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-    </div>
+    </button>
   </div>
 </header>
 
@@ -40,6 +42,31 @@
   </div>
 </main>
 
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto" data-i18n="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
+    <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-titulo">Sobre este projeto</h2>
+
+    <h3 data-i18n="sobre-tese-titulo">Sobre a tese em curso</h3>
+    <p data-i18n="sobre-tese-texto">Esta ferramenta e o artefacto central da dissertacao.</p>
+
+    <h3 data-i18n="sobre-autor-titulo">Sobre o autor</h3>
+    <p class="placeholder" data-i18n="sobre-autor-texto">[Escreva aqui uma breve apresentacao sua.]</p>
+  </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/modal.js"></script>
 <script src="js/data.js"></script>
 <script src="js/state.js"></script>
 <script src="js/instrumento2.js"></script>

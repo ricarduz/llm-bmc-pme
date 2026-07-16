@@ -3,72 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LLMemPME — Framework de adoção de LLM em PME</title>
-<meta name="description" content="Ferramenta interativa de demonstração do framework de adoção de Large Language Models por PME, estruturado no Business Model Canvas.">
+<title data-i18n="titulo-pagina">Framework de adoção de LLM em PME</title>
+<meta id="meta-descricao" name="description" content="Ferramenta interativa de demonstração do framework de adoção de Large Language Models por PME, estruturado no Business Model Canvas.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="topo">
   <div class="topo-inner">
-    <a class="marca" href="index.html">LLMemPME<span>Framework LLM × BMC</span></a>
-    <div class="mapa-bmc" aria-hidden="true">
-      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="seletor-idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </button>
     </div>
   </div>
 </header>
 
 <main>
   <div class="container">
-    <span class="eyebrow">Instrumento de demonstração · dissertação de Mestrado</span>
-    <h1>Um percurso guiado para decidir onde os LLM fazem sentido na sua PME</h1>
-    <p class="lead">
-      Esta ferramenta instancia sequencialmente os três instrumentos do framework
-      de apoio à adoção de Large Language Models (LLM) por Pequenas e Médias
-      Empresas, estruturado no Business Model Canvas (BMC). Responde, por esta
-      ordem, a três perguntas.
+    <span class="eyebrow" data-i18n="eyebrow">Instrumento de demonstração · dissertação de Mestrado</span>
+    <h1 data-i18n="h1">Um percurso guiado para decidir onde os LLM fazem sentido na sua PME</h1>
+    <p class="lead" data-i18n="lead">
+      Esta ferramenta instancia sequencialmente os três instrumentos do framework de apoio à adoção de Large Language Models (LLM) por Pequenas e Médias
+      Empresas, estruturado no Business Model Canvas (BMC). Responde, por esta ordem, a três perguntas.
     </p>
 
-    <div class="cartao">
-      <h3>1. A minha empresa está pronta?</h3>
-      <p class="nota">Instrumento 1 — Diagnóstico de Pré-requisitos. Avalia, bloco a bloco, a prontidão operacional e a criticidade de cada área do seu negócio.</p>
+    <div class="cartao cartao-clicavel" data-modal-trigger="instrumento1">
+      <h3 data-i18n="card1-titulo">1. A minha empresa está pronta?</h3>
+      <p class="nota" data-i18n="card1-nota">Instrumento 1 — Diagnóstico de Pré-requisitos. Avalia, bloco a bloco, a prontidão operacional e a criticidade de cada área do seu negócio.</p>
     </div>
-    <div class="cartao">
-      <h3>2. Onde faz sentido para a minha PME?</h3>
-      <p class="nota">Instrumento 2 — Matriz LLM × BMC. Mapeia aplicações, oportunidades e riscos nos blocos identificados como prioritários.</p>
+    <div class="cartao cartao-clicavel" data-modal-trigger="instrumento2">
+      <h3 data-i18n="card2-titulo">2. Onde faz sentido para a minha PME?</h3>
+      <p class="nota" data-i18n="card2-nota">Instrumento 2 — Matriz LLM × BMC. Mapeia aplicações, oportunidades e riscos nos blocos identificados como prioritários.</p>
     </div>
-    <div class="cartao">
-      <h3>3. Como avanço neste bloco?</h3>
-      <p class="nota">Instrumento 3 — Fichas de Decisão. Orientação tecnológica e ações concretas para os blocos com maior densidade de evidência empírica.</p>
+    <div class="cartao cartao-clicavel" data-modal-trigger="instrumento3">
+      <h3 data-i18n="card3-titulo">3. Como avanço neste bloco?</h3>
+      <p class="nota" data-i18n="card3-nota">Instrumento 3 — Fichas de Decisão. Orientação tecnológica e ações concretas para os blocos com maior densidade de evidência empírica.</p>
     </div>
 
     <div class="cartao" style="border-color: var(--ink); margin-top: 32px;">
-      <h3>Antes de começar</h3>
-      <p class="nota">
-        As suas respostas ficam guardadas apenas neste navegador enquanto usa a
-        ferramenta. No final, pode exportar os resultados; nenhum dado pessoal
+      <h3 data-i18n="antes-titulo">Antes de começar</h3>
+      <p class="nota" data-i18n="antes-texto">
+        As respostas ficam guardadas apenas neste navegador enquanto usa a ferramenta. No final, pode exportar os resultados; nenhum dado pessoal
         identificativo é recolhido por defeito.
       </p>
       <label style="display:flex; gap:10px; align-items:flex-start; margin-top:16px; cursor:pointer;">
         <input type="checkbox" id="consentimento" style="margin-top:4px;">
-        <span>Li o parágrafo acima e pretendo iniciar o diagnóstico.</span>
+        <span data-i18n="antes-consentimento">Li o parágrafo acima e pretendo iniciar o diagnóstico.</span>
       </label>
     </div>
 
+    <p class="aviso" id="aviso-inicio" data-i18n="aviso-consentimento">Confirme que leu o texto acima para poder iniciar.</p>
     <div class="acoes-rodape" style="border-top:none; padding-top:8px; justify-content:flex-end;">
-      <button class="botao" id="iniciar" disabled>Iniciar diagnóstico →</button>
+      <button class="botao" id="iniciar" data-i18n="botao-iniciar" disabled>Iniciar diagnóstico →</button>
     </div>
   </div>
 </main>
 
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto" data-i18n="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
+    <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-titulo">Sobre este projeto</h2>
+
+    <h3 data-i18n="sobre-tese-titulo">Sobre a tese em curso</h3>
+    <p data-i18n="sobre-tese-texto">Esta ferramenta e o artefacto central da dissertacao.</p>
+
+    <h3 data-i18n="sobre-autor-titulo">Sobre o autor</h3>
+    <p class="placeholder" data-i18n="sobre-autor-texto">[Escreva aqui uma breve apresentacao sua.]</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" data-modal="instrumento1" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-i1-titulo">
+    <button type="button" class="modal-fechar" aria-label="Fechar">&times;</button>
+    <h2 id="modal-i1-titulo" data-i18n="exp-i1-titulo">Instrumento 1 — Diagnóstico de Pré-requisitos</h2>
+    <p data-i18n="exp-i1-texto">Constitui o ponto de entrada obrigatório do framework.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" data-modal="instrumento2" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-i2-titulo">
+    <button type="button" class="modal-fechar" aria-label="Fechar">&times;</button>
+    <h2 id="modal-i2-titulo" data-i18n="exp-i2-titulo">Instrumento 2 — Matriz LLM × BMC</h2>
+    <p data-i18n="exp-i2-texto">Mapeia panoramicamente as aplicações, oportunidades e riscos.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" data-modal="instrumento3" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-i3-titulo">
+    <button type="button" class="modal-fechar" aria-label="Fechar">&times;</button>
+    <h2 id="modal-i3-titulo" data-i18n="exp-i3-titulo">Instrumento 3 — Fichas de Decisão por Bloco BMC</h2>
+    <p data-i18n="exp-i3-texto">O instrumento operacional mais aprofundado do framework.</p>
+  </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/modal.js"></script>
 <script src="js/data.js"></script>
 <script src="js/state.js"></script>
 <script>
   const checkbox = document.getElementById('consentimento');
   const botao = document.getElementById('iniciar');
+  const aviso = document.getElementById('aviso-inicio');
 
   checkbox.addEventListener('change', () => {
     botao.disabled = !checkbox.checked;
+    aviso.hidden = checkbox.checked;
   });
 
   botao.addEventListener('click', () => {
