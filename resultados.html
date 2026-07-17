@@ -76,8 +76,11 @@
         </div>
 
         <div class="acoes-rodape">
-          <button type="button" class="botao secundario" id="recomecar" data-i18n="sessao-recomecar">Recomeçar</button>
-          <button type="button" class="botao" id="ir-passo-2" data-i18n="seguinte" disabled>Seguinte →</button>
+          <button type="button" class="botao secundario" id="recomecar-1" data-i18n="sessao-recomecar">Recomeçar</button>
+          <div style="display:flex; gap:10px;">
+            <a class="botao secundario" id="voltar-instrumento" href="instrumento3.html" data-i18n="voltar">← Voltar</a>
+            <button type="button" class="botao" id="ir-passo-2" data-i18n="seguinte" disabled>Seguinte →</button>
+          </div>
         </div>
       </section>
 
@@ -85,35 +88,46 @@
       <section id="r-passo-2" hidden>
         <h2 data-i18n="r-passo2-titulo">Passo 2 — Resultado do diagnóstico</h2>
 
-        <div class="cartao">
-          <h3 data-i18n="sintese-tabela-titulo">Perfil de prioridade por bloco</h3>
-          <table id="tabela-diagnostico"></table>
+        <div class="abas-painel">
+          <button type="button" class="aba-painel ativa" data-aba="descarregar" data-i18n="aba-descarregar">Descarregar</button>
+          <button type="button" class="aba-painel" data-aba="resultado" data-i18n="aba-resultado">Resultados</button>
         </div>
 
-        <div class="cartao">
-          <h3 data-i18n="sintese-aprofundados-titulo">Blocos selecionados para aprofundamento</h3>
-          <div id="blocos-aprofundados"></div>
-        </div>
-
-        <div class="cartao" style="border-color: var(--ink);">
-          <h3 data-i18n="sintese-download-titulo">Descarregar o seu resumo</h3>
-          <p class="nota" data-i18n="sintese-download-nota">Um ficheiro simples, pronto a abrir em qualquer computador — sem necessidade de programas técnicos.</p>
-          <div style="margin-top:16px;">
-            <button class="botao" id="descarregar-resumo" data-i18n="sintese-download-botao">Descarregar resumo →</button>
+        <div id="aba-descarregar">
+          <div class="cartao" style="border-color: var(--ink);">
+            <h3 data-i18n="sintese-download-titulo">Descarregar o seu resumo</h3>
+            <p class="nota" data-i18n="sintese-download-nota">Um ficheiro simples, pronto a abrir em qualquer computador — sem necessidade de programas técnicos.</p>
+            <div style="margin-top:16px;">
+              <button class="botao" id="descarregar-resumo" data-i18n="sintese-download-botao">Descarregar resumo →</button>
+            </div>
           </div>
-          <p class="nota" style="margin-top:20px;" data-i18n="sintese-json-nota">Para fins de investigação, também é possível exportar os dados técnicos (JSON) desta sessão.</p>
-          <button type="button" class="botao secundario" id="exportar" data-i18n="sintese-json-botao">Exportar dados técnicos (JSON)</button>
+
+          <div class="acoes-rodape">
+            <button type="button" class="botao secundario" id="recomecar-2" data-i18n="sessao-recomecar">Recomeçar</button>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="botao secundario" id="voltar-passo-1" data-i18n="voltar">← Voltar</button>
+              <button type="button" class="botao" id="terminar" data-i18n="sessao-terminar">Terminar sessão</button>
+            </div>
+          </div>
         </div>
 
-        <div class="acoes-rodape">
-          <button type="button" class="botao secundario" id="voltar-passo-1" data-i18n="voltar">← Voltar</button>
-          <button type="button" class="botao" id="terminar" data-i18n="sessao-terminar">Terminar sessão</button>
+        <div id="aba-resultado" hidden>
+          <div class="cartao">
+            <h3 data-i18n="sintese-tabela-titulo">Perfil de prioridade por bloco</h3>
+            <table id="tabela-diagnostico"></table>
+          </div>
+
+          <div class="cartao">
+            <h3 data-i18n="sintese-aprofundados-titulo">Blocos selecionados para aprofundamento</h3>
+            <div id="blocos-aprofundados"></div>
+          </div>
         </div>
       </section>
     </div>
 
     <div class="cartao" id="ecra-fim" style="text-align:center; padding:56px 28px;" hidden>
       <h2 data-i18n="sessao-terminada-titulo">Sessão terminada</h2>
+      <p class="nota" data-i18n="sessao-terminada-agradecimento">Obrigado por participar neste estudo — a sua contribuição é uma ajuda preciosa para esta investigação.</p>
       <p class="nota" data-i18n="sessao-terminada-texto">Os dados desta sessão foram apagados deste navegador. Pode fechar esta janela.</p>
     </div>
   </div>
@@ -138,7 +152,7 @@
     <p data-i18n="sobre-tese-texto">Esta ferramenta e o artefacto central da dissertacao.</p>
 
     <h3 data-i18n="sobre-autor-titulo">Sobre o autor</h3>
-    <p class="placeholder" data-i18n="sobre-autor-texto">[Escreva aqui uma breve apresentacao sua.]</p>
+    <p data-i18n="sobre-autor-texto">[Escreva aqui uma breve apresentacao sua.]</p>
   </div>
 </div>
 

@@ -81,6 +81,40 @@ function listaMatriz(itens) {
   return `<ul style="margin:0; padding-left:18px;">${itens.map(i => `<li>${i}</li>`).join('')}</ul>`;
 }
 
+function renderFichaResumo(bloco, ficha) {
+  return `
+    <div style="margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--line);">
+      <h4 style="margin-bottom:4px;">${tBloco(bloco).nome} — ${t('ficha-titulo-sufixo')}</h4>
+      <p class="nota" style="margin-bottom:14px;">${ficha.area} · ${ficha.requisitos}</p>
+
+      <p><strong>${t('ficha-contexto')}:</strong> ${ficha.contexto}</p>
+
+      <p style="margin-bottom:6px;"><strong>${t('ficha-aplicacoes')}:</strong></p>
+      ${listaMatriz(ficha.aplicacoes)}
+
+      <p style="margin:14px 0 6px;"><strong>${t('ficha-tecnologia')}:</strong></p>
+      <table>
+        <thead><tr><th>${t('th-opcao')}</th><th>${t('th-adequada-quando')}</th><th>${t('th-consideracoes')}</th></tr></thead>
+        <tbody>
+          ${ficha.orientacaoTecnologica.map(o => `<tr><td>${o.opcao}</td><td>${o.quando}</td><td>${o.consideracoes}</td></tr>`).join('')}
+        </tbody>
+      </table>
+
+      <p style="margin:14px 0 6px;"><strong>${t('ficha-acoes')}:</strong></p>
+      ${listaMatriz(ficha.acoes)}
+
+      <p style="margin:14px 0 6px;"><strong>${t('ficha-criterios')}:</strong></p>
+      <table>
+        <thead><tr><th>${t('th-criterio')}</th><th>${t('th-indicador')}</th></tr></thead>
+        <tbody>
+          ${ficha.criterios.map(c => `<tr><td>${c.criterio}</td><td>${c.indicador}</td></tr>`).join('')}
+        </tbody>
+      </table>
+
+      <p style="margin-top:14px;"><strong>${t('ficha-governanca')}:</strong> ${ficha.governanca}</p>
+    </div>`;
+}
+
 function renderAprofundados() {
   const el = document.getElementById('blocos-aprofundados');
   if (estadoR.blocosSelecionados.length === 0) {
@@ -89,22 +123,9 @@ function renderAprofundados() {
   }
   el.innerHTML = estadoR.blocosSelecionados.map(id => {
     const bloco = BMC_BLOCOS.find(b => b.id === id);
-    if (!bloco) return '';
-    const conteudo = tBloco(bloco);
-    return `
-      <div style="margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--line);">
-        <h4 style="margin-bottom:10px;">${conteudo.nome}${bloco.ficha ? t('sintese-com-ficha') : ''}</h4>
-        <table>
-          <thead><tr><th>${t('th-aplicacoes')}</th><th>${t('th-oportunidades')}</th><th>${t('th-riscos')}</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>${listaMatriz(conteudo.matriz.aplicacoes)}</td>
-              <td>${listaMatriz(conteudo.matriz.oportunidades)}</td>
-              <td>${listaMatriz(conteudo.matriz.riscos)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>`;
+    const ficha = FICHAS[id];
+    if (!bloco || !ficha) return '';
+    return renderFichaResumo(bloco, ficha);
   }).join('');
 }
 
@@ -119,6 +140,18 @@ function atualizarMapa() {
   });
 }
 
+function irParaAba(aba) {
+  document.getElementById('aba-descarregar').hidden = aba !== 'descarregar';
+  document.getElementById('aba-resultado').hidden = aba !== 'resultado';
+  document.querySelectorAll('.aba-painel').forEach(botao => {
+    botao.classList.toggle('ativa', botao.dataset.aba === aba);
+  });
+}
+
+document.querySelectorAll('.aba-painel').forEach(botao => {
+  botao.addEventListener('click', () => irParaAba(botao.dataset.aba));
+});
+
 function irParaPasso(n) {
   [1, 2].forEach(i => {
     document.getElementById(`r-passo-${i}`).hidden = i !== n;
@@ -126,7 +159,13 @@ function irParaPasso(n) {
     dot.classList.toggle('ativo', i === n);
     dot.classList.toggle('concluido', i < n);
   });
+  if (n === 2) irParaAba('descarregar');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function configurarLinkVoltarInstrumento() {
+  const temFicha = estadoR.blocosSelecionados.some(id => BMC_BLOCOS.find(b => b.id === id)?.ficha);
+  document.getElementById('voltar-instrumento').setAttribute('href', temFicha ? 'instrumento3.html' : 'instrumento2.html');
 }
 
 function validarSatisfacao() {
@@ -217,17 +256,25 @@ async function construirResumoHTML() {
   const listaAprofundados = estadoR.blocosSelecionados.length
     ? estadoR.blocosSelecionados.map(id => {
         const bloco = BMC_BLOCOS.find(b => b.id === id);
-        if (!bloco) return '';
-        const conteudo = tBloco(bloco);
+        const ficha = FICHAS[id];
+        if (!bloco || !ficha) return '';
         const linha = (rotulo, itens) => `<tr><th>${rotulo}</th><td><ul style="margin:0; padding-left:18px;">${itens.map(i => `<li>${i}</li>`).join('')}</ul></td></tr>`;
         return `
-          <h3>${conteudo.nome}${bloco.ficha ? t('sintese-com-ficha') : ''}</h3>
+          <h3>${tBloco(bloco).nome} — ${t('ficha-titulo-sufixo')}</h3>
+          <p><em>${ficha.area} · ${ficha.requisitos}</em></p>
+          <p><strong>${t('ficha-contexto')}:</strong> ${ficha.contexto}</p>
+          <table>${linha(t('ficha-aplicacoes'), ficha.aplicacoes)}</table>
           <table>
-            ${linha(t('th-aplicacoes'), conteudo.matriz.aplicacoes)}
-            ${linha(t('th-oportunidades'), conteudo.matriz.oportunidades)}
-            ${linha(t('th-riscos'), conteudo.matriz.riscos)}
-          </table>`;
-      }).join('')
+            <thead><tr><th>${t('th-opcao')}</th><th>${t('th-adequada-quando')}</th><th>${t('th-consideracoes')}</th></tr></thead>
+            <tbody>${ficha.orientacaoTecnologica.map(o => `<tr><td>${o.opcao}</td><td>${o.quando}</td><td>${o.consideracoes}</td></tr>`).join('')}</tbody>
+          </table>
+          <table>${linha(t('ficha-acoes'), ficha.acoes)}</table>
+          <table>
+            <thead><tr><th>${t('th-criterio')}</th><th>${t('th-indicador')}</th></tr></thead>
+            <tbody>${ficha.criterios.map(c => `<tr><td>${c.criterio}</td><td>${c.indicador}</td></tr>`).join('')}</tbody>
+          </table>
+          <p><strong>${t('ficha-governanca')}:</strong> ${ficha.governanca}</p>`;
+      }).join('<hr style="margin:24px 0; border:none; border-top:1px solid #DADDD9;">')
     : `<p>${t('sintese-nenhum-bloco')}</p>`;
 
   const blocoPerfil = perfil.setor ? `
@@ -293,15 +340,10 @@ document.getElementById('descarregar-resumo').addEventListener('click', async ()
   try {
     const html = await construirResumoHTML();
     descarregarFicheiro(html, `llm-em-pme-resumo-${Date.now()}.html`, 'text/html');
+    enviarParaGoogleSheets(construirRegisto());
   } finally {
     botao.disabled = false;
   }
-});
-
-document.getElementById('exportar').addEventListener('click', () => {
-  const registo = construirRegisto();
-  descarregarFicheiro(JSON.stringify(registo, null, 2), `llm-bmc-pme-sessao-${Date.now()}.json`, 'application/json');
-  enviarParaGoogleSheets(registo);
 });
 
 document.getElementById('guardar-contacto').addEventListener('click', () => {
@@ -326,11 +368,13 @@ document.getElementById('guardar-contacto').addEventListener('click', () => {
   mensagem.hidden = false;
 });
 
-document.getElementById('recomecar').addEventListener('click', () => {
-  if (confirm(t('sessao-recomecar-confirmar'))) {
-    limparEstado();
-    window.location.href = 'index.html';
-  }
+document.querySelectorAll('#recomecar-1, #recomecar-2').forEach(botao => {
+  botao.addEventListener('click', () => {
+    if (confirm(t('sessao-recomecar-confirmar'))) {
+      limparEstado();
+      window.location.href = 'index.html';
+    }
+  });
 });
 
 document.getElementById('terminar').addEventListener('click', () => {
@@ -351,4 +395,5 @@ renderTabela();
 renderAprofundados();
 atualizarMapa();
 restaurarSatisfacao();
+configurarLinkVoltarInstrumento();
 irParaPasso(1);
