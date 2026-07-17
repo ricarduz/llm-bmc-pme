@@ -1,6 +1,18 @@
 const estado3 = lerEstado();
 
 const idsSelecionados = estado3.blocosSelecionados.filter(id => FICHAS[id]);
+let fichaAtivaId = idsSelecionados[0];
+
+function renderAbas() {
+  if (idsSelecionados.length <= 1) return '';
+  return `
+    <div class="abas-fichas">
+      ${idsSelecionados.map(id => {
+        const bloco = BMC_BLOCOS.find(b => b.id === id);
+        return `<button type="button" class="aba-ficha ${id === fichaAtivaId ? 'ativa' : ''}" data-aba="${id}">${bloco ? bloco.nome : FICHAS[id].titulo}</button>`;
+      }).join('')}
+    </div>`;
+}
 
 function renderFichaCompleta(bloco, ficha) {
   return `
@@ -75,11 +87,21 @@ function render() {
     return;
   }
 
-  document.getElementById('lista-fichas').innerHTML = idsSelecionados.map(id => {
-    const bloco = BMC_BLOCOS.find(b => b.id === id);
-    const ficha = FICHAS[id];
-    return ficha.pendente ? renderFichaPendente(bloco, ficha) : renderFichaCompleta(bloco, ficha);
-  }).join('');
+  if (!idsSelecionados.includes(fichaAtivaId)) fichaAtivaId = idsSelecionados[0];
+
+  const bloco = BMC_BLOCOS.find(b => b.id === fichaAtivaId);
+  const ficha = FICHAS[fichaAtivaId];
+  const conteudoFicha = ficha.pendente ? renderFichaPendente(bloco, ficha) : renderFichaCompleta(bloco, ficha);
+
+  document.getElementById('lista-fichas').innerHTML = renderAbas() + conteudoFicha;
+
+  document.querySelectorAll('.aba-ficha').forEach(botao => {
+    botao.addEventListener('click', () => {
+      fichaAtivaId = botao.dataset.aba;
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
 }
 
 function atualizarMapa() {
