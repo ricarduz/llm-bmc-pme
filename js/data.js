@@ -8,6 +8,8 @@
  * Instrumento 3 estão, por agora, só em português.
  */
 
+// As 4 áreas agregadas em que os 9 blocos do BMC se organizam na Matriz
+// do Instrumento 2 (cada bloco aponta para uma destas chaves no seu campo "area").
 const AREAS = {
   'interface-cliente': 'Interface com o Cliente',
   'produto-oferta': 'Produto/Oferta',
@@ -15,6 +17,20 @@ const AREAS = {
   'aspetos-financeiros': 'Aspetos Financeiros'
 };
 
+/**
+ * Os nove blocos do Business Model Canvas, na ordem canónica da tese.
+ * Cada bloco tem sempre a mesma forma:
+ *   id          — usado como chave em todo o resto do site (diagnóstico, seleção, fichas)
+ *   nome        — nome do bloco em português (a versão EN vive em i18n.js, TRADUCOES_I1_EN.blocos)
+ *   area        — uma das 4 chaves de AREAS, acima
+ *   descricao   — explicação em linguagem simples, usada na grelha do Passo 2 do index
+ *   ficha       — true só para os 4 blocos com Ficha de Decisão no Instrumento 3
+ *   matriz      — { aplicacoes, oportunidades, riscos }, cada uma um array de 3 frases — a Matriz do Instrumento 2 (Tabela 10)
+ *   indicadores — 3 perguntas de reflexão, mostradas no Instrumento 1 para ajudar a avaliar Prontidão/Impacto
+ *
+ * Não há comentários bloco a bloco a seguir — o conteúdo de cada campo é
+ * só texto vindo do Apêndice de Instrumentos da tese, não lógica.
+ */
 const BMC_BLOCOS = [
   {
     id: 'segmentos-clientes',
@@ -39,7 +55,7 @@ const BMC_BLOCOS = [
       'Privacidade e conformidade no uso de dados pessoais'
     ]
     },
-        indicadores: [
+    indicadores: [
       'Existem dados estruturados sobre clientes (e.g., CRM)?',
       'Segmenta ou diferencia clientes por perfil ou necessidade?',
       'Capacidade de registar e analisar interações com clientes?'
@@ -68,7 +84,7 @@ const BMC_BLOCOS = [
       'Dependência de validação humana para conteúdo publicável'
     ]
     },
-        indicadores: [
+    indicadores: [
       'A proposta de valor inclui personalização ou serviço diferenciado?',
       'Existe produção regular de conteúdos comerciais?',
       'Necessidade de adaptação frequente da oferta ao cliente?'
@@ -97,7 +113,7 @@ const BMC_BLOCOS = [
       'Conformidade RGPD no tratamento de dados de interação'
     ]
     },
-        indicadores: [
+    indicadores: [
       'Utiliza canais digitais para comunicar com clientes (email, redes sociais)?',
       'Há plataformas de atendimento ou comunicação já implementadas?',
       'Existem perguntas frequentes nesses canais?'
@@ -126,7 +142,7 @@ const BMC_BLOCOS = [
       'Necessidade de validação e supervisão contínua dos outputs'
     ]
     },
-        indicadores: [
+    indicadores: [
       'Existe serviço de apoio ao cliente com volume de interações regular?',
       'Há processos de acompanhamento pós-venda ou fidelização definidos?',
       'Regista reclamações ou comentários de forma estruturada?'
@@ -155,7 +171,7 @@ const BMC_BLOCOS = [
       'Risco de canibalização de serviços existentes por automação'
     ]
     },
-        indicadores: [
+    indicadores: [
       'Existem serviços digitais com potencial de escala?',
       'Tem capacidade de introduzir novos modelos de serviço baseados em dados?',
       'Existem processos comerciais ou de conversão que podem ser otimizados por comunicação personalizada?'
@@ -184,7 +200,7 @@ const BMC_BLOCOS = [
       'Integração com sistemas e fluxos de trabalho existentes'
     ]
     },
-        indicadores: [
+    indicadores: [
       'Existem atividades intensivas em linguagem (relatórios, comunicações)?',
       'Há tarefas administrativas repetitivas com elevado volume de documentos?',
       'Os processos operacionais estão minimamente documentados?'
@@ -213,7 +229,7 @@ const BMC_BLOCOS = [
       'Risco de lock-in e dificuldade de migração entre fornecedores'
     ]
     },
-        indicadores: [
+    indicadores: [
       'Dispõe de infraestrutura digital básica (computadores, ligação à internet)?',
       'Pelo menos um colaborador tem literacia digital para operar LLM?',
       'Existe documentação interna ou base de conhecimento organizada (manuais, FAQs, processos, contratos)?'
@@ -242,7 +258,7 @@ const BMC_BLOCOS = [
       'Alinhamento de interesses e condições contratuais de longo prazo'
     ]
     },
-        indicadores: [
+    indicadores: [
       'Trabalha com fornecedores tecnológicos ou consultores externos?',
       'Existem relações com plataformas cloud ou de software como serviço (SaaS)?',
       'Há abertura para estabelecer novos acordos com fornecedores de IA?'
@@ -251,7 +267,7 @@ const BMC_BLOCOS = [
   {
     id: 'estrutura-custos',
     nome: 'Estrutura de Custos',
-    area: 'aspetos-financeiras',
+    area: 'aspetos-financeiros',
     descricao: 'Os principais custos envolvidos em operar o modelo de negócio.',
     ficha: false,
     matriz: {
@@ -271,16 +287,13 @@ const BMC_BLOCOS = [
       'Dificuldade de controlo orçamental em modelos de pricing por uso'
     ]
     },
-        indicadores: [
+    indicadores: [
       'Existem custos elevados associados a tarefas manuais ou repetitivas?',
       'Tem capacidade de absorver custos de subscrição recorrentes (SaaS)?',
       'Há mecanismos de controlo ou monitorização de custos operacionais?'
     ]
   }
 ];
-
-// Corrige o id de área do último bloco (erro de escrita evitado)
-BMC_BLOCOS.find(b => b.id === 'estrutura-custos').area = 'aspetos-financeiros';
 
 const PRONTIDAO_DEF = {
   3: 'Condições presentes, estruturadas e utilizáveis.',
@@ -301,6 +314,9 @@ const MATRIZ_PRIORIDADE = {
   1: { 1: 'Diferir', 2: 'Diferir', 3: 'Investimento necessário' }
 };
 
+// NOTA: definido mas ainda não usado em nenhuma página — fica pronto
+// para o dia em que se queira mostrar, junto do selo de prioridade, uma
+// frase a explicar o que cada classificação significa na prática.
 const DESCRICAO_PRIORIDADE = {
   'Prioritário': 'Avançar para a Matriz LLM × BMC com prioridade.',
   'Relevante': 'Potencial identificado; avaliar na Matriz LLM × BMC.',
@@ -308,11 +324,57 @@ const DESCRICAO_PRIORIDADE = {
   'Diferir': 'Prioridade baixa no contexto atual da PME.'
 };
 
+/** Cruza Prontidão × Impacto (1 a 3) e devolve a prioridade do bloco, segundo a Tabela 7. */
 function classificarBloco(prontidao, impacto) {
   return MATRIZ_PRIORIDADE[prontidao][impacto];
 }
 
-// Instrumento 3 — Fichas de Decisão (apenas 4 blocos têm ficha completa)
+/**
+ * Classificação de PME segundo a Recomendação 2003/361/CE — usada tanto
+ * no Passo 1 do index (para mostrar o selo em tempo real e bloquear
+ * "Seguinte" se a empresa não for uma PME) como no resumo exportado em
+ * resultados.js. Estava duplicada nos dois ficheiros; centralizou-se
+ * aqui para não haver duas versões da mesma regra a divergir com o tempo.
+ */
+const ORDEM_TIERS = ['micro', 'pequena', 'media', 'grande'];
+
+/** Classificação só pelo critério de colaboradores (um dos dois critérios da UE — o outro é o financeiro). */
+function tierPorColaboradores(n) {
+  if (n < 10) return 'micro';
+  if (n < 50) return 'pequena';
+  if (n < 250) return 'media';
+  return 'grande';
+}
+
+/**
+ * Classificação final, cruzando colaboradores e escalão financeiro
+ * (volume de negócios OU balanço total). Usa-se o pior dos dois — uma
+ * empresa só conta como "pequena", por exemplo, se AMBOS os critérios
+ * apontarem para pequena ou menos.
+ */
+function classificacaoSME(colaboradores, escalao) {
+  const tierStaff = tierPorColaboradores(colaboradores);
+  return ORDEM_TIERS[Math.max(ORDEM_TIERS.indexOf(tierStaff), ORDEM_TIERS.indexOf(escalao))];
+}
+
+/**
+ * Instrumento 3 — Fichas de Decisão. Só os 4 blocos com `ficha: true` em
+ * BMC_BLOCOS têm entrada aqui (Recursos-Chave, Canais, Relacionamento com
+ * Clientes, Atividades-Chave) — são os que têm densidade de evidência
+ * suficiente na literatura para uma orientação operacional detalhada.
+ *
+ * Cada ficha tem sempre as mesmas seis secções (na mesma ordem em que
+ * aparecem no Instrumento 3 e no resumo da página de resultados):
+ *   contexto             — porque é que este bloco importa, em prosa
+ *   aplicacoes           — lista de aplicações LLM prioritárias
+ *   orientacaoTecnologica — array de {opcao, quando, consideracoes}: as opções técnicas e quando escolher cada uma
+ *   acoes                — lista de passos concretos a executar
+ *   criterios            — array de {criterio, indicador}: como medir se está a resultar
+ *   governanca           — texto sobre RGPD/AI Act relevante para este bloco
+ *
+ * (`pendente: true` é um estado alternativo, ainda por usar — ver o
+ * comentário de renderFichaPendente em instrumento3.js.)
+ */
 const FICHAS = {
   'recursos-chave': {
     titulo: 'Recursos-Chave',

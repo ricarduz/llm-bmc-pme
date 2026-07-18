@@ -25,9 +25,14 @@
   --ink-soft: #52585C;
   --line: #DADDD9;
 
-  /* Sistema de estados dos instrumentos — usa exclusivamente os quatro
-     valores do Manual de Normas Gráficas (preto, azul, azul 50%, cinzento),
-     numa escala de intensidade crescente conforme a prioridade. */
+  /* Sistema de estados dos instrumentos (selos de prioridade, mini-mapa)
+     — usa exclusivamente os quatro valores do Manual de Normas Gráficas
+     (preto, azul, azul 50%, cinzento), numa escala de intensidade
+     crescente: Diferir (cinza, o mais discreto) < Relevante < Prioritário
+     < Investimento necessário (preto, o mais forte — é o estado que mais
+     precisa de chamar a atenção, por bloquear o avanço). Assim evita-se
+     introduzir cores fora da identidade institucional só para "semáforo".
+  */
   --st-diferir: var(--ink-soft);
   --st-diferir-bg: #ECECEA;
   --st-relevante: var(--uab-preto);
@@ -47,6 +52,9 @@
 
 * { box-sizing: border-box; }
 
+/* Checkboxes e radio buttons nativos do navegador seguem a cor
+   institucional — sem isto, ficavam azul-padrão do sistema operativo do
+   utilizador, destoando do resto da paleta. */
 input[type="checkbox"],
 input[type="radio"] {
   accent-color: var(--uab-azul);
@@ -97,7 +105,7 @@ a { color: var(--uab-azul); }
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* em ecrãs muito estreitos, o seletor de idioma + mini-mapa passam para a linha de baixo em vez de espremer a marca */
   row-gap: 10px;
   justify-content: space-between;
   align-items: center;
@@ -122,7 +130,7 @@ a { color: var(--uab-azul); }
   text-transform: uppercase;
 }
 
-/* Seletor de idioma */
+/* Seletor de idioma PT/EN, no cabeçalho de todas as páginas */
 .seletor-idioma {
   display: flex;
   border: 1px solid var(--line);
@@ -154,7 +162,14 @@ a { color: var(--uab-azul); }
   outline-offset: 2px;
 }
 
-/* Mini-mapa: grelha 3x3 que espelha o BMC, usada como indicador de progresso */
+/**
+ * Mini-mapa: a grelha 3x3 que espelha o BMC, no cabeçalho de todas as
+ * páginas. Serve dois propósitos ao mesmo tempo: (1) indicador visual de
+ * progresso do diagnóstico, e (2) botão que abre o modal "Sobre este
+ * projeto" (ver data-modal-trigger="sobre" no HTML e js/modal.js).
+ * É um <button>, não uma <div> — por isso o reset de background/border/
+ * padding a seguir, para não parecer um botão do sistema operativo.
+ */
 .mapa-bmc {
   display: grid;
   grid-template-columns: repeat(3, 10px);
@@ -163,7 +178,7 @@ a { color: var(--uab-azul); }
   background: none;
   border: none;
   padding: 4px;
-  margin: -4px;
+  margin: -4px; /* compensa o padding, para não empurrar o resto do cabeçalho */
   border-radius: 4px;
   cursor: pointer;
 }
@@ -178,16 +193,21 @@ a { color: var(--uab-azul); }
 .mapa-bmc i {
   display: block;
   border-radius: 2px;
-  background: var(--line);
+  background: var(--line); /* célula "vazia", por defeito */
 }
 
+/* Cada script de página (instrumento1.js, etc.) acrescenta a classe
+   "preenchido" e o atributo data-p à célula correspondente assim que um
+   bloco é respondido — e remove os dois quando deixa de haver resposta
+   (ver atualizarMapa() nesses ficheiros). Sem essa remoção, uma célula
+   ficava "presa" com a cor antiga depois de se limpar o diagnóstico. */
 .mapa-bmc i.preenchido[data-p="Diferir"] { background: var(--uab-cinza); }
 .mapa-bmc i.preenchido[data-p="Relevante"] { background: var(--uab-azul-tint); }
 .mapa-bmc i.preenchido[data-p="Prioritário"] { background: var(--uab-azul); }
 .mapa-bmc i.preenchido[data-p="Investimento necessário"] { background: var(--uab-preto); }
 
 main {
-  padding: 48px 0 96px;
+  padding: 48px 0 32px;
 }
 
 .eyebrow {
@@ -203,10 +223,10 @@ main {
 .lead {
   font-size: 1.1rem;
   color: var(--ink-soft);
-  max-width: 60ch;
+  max-width: 60ch; /* linhas de texto longas demais ficam difíceis de ler — 60 caracteres é o valor clássico recomendado para leitura confortável */
 }
 
-/* Cartões */
+/* Cartões — o bloco visual base, reutilizado em quase todo o lado (perguntas, tabelas, cartões de instrumento, etc.) */
 .cartao {
   background: var(--paper);
   border: 1px solid var(--line);
@@ -215,6 +235,7 @@ main {
   margin-bottom: 20px;
 }
 
+/* Cartão clicável (os 3 cartões de instrumento no index, que abrem um modal de explicação) */
 .cartao-clicavel {
   cursor: pointer;
   transition: border-color 0.15s, box-shadow 0.15s;
@@ -228,6 +249,13 @@ main {
 
 .cartao-clicavel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
 
+/**
+ * Os três estados do percurso "abre um bloco de cada vez" do Instrumento 1
+ * (ver calcularVisao() em instrumento1.js):
+ *   .cartao-bloqueado  — ainda não se chegou lá; esbatido e sem interação
+ *   .cartao-colapsado  — já respondido, resumo clicável para reabrir
+ *   (o terceiro estado, "expandido", é só o .cartao normal, com os inputs)
+ */
 .cartao-bloqueado {
   opacity: 0.45;
   pointer-events: none;
@@ -284,7 +312,7 @@ main {
   font-size: 0.94rem;
 }
 
-/* Grupos de escolha (Prontidão / Impacto) */
+/* Grupos de escolha (Prontidão / Impacto), no Instrumento 1 */
 .eixo { margin-bottom: 16px; }
 
 .eixo-titulo {
@@ -318,6 +346,11 @@ main {
   font-weight: 500;
 }
 
+/* :has() deixa estilizar o <label> com base no estado do <input> lá
+   dentro, sem precisar de JavaScript para alternar uma classe — só
+   funciona em navegadores relativamente recentes (2023+), mas como isto
+   é só um destaque visual (a opção continua a funcionar sem ele), não há
+   problema em usar sem verificação extra de compatibilidade. */
 .escala label:has(input:checked) {
   border-color: var(--uab-azul);
   background: #EEF1F3;
@@ -328,7 +361,7 @@ main {
   outline-offset: 2px;
 }
 
-/* Selo de prioridade */
+/* Selo de prioridade — reutiliza o sistema de cores --st-* definido no :root */
 .selo {
   display: inline-block;
   font-family: var(--font-mono);
@@ -356,7 +389,7 @@ main {
   background: var(--uab-preto);
   color: var(--paper);
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: none; /* para quando .botao é aplicado a um <a>, não só a <button> */
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -415,7 +448,10 @@ th {
   color: var(--ink-soft);
 }
 
-/* Abas genéricas (Instrumento 3 e Passo 2 dos resultados) */
+/* Abas genéricas — usadas em dois sítios: a navegação entre Fichas de
+   Decisão no Instrumento 3 (.aba-ficha) e as abas Descarregar/Resultados
+   no Passo 2 da página de resultados (.aba-painel). Mesma aparência nos
+   dois casos, por isso as regras estão agrupadas em vez de duplicadas. */
 .abas-fichas, .abas-painel {
   display: flex;
   flex-wrap: wrap;
@@ -447,7 +483,7 @@ th {
 
 .aba-ficha:focus-visible, .aba-painel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
 
-/* Indicador de passos (index) */
+/* Indicador de passos (as barrinhas no topo do index e da página de resultados) */
 .passos {
   display: flex;
   gap: 8px;
@@ -464,7 +500,7 @@ th {
 .passos span.ativo { background: var(--uab-azul); }
 .passos span.concluido { background: var(--uab-azul-tint); }
 
-/* Campos de formulário (perfil da empresa) */
+/* Campos de formulário (Passo 1 do index — perfil da empresa) */
 .campo { margin-bottom: 22px; }
 
 .campo label {
@@ -494,12 +530,6 @@ th {
   border-color: var(--uab-azul);
 }
 
-.campo-ajuda {
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  margin-top: 6px;
-}
-
 .opcoes-inline {
   display: flex;
   gap: 16px;
@@ -515,6 +545,7 @@ th {
   cursor: pointer;
 }
 
+/* Selo com a classificação de PME estimada (micro/pequena/média/grande) */
 .classificacao {
   display: inline-block;
   font-family: var(--font-mono);
@@ -526,6 +557,11 @@ th {
   margin-top: 4px;
 }
 
+.classificacao[hidden] { display: none; }
+
+/* Aviso de bloqueio (ex: "esta empresa não é uma PME") — usa preto, o
+   tom mais forte da paleta, porque impede mesmo de avançar; não é só um
+   alerta informativo como o .marcador-pendente. */
 .aviso-bloqueio {
   display: flex;
   align-items: center;
@@ -539,7 +575,9 @@ th {
   margin-top: 10px;
 }
 
-/* Grelha explicativa do BMC (passo 2) */
+.aviso-bloqueio[hidden] { display: none; }
+
+/* Grelha explicativa do BMC (Passo 2 do index) */
 .grelha-explicativa {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -578,7 +616,19 @@ th {
   .grelha-explicativa { grid-template-columns: 1fr; }
 }
 
-/* Modal "Sobre este projeto" */
+/**
+ * Modal "Sobre este projeto" e os modais de explicação dos instrumentos
+ * (todos usam .modal-backdrop / .modal — ver js/modal.js para a lógica
+ * de abrir/fechar, que é genérica para qualquer par gatilho/modal).
+ *
+ * O `.modal-backdrop[hidden] { display: none; }` a seguir não é
+ * redundante — é mesmo necessário: como .modal-backdrop já tem
+ * `display: flex` (para centrar a caixa branca), isso sobrepõe-se ao
+ * comportamento nativo do atributo HTML `hidden`, que só funciona
+ * sozinho quando não há nenhum `display` definido no CSS para esse
+ * elemento. Sem esta regra extra, `elemento.hidden = true` em JavaScript
+ * não escondia o modal nenhuma - ficava sempre visível.
+ */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -623,13 +673,12 @@ th {
 .modal h2 { margin-bottom: 18px; padding-right: 24px; }
 .modal h3 { font-size: 0.92rem; color: var(--uab-azul); margin-top: 22px; }
 .modal p:last-child { margin-bottom: 0; }
-.modal .placeholder { color: var(--ink-soft); font-style: italic; }
 
 /* Rodapé institucional — logotipos UAb / UTAD, fundo branco (idem cabeçalho) */
 .rodape {
   background: var(--paper);
   border-top: 1px solid var(--line);
-  margin-top: 64px;
+  margin-top: 40px;
 }
 
 .rodape-inner {
@@ -662,21 +711,24 @@ th {
   text-align: right;
 }
 
+/* Respeita quem desativou animações no sistema operativo (acessibilidade) — desliga todas as transições em vez de as ajustar uma a uma. */
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
 
+/* Ajustes para ecrãs de telemóvel — agrupados no fim de propósito, para
+   ficar fácil de ver tudo o que muda em conjunto num ecrã pequeno. */
 @media (max-width: 640px) {
   .escala { grid-template-columns: 1fr; }
   .cartao { padding: 20px; }
   .container { padding: 0 16px; }
-  main { padding: 32px 0 64px; }
+  main { padding: 32px 0 28px; }
 
-  table { display: block; overflow-x: auto; white-space: nowrap; }
+  table { display: block; overflow-x: auto; } /* scroll horizontal como rede de segurança; o texto quebra linha normalmente dentro de cada célula (sem "nowrap" universal, que tornava as tabelas de texto longo — Fichas de Decisão — praticamente ilegíveis em mobile) */
 
   .acoes-rodape { flex-direction: column; align-items: stretch; gap: 12px; }
   .acoes-rodape .botao { width: 100%; justify-content: center; }
-  .acoes-rodape > div { flex-direction: column; gap: 10px !important; }
+  .acoes-rodape > div { flex-direction: column; gap: 10px !important; } /* quando há um grupo de 2 botões aninhado dentro de .acoes-rodape (ver resultados.html/index.html) */
 
   .cartao-cabecalho { flex-wrap: wrap; row-gap: 8px; }
 
