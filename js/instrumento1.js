@@ -224,10 +224,10 @@ function renderResumo(estadoAtual) {
     const r = estadoAtual.diagnostico[bloco.id];
     return `
       <tr>
-        <td>${tBloco(bloco).nome}</td>
-        <td>${r.prontidao}</td>
-        <td>${r.impacto}</td>
-        <td><span class="selo" data-p="${r.prioridade}">${tPrioridade(r.prioridade)}</span></td>
+        <td data-label="${t('th-bloco')}">${tBloco(bloco).nome}</td>
+        <td data-label="${t('th-prontidao')}">${r.prontidao}</td>
+        <td data-label="${t('th-impacto')}">${r.impacto}</td>
+        <td data-label="${t('th-prioridade')}"><span class="selo" data-p="${r.prioridade}">${tPrioridade(r.prioridade)}</span></td>
       </tr>`;
   }).join('');
 
