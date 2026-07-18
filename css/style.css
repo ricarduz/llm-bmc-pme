@@ -286,9 +286,25 @@ main {
 .cartao-cabecalho {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 16px;
   margin-bottom: 14px;
+}
+
+/* O bloco de texto à esquerda (area-tag + h3) pode encolher e quebrar
+   linha dentro de si mesmo — min-width:0 é o que permite isso num item
+   flex (sem ele, um filho com texto longo nunca encolhe abaixo do
+   tamanho do próprio conteúdo, e era isso que empurrava o selo para
+   baixo em nomes de bloco compridos, como "Relacionamento com Clientes"). */
+.cartao-cabecalho > div {
+  min-width: 0;
+  flex: 1;
+}
+
+/* O selo/cadeado nunca encolhe nem quebra — fica sempre inteiro e à direita. */
+.cartao-cabecalho .selo,
+.cartao-cabecalho .selo-cadeado {
+  flex-shrink: 0;
 }
 
 .area-tag {
@@ -720,17 +736,50 @@ th {
    ficar fácil de ver tudo o que muda em conjunto num ecrã pequeno. */
 @media (max-width: 640px) {
   .escala { grid-template-columns: 1fr; }
+  .escala label { padding: 8px 10px; font-size: 0.8rem; }
+  .eixo { margin-bottom: 12px; }
+  .eixo-titulo { margin-bottom: 6px; font-size: 0.85rem; }
   .cartao { padding: 20px; }
   .container { padding: 0 16px; }
   main { padding: 32px 0 28px; }
 
   table { display: block; overflow-x: auto; } /* scroll horizontal como rede de segurança; o texto quebra linha normalmente dentro de cada célula (sem "nowrap" universal, que tornava as tabelas de texto longo — Fichas de Decisão — praticamente ilegíveis em mobile) */
 
+  /* Exceção: a tabela "Resultado global do diagnóstico" (Instrumento 1 e
+     resultados) tem poucas colunas mas nomes de bloco compridos — em vez
+     de scroll lateral, cada linha vira um pequeno cartão, com o nome da
+     coluna (data-label, escrito pelo JS) a aparecer antes do valor. */
+  #tabela-resumo, #tabela-diagnostico { overflow-x: visible; }
+  #tabela-resumo thead, #tabela-diagnostico thead { display: none; }
+  #tabela-resumo tbody, #tabela-diagnostico tbody,
+  #tabela-resumo tr, #tabela-diagnostico tr { display: block; }
+  #tabela-resumo tr, #tabela-diagnostico tr {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    padding: 4px 12px;
+  }
+  #tabela-resumo td, #tabela-diagnostico td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  #tabela-resumo td:last-child, #tabela-diagnostico td:last-child { border-bottom: none; }
+  #tabela-resumo td::before, #tabela-diagnostico td::before {
+    content: attr(data-label);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+
   .acoes-rodape { flex-direction: column; align-items: stretch; gap: 12px; }
   .acoes-rodape .botao { width: 100%; justify-content: center; }
   .acoes-rodape > div { flex-direction: column; gap: 10px !important; } /* quando há um grupo de 2 botões aninhado dentro de .acoes-rodape (ver resultados.html/index.html) */
-
-  .cartao-cabecalho { flex-wrap: wrap; row-gap: 8px; }
 
   .rodape-inner { flex-direction: column; align-items: flex-start; }
   .rodape-texto { text-align: left; }
