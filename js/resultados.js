@@ -17,7 +17,7 @@ const estadoR = lerEstado();
  * pronto (o payload inclui "tipo": "diagnostico" ou "contacto", para
  * encaminhar para folhas diferentes na mesma folha de cálculo).
  */
-const GOOGLE_SHEETS_URL = '';
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbya_xjwmUnaodRxl4W6R4l2ID_5A3c0-F7jdZzh5VyhjNrKE7vHLdGKCM9f-cw16E8T/exec';
 
 /** Envio "melhor esforço": se falhar (sem rede, URL por preencher, etc.), só regista no console — nunca impede o utilizador de continuar a usar a página. `mode: 'no-cors'` evita o preflight de CORS, ao custo de não se conseguir ler a resposta (aceitável, porque não se precisa dela). */
 function enviarParaGoogleSheets(payload) {
