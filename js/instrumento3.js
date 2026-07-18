@@ -1,8 +1,32 @@
+/**
+ * Instrumento 3 — Fichas de Decisão.
+ *
+ * Só aparecem aqui os blocos que o utilizador escolheu aprofundar no
+ * Instrumento 2 (e que tenham mesmo uma Ficha disponível — dos 9 blocos
+ * do BMC, só 4 têm ficha: Canais, Relacionamento com Clientes,
+ * Atividades-Chave e Recursos-Chave). Quando há mais do que uma
+ * selecionada, mostram-se por abas em vez de empilhadas — com 2 ou 3
+ * fichas completas (cada uma com 6 secções e várias tabelas), ler tudo
+ * de seguida tornava-se confuso.
+ *
+ * Nota: esta página ainda não tem seletor de idioma — o conteúdo das
+ * fichas (FICHAS, em data.js) só existe em português. Por isso os
+ * textos fixos aqui (títulos das secções, "Ficha de Decisão —", etc.)
+ * estão escritos diretamente em português, sem passar por t()/tBloco().
+ */
+
 const estado3 = lerEstado();
 
+// Filtra a seleção feita no Instrumento 2 aos blocos que realmente têm
+// ficha em data.js — devia ser sempre igual à seleção completa (a
+// checkbox de blocos sem ficha vem sempre desativada), mas o filter()
+// aqui é uma segunda proteção, sem custo, contra dados inconsistentes.
 const idsSelecionados = estado3.blocosSelecionados.filter(id => FICHAS[id]);
+
+// Qual ficha está visível agora. Começa na primeira da lista.
 let fichaAtivaId = idsSelecionados[0];
 
+/** As abas do topo — só aparecem quando há mais de uma ficha para escolher; com só uma, não fazem falta. */
 function renderAbas() {
   if (idsSelecionados.length <= 1) return '';
   return `
@@ -14,6 +38,7 @@ function renderAbas() {
     </div>`;
 }
 
+/** As seis secções de uma Ficha de Decisão completa: contexto, aplicações, orientação tecnológica (tabela de opções), ações concretas, critérios de avaliação (tabela), e conformidade/governança. */
 function renderFichaCompleta(bloco, ficha) {
   return `
     <div class="cartao">
@@ -58,6 +83,14 @@ function renderFichaCompleta(bloco, ficha) {
   `;
 }
 
+/**
+ * Estado "por preencher" de uma ficha — neste momento não é usado por
+ * nenhuma das 4 fichas (todas estão completas em data.js), mas fica
+ * pronto para o caso de, no futuro, se adicionar/editar uma ficha e
+ * quiser mostrar-se um aviso em vez de conteúdo a meio, em vez de deixar
+ * a página rebentar por faltarem campos (contexto, aplicacoes, etc.).
+ * Ativa-se marcando `pendente: true` no objeto da ficha, em data.js.
+ */
 function renderFichaPendente(bloco, ficha) {
   return `
     <div class="cartao">
@@ -78,6 +111,7 @@ function renderFichaPendente(bloco, ficha) {
   `;
 }
 
+/** Desenha as abas (se aplicável) e o conteúdo da ficha ativa. Se a ficha ativa deixar de estar na lista (ex: idioma mudou os ids — não acontece aqui, mas é uma proteção barata), volta para a primeira. */
 function render() {
   if (idsSelecionados.length === 0) {
     document.getElementById('lista-fichas').innerHTML = `
@@ -99,18 +133,23 @@ function render() {
     botao.addEventListener('click', () => {
       fichaAtivaId = botao.dataset.aba;
       render();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // ao trocar de aba, sobe ao topo — sem isto, se se mudasse de aba a meio do scroll, ficava-se a meio de outra ficha
     });
   });
 }
 
+/** Mini-grelha do cabeçalho com o resultado do diagnóstico (igual às outras páginas — ver o comentário equivalente em instrumento1.js para a razão do "else"). */
 function atualizarMapa() {
   const celulas = document.querySelectorAll('#mapa i');
   BMC_BLOCOS.forEach((bloco, idx) => {
+    if (!celulas[idx]) return;
     const resultado = estado3.diagnostico[bloco.id];
-    if (resultado && celulas[idx]) {
+    if (resultado) {
       celulas[idx].classList.add('preenchido');
       celulas[idx].setAttribute('data-p', resultado.prioridade);
+    } else {
+      celulas[idx].classList.remove('preenchido');
+      celulas[idx].removeAttribute('data-p');
     }
   });
 }
