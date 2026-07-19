@@ -166,6 +166,24 @@ function todosBlocosDiferir() {
   return valores.length === BMC_BLOCOS.length && valores.every(v => v.prioridade === 'Diferir');
 }
 
+/**
+ * Diagrama do BMC no topo da aba "Resultados": mostra de relance quais
+ * blocos foram escolhidos para aprofundamento no Instrumento 2 (a azul)
+ * e quais não foram considerados (esbatidos) — antes de entrar nos
+ * detalhes da tabela de prioridade e das Fichas de Decisão, logo abaixo.
+ */
+function renderCanvasSelecao() {
+  const el = document.getElementById('canvas-selecao');
+  if (!el) return;
+  el.innerHTML = BMC_BLOCOS.map(bloco => {
+    const selecionado = estadoR.blocosSelecionados.includes(bloco.id);
+    return `
+      <div class="bmc-bloco ${selecionado ? 'bmc-bloco--selecionado' : 'bmc-bloco--nao-selecionado'}" data-bmc="${bloco.id}">
+        <h4>${tBloco(bloco).nome}</h4>
+      </div>`;
+  }).join('');
+}
+
 function renderAprofundados() {
   const el = document.getElementById('blocos-aprofundados');
   if (todosBlocosDiferir()) {
@@ -361,6 +379,26 @@ function construirRegisto(origem) {
   };
 }
 
+/**
+ * Mapa de cada bloco para a sua posição clássica no desenho do Business
+ * Model Canvas — os mesmos nomes de grid-area usados em .bmc-diagrama,
+ * em style.css. Usado aqui porque o ficheiro exportado não pode
+ * depender do style.css do site (tem de continuar a abrir corretamente
+ * copiado para outro computador), por isso o CSS do diagrama vai
+ * embutido no próprio ficheiro, com estilos inline por bloco.
+ */
+const AREA_GRID = {
+  'parcerias-chave': 'parcerias',
+  'atividades-chave': 'atividades',
+  'recursos-chave': 'recursos',
+  'proposta-valor': 'valor',
+  'relacionamento-clientes': 'relacionamento',
+  'canais': 'canais',
+  'segmentos-clientes': 'segmentos',
+  'estrutura-custos': 'custos',
+  'fontes-receita': 'receita'
+};
+
 /** Utilitário genérico para descarregar uma string como ficheiro — cria um link temporário, "clica" nele por código, e limpa logo a seguir (URL.revokeObjectURL evita acumular URLs órfãos na memória do separador). */
 function descarregarFicheiro(conteudo, nomeFicheiro, tipoMime) {
   const blob = new Blob([conteudo], { type: tipoMime });
@@ -428,6 +466,11 @@ async function construirResumoHTML() {
       }).join('<hr style="margin:24px 0; border:none; border-top:1px solid #DADDD9;">')
     : `<p>${t('sintese-nenhum-bloco')}</p>`;
 
+  const canvasSelecaoHTML = BMC_BLOCOS.map(bloco => {
+    const selecionado = estadoR.blocosSelecionados.includes(bloco.id);
+    return `<div class="bmc-bloco ${selecionado ? 'sel' : 'nsel'}" style="grid-area:${AREA_GRID[bloco.id]};"><h4>${tBloco(bloco).nome}</h4></div>`;
+  }).join('');
+
   // O perfil da empresa só aparece se o Passo 1 do index chegou a ser
   // preenchido (perfil.setor existe) — sessões antigas, de antes desse
   // ecrã existir, não têm este bloco no ficheiro exportado.
@@ -463,6 +506,28 @@ async function construirResumoHTML() {
   footer .logos { display: flex; align-items: center; gap: 24px; margin-bottom: 12px; }
   footer .logos img { height: 40px; width: auto; display: block; }
   footer p { font-size: 0.8rem; color: #52585C; margin: 0; }
+  .bmc-diagrama {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.575fr 0.575fr 1fr 1fr;
+    grid-template-areas:
+      "parcerias  atividades  valor  valor  relacionamento  segmentos"
+      "parcerias  recursos    valor  valor  canais          segmentos"
+      "custos     custos      custos receita receita        receita";
+    gap: 1px;
+    background: #000000;
+    border: 2px solid #000000;
+    margin-top: 12px;
+  }
+  .bmc-bloco { background: #FFFFFF; padding: 10px; min-width: 0; }
+  .bmc-bloco h4 { font-size: 0.74rem; font-weight: 700; line-height: 1.25; margin: 0; color: #000000; }
+  .bmc-bloco.sel { background: #6D8297; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bmc-bloco.sel h4 { color: #FFFFFF; }
+  .bmc-bloco.nsel { opacity: 0.45; }
+  @media (max-width: 640px) {
+    .bmc-diagrama { grid-template-columns: 1fr; grid-template-areas: none; }
+    .bmc-bloco { grid-area: auto !important; padding: 12px; }
+    .bmc-bloco h4 { font-size: 0.88rem; }
+  }
   @media print { body { margin: 0; } }
 </style>
 </head>
@@ -471,6 +536,10 @@ async function construirResumoHTML() {
   <p class="data">${dataGeracao}</p>
 
   ${blocoPerfil}
+
+  <h2>${t('sintese-canvas-titulo')}</h2>
+  <p style="color:#52585C; font-size:0.85rem;">${t('sintese-canvas-lead')}</p>
+  <div class="bmc-diagrama">${canvasSelecaoHTML}</div>
 
   <h2>${t('sintese-tabela-titulo')}</h2>
   <table>
@@ -565,10 +634,12 @@ document.getElementById('terminar').addEventListener('click', () => {
 // sozinho quando o idioma muda — só o texto marcado com data-i18n é que
 // tem esse comportamento automático (ver aplicarTraducoes, em i18n.js).
 document.addEventListener('idioma:alterado', () => {
+  renderCanvasSelecao();
   renderTabela();
   renderAprofundados();
 });
 
+renderCanvasSelecao();
 renderTabela();
 renderAprofundados();
 atualizarMapa();
