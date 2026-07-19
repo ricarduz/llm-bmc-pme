@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLMemPME — Framework de adoção de LLM em PME</title>
+<meta name="description" content="Ferramenta interativa de demonstração do framework de adoção de Large Language Models por PME, estruturado no Business Model Canvas.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLMemPME<span>Framework LLM × BMC</span></a>
+    <div class="mapa-bmc" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <span class="eyebrow">Instrumento de demonstração · dissertação de Mestrado</span>
+    <h1>Um percurso guiado para decidir onde os LLM fazem sentido na sua PME</h1>
+    <p class="lead">
+      Esta ferramenta instancia sequencialmente os três instrumentos do framework
+      de apoio à adoção de Large Language Models (LLM) por Pequenas e Médias
+      Empresas, estruturado no Business Model Canvas (BMC). Responde, por esta
+      ordem, a três perguntas.
+    </p>
+
+    <div class="cartao">
+      <h3>1. A minha empresa está pronta?</h3>
+      <p class="nota">Instrumento 1 — Diagnóstico de Pré-requisitos. Avalia, bloco a bloco, a prontidão operacional e a criticidade de cada área do seu negócio.</p>
+    </div>
+    <div class="cartao">
+      <h3>2. Onde faz sentido para a minha PME?</h3>
+      <p class="nota">Instrumento 2 — Matriz LLM × BMC. Mapeia aplicações, oportunidades e riscos nos blocos identificados como prioritários.</p>
+    </div>
+    <div class="cartao">
+      <h3>3. Como avanço neste bloco?</h3>
+      <p class="nota">Instrumento 3 — Fichas de Decisão. Orientação tecnológica e ações concretas para os blocos com maior densidade de evidência empírica.</p>
+    </div>
+
+    <div class="cartao" style="border-color: var(--ink); margin-top: 32px;">
+      <h3>Antes de começar</h3>
+      <p class="nota">
+        As suas respostas ficam guardadas apenas neste navegador enquanto usa a
+        ferramenta. No final, pode exportar os resultados; nenhum dado pessoal
+        identificativo é recolhido por defeito.
+      </p>
+      <label style="display:flex; gap:10px; align-items:flex-start; margin-top:16px; cursor:pointer;">
+        <input type="checkbox" id="consentimento" style="margin-top:4px;">
+        <span>Li o parágrafo acima e pretendo iniciar o diagnóstico.</span>
+      </label>
+    </div>
+
+    <div class="acoes-rodape" style="border-top:none; padding-top:8px; justify-content:flex-end;">
+      <button class="botao" id="iniciar" disabled>Iniciar diagnóstico →</button>
+    </div>
+  </div>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script>
+  const checkbox = document.getElementById('consentimento');
+  const botao = document.getElementById('iniciar');
+
+  checkbox.addEventListener('change', () => {
+    botao.disabled = !checkbox.checked;
+  });
+
+  botao.addEventListener('click', () => {
+    const estado = lerEstado();
+    estado.consentimento = true;
+    guardarEstado(estado);
+    window.location.href = 'instrumento1.html';
+  });
+</script>
+</body>
+</html>

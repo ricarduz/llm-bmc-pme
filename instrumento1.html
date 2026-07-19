@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instrumento 1 — Diagnóstico de Pré-requisitos · LLMemPME</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLMemPME<span>Framework LLM × BMC</span></a>
+    <div class="mapa-bmc" id="mapa" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <span class="eyebrow">Instrumento 1 de 3</span>
+    <h1>Diagnóstico de Pré-requisitos</h1>
+    <p class="lead">
+      Avalie cada bloco do BMC nos eixos <strong>Prontidão</strong> e
+      <strong>Impacto</strong>, numa escala de 1 (Baixo) a 3 (Alto), tendo a
+      sua PME como referência. Os indicadores servem apenas para orientar a
+      reflexão — a classificação final é a sua avaliação global do bloco.
+    </p>
+
+    <div id="lista-blocos"></div>
+
+    <div class="acoes-rodape">
+      <span class="nota" id="progresso">0 de 9 blocos avaliados</span>
+      <button class="botao" id="continuar" disabled>Continuar para a Matriz LLM × BMC →</button>
+    </div>
+  </div>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/instrumento1.js"></script>
+</body>
+</html>
