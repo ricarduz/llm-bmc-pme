@@ -50,3 +50,11 @@ function atualizarDiagnostico(blocoId, prontidao, impacto) {
   guardarEstado(estado);
   return estado;
 }
+
+function limparDiagnostico() {
+  const estado = lerEstado();
+  estado.diagnostico = {};
+  estado.blocosSelecionados = []; // dependem da classificação, ficariam órfãos
+  guardarEstado(estado);
+  return estado;
+}

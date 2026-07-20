@@ -3,25 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Instrumento 1 — Diagnóstico de Pré-requisitos · LLMemPME</title>
+<title>Instrumento 1 — Diagnóstico de Pré-requisitos · LLM em PME</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="topo">
   <div class="topo-inner">
-    <a class="marca" href="index.html">LLMemPME<span>Framework LLM × BMC</span></a>
-    <div class="mapa-bmc" id="mapa" aria-hidden="true">
-      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="seletor-idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </button>
     </div>
   </div>
 </header>
 
 <main>
   <div class="container">
-    <span class="eyebrow">Instrumento 1 de 3</span>
-    <h1>Diagnóstico de Pré-requisitos</h1>
-    <p class="lead">
+    <span class="eyebrow" data-i18n="i1-eyebrow">Instrumento 1 de 3</span>
+    <h1 data-i18n="i1-h1">Diagnóstico de Pré-requisitos</h1>
+    <p class="lead" data-i18n="i1-lead">
       Avalie cada bloco do BMC nos eixos <strong>Prontidão</strong> e
       <strong>Impacto</strong>, numa escala de 1 (Baixo) a 3 (Alto), tendo a
       sua PME como referência. Os indicadores servem apenas para orientar a
@@ -30,13 +38,48 @@
 
     <div id="lista-blocos"></div>
 
+    <div id="resumo-final" class="cartao" hidden>
+      <h3 data-i18n="i1-resumo-titulo">Resultado global do diagnóstico</h3>
+      <p class="nota" data-i18n="i1-resumo-lead">Perfil de prioridade dos nove blocos do BMC, resultante das suas respostas.</p>
+      <table id="tabela-resumo"></table>
+    </div>
+
+    <p class="aviso" id="aviso-diagnostico" data-i18n="aviso-diagnostico" hidden>Responda aos 9 blocos para ver o resultado global e continuar.</p>
     <div class="acoes-rodape">
       <span class="nota" id="progresso">0 de 9 blocos avaliados</span>
-      <button class="botao" id="continuar" disabled>Continuar para a Matriz LLM × BMC →</button>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="botao secundario" id="limpar" data-i18n="i1-limpar">Limpar respostas</button>
+        <button class="botao" id="continuar" data-i18n="i1-continuar" disabled>Continuar para a Matriz LLM × BMC →</button>
+      </div>
     </div>
   </div>
 </main>
 
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto" data-i18n="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
+    <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-titulo">Sobre este projeto</h2>
+
+    <h3 data-i18n="sobre-tese-titulo">Sobre a tese em curso</h3>
+    <p data-i18n="sobre-tese-texto">Esta ferramenta e o artefacto central da dissertacao.</p>
+
+    <h3 data-i18n="sobre-autor-titulo">Sobre o autor</h3>
+    <p class="placeholder" data-i18n="sobre-autor-texto">[Escreva aqui uma breve apresentacao sua.]</p>
+  </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/modal.js"></script>
 <script src="js/data.js"></script>
 <script src="js/state.js"></script>
 <script src="js/instrumento1.js"></script>
