@@ -1,0 +1,15 @@
+<svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grelha do Business Model Canvas">
+  <rect width="36" height="36" rx="6" fill="#FFFFFF"/>
+  <!-- linha 1 -->
+  <rect x="3" y="3" width="8" height="8" rx="1.5" fill="#FFFFFF" stroke="#DADDD9" stroke-width="1"/>
+  <rect x="14" y="3" width="8" height="8" rx="1.5" fill="#B3BCC9"/>
+  <rect x="25" y="3" width="8" height="8" rx="1.5" fill="#FFFFFF" stroke="#DADDD9" stroke-width="1"/>
+  <!-- linha 2 -->
+  <rect x="3" y="14" width="8" height="8" rx="1.5" fill="#000000"/>
+  <rect x="14" y="14" width="8" height="8" rx="1.5" fill="#6D8297"/>
+  <rect x="25" y="14" width="8" height="8" rx="1.5" fill="#FFFFFF" stroke="#DADDD9" stroke-width="1"/>
+  <!-- linha 3 -->
+  <rect x="3" y="25" width="8" height="8" rx="1.5" fill="#FFFFFF" stroke="#DADDD9" stroke-width="1"/>
+  <rect x="14" y="25" width="8" height="8" rx="1.5" fill="#B3BCC9"/>
+  <rect x="25" y="25" width="8" height="8" rx="1.5" fill="#6D8297"/>
+</svg>
