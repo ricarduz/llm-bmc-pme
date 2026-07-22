@@ -151,7 +151,6 @@ function atualizarProgresso() {
 
   const completo = avaliados === BMC_BLOCOS.length;
   document.getElementById('continuar').disabled = !completo;
-  document.getElementById('aviso-diagnostico').hidden = completo;
   document.getElementById('resumo-final').hidden = !completo;
   if (completo) renderResumo(estadoAtual);
 }
