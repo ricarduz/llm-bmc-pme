@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resultados da sessão · LLM em PME (versão estática)</title>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 /*
@@ -13,19 +20,7 @@
   peso semelhantes) até haver licença de webfont. Ver nota no README.
 */
 
-/* Reserva sempre o espaço da barra de scroll vertical, mesmo quando não
-   é precisa — sem isto, sempre que o conteúdo muda de altura (mudar de
-   idioma, abrir um modal, avançar de passo) e cruza a fronteira de
-   precisar ou não de scroll, a página inteira salta lateralmente pela
-   largura da barra. Afeta sobretudo Windows/Linux, onde a barra ocupa
-   espaço; em macOS com barra sobreposta isto não se nota tanto — mas a
-   correção não faz mal nenhum nesse caso. */
-html {
-  scrollbar-gutter: stable;
-}
-
 :root {
-  color-scheme: light;
   --uab-preto: #000000;
   --uab-azul: #6D8297;
   --uab-azul-tint: #B3BCC9;
@@ -247,6 +242,20 @@ main {
   margin-bottom: 20px;
 }
 
+/* Cartão clicável (os 3 cartões de instrumento no index, que abrem um modal de explicação) */
+.cartao-clicavel {
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cartao-clicavel:hover,
+.cartao-clicavel:focus-visible {
+  border-color: var(--uab-azul);
+  box-shadow: 0 2px 10px rgba(109, 130, 151, 0.15);
+}
+
+.cartao-clicavel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+
 /**
  * Os três estados do percurso "abre um bloco de cada vez" do Instrumento 1
  * (ver calcularVisao() em instrumento1.js):
@@ -265,17 +274,6 @@ main {
   font-family: var(--font-mono);
   font-size: 0.9rem;
   color: var(--ink-soft);
-}
-
-/* Indicador neutro de "já respondido" no Instrumento 1 (percurso de
-   especialistas) — não revela a prioridade calculada (Diferir/Relevante/
-   Prioritário/Investimento necessário) enquanto se está a responder, só
-   confirma que o bloco já tem resposta. A prioridade só aparece na
-   tabela-resumo final, depois dos 9 blocos respondidos. */
-.selo-respondido {
-  font-size: 1rem;
-  color: var(--uab-azul);
-  flex-shrink: 0;
 }
 
 .cartao-colapsado {
@@ -310,13 +308,10 @@ main {
   flex: 1;
 }
 
-/* O selo/cadeado nunca encolhe — fica sempre à direita; pode quebrar
-   para 2 linhas com texto mais comprido ("Investimento necessário"),
-   em vez de sair da caixa. */
+/* O selo/cadeado nunca encolhe nem quebra — fica sempre inteiro e à direita. */
 .cartao-cabecalho .selo,
 .cartao-cabecalho .selo-cadeado {
   flex-shrink: 0;
-  max-width: 130px;
 }
 
 .area-tag {
@@ -398,10 +393,7 @@ main {
   letter-spacing: 0.03em;
   padding: 4px 10px;
   border-radius: 999px;
-  max-width: 100%;
-  white-space: normal; /* "Investimento necessário" é bem mais comprido do que os outros três valores — com nowrap, saía da caixa em vez de quebrar linha */
-  text-align: center;
-  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .selo[data-p="Prioritário"] { background: var(--st-prioritario-bg); color: var(--st-prioritario); }
@@ -479,9 +471,11 @@ th {
   color: var(--ink-soft);
 }
 
-/* Abas genéricas — usadas na navegação entre Fichas de Decisão no
-   Instrumento 3 (.aba-ficha). */
-.abas-fichas {
+/* Abas genéricas — usadas em dois sítios: a navegação entre Fichas de
+   Decisão no Instrumento 3 (.aba-ficha) e as abas Descarregar/Resultados
+   no Passo 2 da página de resultados (.aba-painel). Mesma aparência nos
+   dois casos, por isso as regras estão agrupadas em vez de duplicadas. */
+.abas-fichas, .abas-painel {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -490,7 +484,7 @@ th {
   border-bottom: 1px solid var(--line);
 }
 
-.aba-ficha {
+.aba-ficha, .aba-painel {
   font-family: var(--font-body);
   font-size: 0.88rem;
   font-weight: 500;
@@ -502,15 +496,15 @@ th {
   cursor: pointer;
 }
 
-.aba-ficha:hover { border-color: var(--uab-azul); color: var(--ink); }
+.aba-ficha:hover, .aba-painel:hover { border-color: var(--uab-azul); color: var(--ink); }
 
-.aba-ficha.ativa {
+.aba-ficha.ativa, .aba-painel.ativa {
   background: var(--uab-preto);
   border-color: var(--uab-preto);
   color: #FFFFFF;
 }
 
-.aba-ficha:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+.aba-ficha:focus-visible, .aba-painel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
 
 /* Indicador de passos (as barrinhas no topo do index e da página de resultados) */
 .passos {
@@ -528,220 +522,6 @@ th {
 
 .passos span.ativo { background: var(--uab-azul); }
 .passos span.concluido { background: var(--uab-azul-tint); }
-
-/* Barra de progresso do jogo PME (pme.html) — substitui os "pontinhos"
-   de passo usados no percurso de especialistas, já que aqui não há
-   passos nomeados, só uma progressão contínua pergunta a pergunta. */
-.barra-progresso {
-  flex: 1;
-  max-width: 200px;
-  height: 4px;
-  background: var(--line);
-  border-radius: 2px;
-  margin-left: 24px;
-  overflow: hidden;
-}
-
-.barra-progresso-preenchida {
-  height: 100%;
-  background: var(--uab-azul);
-  border-radius: 2px;
-  transition: width 0.3s ease;
-}
-
-/* Ecrã de pergunta única — largura mais estreita que o resto do site,
-   de propósito: uma pergunta de cada vez, sem distrações à volta. */
-.ecra-pme {
-  max-width: 480px;
-  margin: 40px auto;
-}
-
-/* O ecrã inicial (hook) é mais largo do que os de pergunta — o título
-   é mais comprido do que cabe em 480px, e aqui não há problema em dar
-   mais respiro, já que não é uma pergunta a responder. */
-.ecra-pme--hook {
-  max-width: 600px;
-}
-
-/* .lead tem max-width:60ch (ver a regra global) para as linhas não
-   ficarem compridas demais — nas outras páginas isso é o que se quer
-   (fica encostado à esquerda, alinhado com o resto do texto). Aqui,
-   como o ecrã inteiro está centrado, a caixa do próprio parágrafo
-   também precisa de se autocentrar — sem isto, ficava encostada à
-   esquerda do ecrã, com o texto lá dentro centrado só dentro dessa
-   caixa mais estreita, o que parece descentrado em relação ao título. */
-.ecra-pme--hook .lead {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-@media (min-width: 560px) {
-  .ecra-pme--hook h1 { white-space: nowrap; }
-}
-
-.ecra-pme .area-tag { display: block; margin-bottom: 10px; }
-
-.opcao-jogo {
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 8px;
-  background: var(--paper);
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.opcao-jogo:hover, .opcao-jogo:focus-visible {
-  border-color: var(--uab-azul);
-  background: #EEF1F3;
-  outline: none;
-}
-
-.valor-destaque {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin: 20px 0 28px;
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-}
-
-.valor-destaque span { display: flex; align-items: center; gap: 6px; }
-
-/* Campos maiores para os ecrãs de perfil do jogo PME — o número de
-   colaboradores, país e região usam este estilo em vez do .campo
-   select/input padrão (mais pequeno), para ficarem confortáveis de usar
-   em ecrã de computador, não só em telemóvel. */
-.input-grande {
-  width: 100%;
-  max-width: none;
-  padding: 16px 18px;
-  font-size: 1.05rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  background: var(--paper);
-  color: var(--ink);
-  margin-bottom: 14px;
-}
-
-.input-grande:focus-visible {
-  outline: 2px solid var(--uab-azul);
-  outline-offset: 1px;
-  border-color: var(--uab-azul);
-}
-
-/* Estado selecionado de uma opção do jogo — clicar já não avança
-   automaticamente (ver js/pme.js); fica destacada até se confirmar com
-   "Continuar", para dar a oportunidade de mudar de ideias antes de
-   avançar. */
-.opcao-jogo--selecionada {
-  border-color: var(--uab-azul);
-  background: #EEF1F3;
-  font-weight: 600;
-}
-
-/* Contador "Pergunta X de 18", visível diretamente acima de cada
-   pergunta — mais percetível do que a barra fina do cabeçalho sozinha,
-   sobretudo em ecrãs pequenos onde essa barra fica espremida entre o
-   logótipo e o mini-mapa. */
-.progresso-pergunta {
-  margin-bottom: 18px;
-}
-
-.progresso-pergunta-barra {
-  height: 6px;
-  background: var(--line);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.progresso-pergunta-barra > div {
-  height: 100%;
-  background: var(--uab-azul);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.progresso-pergunta-texto {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-/* Espaço reservado para o vídeo de apresentação (entrevista.html) —
-   substituir por um <iframe> (YouTube/Vimeo) ou uma tag <video> com o
-   ficheiro, mantendo a mesma proporção 16:9, quando o vídeo estiver
-   pronto. */
-.video-placeholder {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%;
-  background: var(--paper-alt);
-  border: 1px dashed var(--uab-cinza);
-  border-radius: var(--radius);
-  margin: 20px 0 28px;
-}
-
-.video-placeholder-conteudo {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
-}
-
-.video-placeholder-conteudo span { font-size: 2rem; }
-
-.escolha-entrada {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 24px 0 32px;
-}
-
-.cartao-escolha {
-  text-align: left;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 24px;
-  cursor: pointer;
-  font-family: var(--font-body);
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.cartao-escolha:hover, .cartao-escolha:focus-visible {
-  border-color: var(--uab-azul);
-  box-shadow: 0 2px 10px rgba(109, 130, 151, 0.15);
-  outline: none;
-}
-
-.cartao-escolha h3 { margin: 8px 0 10px; }
-
-.cartao-escolha-cta {
-  display: inline-block;
-  margin-top: 14px;
-  font-weight: 600;
-  color: var(--uab-azul);
-  font-size: 0.9rem;
-}
-
-@media (max-width: 640px) {
-  .escolha-entrada { grid-template-columns: 1fr; }
-}
 
 /* Campos de formulário (Passo 1 do index — perfil da empresa) */
 .campo { margin-bottom: 22px; }
@@ -802,6 +582,24 @@ th {
 
 .classificacao[hidden] { display: none; }
 
+/* Aviso de bloqueio (ex: "esta empresa não é uma PME") — usa preto, o
+   tom mais forte da paleta, porque impede mesmo de avançar; não é só um
+   alerta informativo como o .marcador-pendente. */
+.aviso-bloqueio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--uab-preto);
+  background: #EFEFED;
+  border-left: 3px solid var(--uab-preto);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-top: 10px;
+}
+
+.aviso-bloqueio[hidden] { display: none; }
+
 /**
  * Diagrama do Business Model Canvas (Passo 2 do index) — replica a
  * disposição clássica de 5 colunas de Osterwalder & Pigneur (2010),
@@ -820,7 +618,7 @@ th {
  */
 .bmc-diagrama {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.575fr) minmax(0, 0.575fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 1fr 1fr 0.575fr 0.575fr 1fr 1fr;
   grid-template-areas:
     "parcerias  atividades  valor  valor  relacionamento  segmentos"
     "parcerias  recursos    valor  valor  canais          segmentos"
@@ -878,6 +676,26 @@ th {
   .bmc-bloco { grid-area: auto; padding: 16px; }
   .bmc-bloco h4 { font-size: 0.95rem; }
   .bmc-bloco p { font-size: 0.82rem; }
+}
+
+/**
+ * Dois estados adicionais do mesmo diagrama, usados na página de
+ * resultados para mostrar de relance quais blocos foram escolhidos para
+ * aprofundamento: "selecionado" ganha destaque (fundo azul institucional,
+ * como o selo de Prioritário), "não selecionado" fica esbatido — a
+ * mesma opacidade reduzida já usada em .cartao-bloqueado no Instrumento 1
+ * para blocos "não aplicáveis nesta fase", por coerência visual.
+ */
+.bmc-bloco--selecionado {
+  background: var(--uab-azul);
+}
+
+.bmc-bloco--selecionado h4 {
+  color: #FFFFFF;
+}
+
+.bmc-bloco--nao-selecionado {
+  opacity: 0.45;
 }
 
 /**
@@ -1031,8 +849,106 @@ th {
 
   .rodape-inner { flex-direction: column; align-items: flex-start; }
   .rodape-texto { text-align: left; }
-  .rodape-logos { gap: 16px; flex-wrap: wrap; }
-  .rodape-logos img { height: 30px; } /* a 40px, os dois logótipos lado a lado ultrapassam a largura de ecrãs estreitos (~375px), causando scroll horizontal */
 
   .modal { padding: 24px 20px; max-height: 90vh; }
 }
+
+.aviso-estatico { background: #F1F1EF; border-left: 3px solid var(--uab-preto); padding: 14px 18px; margin-bottom: 28px; font-size: 0.85rem; color: var(--ink-soft); border-radius: 4px; }
+.checkbox-decorativa { opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <span class="marca">LLM em PME<span>Framework LLM × BMC</span></span>
+    <div class="mapa-bmc" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <div class="aviso-estatico"><strong>Atenção:</strong> os dados abaixo (perfil da empresa, diagnóstico e seleção) são um <strong>exemplo ilustrativo</strong>, não uma sessão real — mostram como fica esta página depois de um diagnóstico completo, já que a página não faz sentido vazia.</div>
+
+    <span class="eyebrow">Síntese</span>
+    <h1>Resultados da sessão (exemplo)</h1>
+    <p class="lead">Resumo do percurso completo de uma sessão ilustrativa.</p>
+
+    <h2>Perfil da empresa (exemplo)</h2>
+    <table>
+      <tr><th>Setor</th><td>Serviços</td></tr>
+      <tr><th>Colaboradores</th><td>18</td></tr>
+      <tr><th>Faturação anual</th><td>≤ 10 milhões € (pequena)</td></tr>
+      <tr><th>Classificação estimada</th><td>Pequena empresa</td></tr>
+      <tr><th>País</th><td>Portugal — Norte</td></tr>
+    </table>
+
+    <h2>Panorama do modelo de negócio</h2>
+    <p class="nota">Os blocos a azul foram escolhidos para aprofundamento nas Fichas de Decisão; os restantes não foram considerados nesta fase.</p>
+    <div class="bmc-diagrama"><div class="bmc-bloco bmc-bloco--nao-selecionado" style="grid-area:segmentos;"><h4>Segmentos de Clientes</h4></div><div class="bmc-bloco bmc-bloco--nao-selecionado" style="grid-area:valor;"><h4>Proposta de Valor</h4></div><div class="bmc-bloco bmc-bloco--selecionado" style="grid-area:canais;"><h4>Canais</h4></div><div class="bmc-bloco bmc-bloco--nao-selecionado" style="grid-area:relacionamento;"><h4>Relacionamento com Clientes</h4></div><div class="bmc-bloco bmc-bloco--nao-selecionado" style="grid-area:receita;"><h4>Fontes de Receita</h4></div><div class="bmc-bloco bmc-bloco--nao-selecionado" style="grid-area:atividades;"><h4>Atividades-Chave</h4></div><div class="bmc-bloco bmc-bloco--selecionado" style="grid-area:recursos;"><h4>Recursos-Chave</h4></div><div class="bmc-bloco bmc-bloco--nao-selecionado" style="grid-area:parcerias;"><h4>Parcerias-Chave</h4></div><div class="bmc-bloco bmc-bloco--nao-selecionado" style="grid-area:custos;"><h4>Estrutura de Custos</h4></div></div>
+
+    <h2>Perfil de prioridade por bloco</h2>
+    <table>
+      <thead><tr><th>Bloco BMC</th><th>Prontidão</th><th>Impacto</th><th>Prioridade</th></tr></thead>
+      <tbody><tr><td data-label="Bloco BMC">Segmentos de Clientes</td><td data-label="Prontidão">2</td><td data-label="Impacto">2</td><td data-label="Prioridade"><span class="selo" data-p="Relevante">Relevante</span></td></tr><tr><td data-label="Bloco BMC">Proposta de Valor</td><td data-label="Prontidão">3</td><td data-label="Impacto">1</td><td data-label="Prioridade"><span class="selo" data-p="Diferir">Diferir</span></td></tr><tr><td data-label="Bloco BMC">Canais</td><td data-label="Prontidão">3</td><td data-label="Impacto">3</td><td data-label="Prioridade"><span class="selo" data-p="Prioritário">Prioritário</span></td></tr><tr><td data-label="Bloco BMC">Relacionamento com Clientes</td><td data-label="Prontidão">1</td><td data-label="Impacto">3</td><td data-label="Prioridade"><span class="selo" data-p="Investimento necessário">Investimento necessário</span></td></tr><tr><td data-label="Bloco BMC">Fontes de Receita</td><td data-label="Prontidão">2</td><td data-label="Impacto">1</td><td data-label="Prioridade"><span class="selo" data-p="Diferir">Diferir</span></td></tr><tr><td data-label="Bloco BMC">Atividades-Chave</td><td data-label="Prontidão">3</td><td data-label="Impacto">2</td><td data-label="Prioridade"><span class="selo" data-p="Relevante">Relevante</span></td></tr><tr><td data-label="Bloco BMC">Recursos-Chave</td><td data-label="Prontidão">2</td><td data-label="Impacto">3</td><td data-label="Prioridade"><span class="selo" data-p="Prioritário">Prioritário</span></td></tr><tr><td data-label="Bloco BMC">Parcerias-Chave</td><td data-label="Prontidão">3</td><td data-label="Impacto">1</td><td data-label="Prioridade"><span class="selo" data-p="Diferir">Diferir</span></td></tr><tr><td data-label="Bloco BMC">Estrutura de Custos</td><td data-label="Prontidão">2</td><td data-label="Impacto">2</td><td data-label="Prioridade"><span class="selo" data-p="Relevante">Relevante</span></td></tr></tbody>
+    </table>
+
+    <h2>Blocos selecionados para aprofundamento</h2>
+    
+    <div style="margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--line);">
+      <h4 style="margin-bottom:4px;">Canais — Ficha de Decisão</h4>
+      <p class="nota" style="margin-bottom:14px;">I - Interface com o Cliente · RF1 · RF2 · RF3 · RF4</p>
+      <p><strong>Contexto:</strong> Os Canais definem como a PME comunica e entrega valor aos seus segmentos de clientes. Em PMEs, os canais digitais (email, website, redes sociais) coexistem frequentemente com canais presenciais, com baixo nível de automação e elevada dependência de intervenção humana. A adoção de LLM neste bloco visa automatizar e personalizar a comunicação, reduzindo o tempo de resposta e aumentando a capacidade de interação sem crescimento proporcional da equipa.</p>
+      <p style="margin-bottom:6px;"><strong>Aplicações prioritárias:</strong></p>
+      <ul style="margin:0; padding-left:18px;"><li>Chatbots e assistentes virtuais para atendimento e qualificação de leads em website</li><li>Automação de respostas a perguntas frequentes por email ou redes sociais</li><li>Geração de conteúdos personalizados para campanhas multicanal</li><li>Tradução e adaptação automática de comunicações para diferentes mercados</li></ul>
+      <p style="margin:14px 0 6px;"><strong>Orientação tecnológica:</strong></p>
+      <table>
+        <thead><tr><th>Opção</th><th>Adequada quando</th><th>Considerações</th></tr></thead>
+        <tbody><tr><td>API comercial (GPT, Claude, Gemini)</td><td>Volume de interações moderado; sem dados sensíveis; necessidade de implementação rápida</td><td>Custo previsível a baixo volume; dependência de fornecedor; conformidade RGPD exige revisão contratual</td></tr><tr><td>Open-source (LLaMA, Mistral)</td><td>Dados sensíveis que não podem sair da organização; maior controlo sobre o modelo</td><td>Requer infraestrutura própria ou cloud dedicada; maior investimento inicial em configuração</td></tr><tr><td>RAG</td><td>Chatbot que responde com base em documentação interna (catálogos, FAQs, contratos)</td><td>Solução recomendada para PMEs com documentação estruturada; reduz alucinações; integrável com APIs comerciais</td></tr></tbody>
+      </table>
+      <p style="margin:14px 0 6px;"><strong>Ações concretas:</strong></p>
+      <ul style="margin:0; padding-left:18px;"><li>Identificar os canais com maior volume de interações repetitivas (email, chat, formulários)</li><li>Selecionar um canal piloto de baixo risco para implementação inicial</li><li>Definir o âmbito de resposta automática e os limites de escalamento para humano</li><li>Integrar o LLM com as plataformas de comunicação existentes via API</li><li>Estabelecer processo de revisão periódica da qualidade das respostas geradas</li></ul>
+      <p style="margin:14px 0 6px;"><strong>Critérios de avaliação:</strong></p>
+      <table>
+        <thead><tr><th>Critério</th><th>Indicador</th></tr></thead>
+        <tbody><tr><td>Eficiência</td><td>Redução do tempo médio de resposta ao cliente</td></tr><tr><td>Qualidade</td><td>Taxa de resolução sem escalamento para humano</td></tr><tr><td>Satisfação</td><td>Avaliação da experiência pelo cliente (NPS ou equivalente)</td></tr><tr><td>Custo</td><td>Custo por interação antes e após implementação</td></tr></tbody>
+      </table>
+      <p style="margin-top:14px;"><strong>Conformidade e governança:</strong> RGPD: os dados de interação com clientes (nome, email, histórico de conversa) são dados pessoais. Garantir base legal para tratamento, informar o utilizador da presença de sistema automatizado e assegurar mecanismo de opt-out. AI Act: sistemas de interação com utilizadores finais estão sujeitos a requisitos de transparência (o utilizador deve ser informado de que interage com um sistema de IA). Risco de reputação: falhas visíveis ao cliente têm impacto direto na imagem da PME. Definir limiar de confiança abaixo do qual a resposta é sempre revista por humano antes de envio.</p>
+    </div>
+    <div style="margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--line);">
+      <h4 style="margin-bottom:4px;">Recursos-Chave — Ficha de Decisão</h4>
+      <p class="nota" style="margin-bottom:14px;">III - Gestão de Infraestrutura · RF1 · RF2 · RF3 · RF4</p>
+      <p><strong>Contexto:</strong> Os Recursos-Chave descrevem os ativos mais importantes que a PME necessita para que o seu modelo de negócio funcione. A adoção de LLM implica a incorporação de novos recursos tecnológicos e intelectuais — APIs, infraestrutura cloud, competências de engenharia de prompts e bases de conhecimento organizacional — que alteram o perfil de recursos da organização. Este bloco é simultaneamente um pré-requisito e um resultado da adoção: a PME precisa de recursos mínimos para adotar LLM e, ao adotá-los, constrói novos recursos.</p>
+      <p style="margin-bottom:6px;"><strong>Aplicações prioritárias:</strong></p>
+      <ul style="margin:0; padding-left:18px;"><li>Integração de APIs LLM como recurso tecnológico central nos processos operacionais</li><li>Construção de base de conhecimento organizacional estruturada e pesquisável com IA</li><li>Desenvolvimento de competências internas na criação de prompts e supervisão de outputs</li><li>Criação de repositório de prompts e templates reutilizáveis por função ou processo</li></ul>
+      <p style="margin:14px 0 6px;"><strong>Orientação tecnológica:</strong></p>
+      <table>
+        <thead><tr><th>Opção</th><th>Adequada quando</th><th>Considerações</th></tr></thead>
+        <tbody><tr><td>API comercial como recurso base</td><td>PME sem capacidade de desenvolvimento interno; prioridade de velocidade de implementação</td><td>Menor custo inicial; dependência externa; avaliar continuidade e condições de serviço do fornecedor</td></tr><tr><td>RAG como recurso de conhecimento</td><td>PME com conhecimento organizacional valioso disperso em documentos</td><td>Transforma documentação existente em recurso pesquisável; investimento moderado; alto retorno em PMEs intensivas em conhecimento</td></tr><tr><td>Infraestrutura própria</td><td>PME com requisitos de privacidade elevados ou volume que justifica investimento</td><td>Maior controlo e independência; requer competências técnicas ou parceiro externo de suporte</td></tr></tbody>
+      </table>
+      <p style="margin:14px 0 6px;"><strong>Ações concretas:</strong></p>
+      <ul style="margin:0; padding-left:18px;"><li>Auditar os recursos tecnológicos existentes face aos requisitos mínimos de adoção LLM</li><li>Selecionar e contratar o fornecedor de API ou plataforma LLM adequado ao perfil da PME</li><li>Identificar e formar o colaborador responsável pela gestão e supervisão das ferramentas LLM</li><li>Construir o repositório inicial de prompts validados para as tarefas prioritárias identificadas</li><li>Definir política interna de utilização e limites de autonomia das ferramentas LLM</li></ul>
+      <p style="margin:14px 0 6px;"><strong>Critérios de avaliação:</strong></p>
+      <table>
+        <thead><tr><th>Critério</th><th>Indicador</th></tr></thead>
+        <tbody><tr><td>Disponibilidade</td><td>Uptime e fiabilidade do serviço LLM integrado nos processos</td></tr><tr><td>Competência interna</td><td>Número de colaboradores com capacidade de utilização autónoma das ferramentas</td></tr><tr><td>Custo-benefício</td><td>Custo mensal de subscrição/API face ao valor gerado (horas poupadas, outputs produzidos)</td></tr><tr><td>Independência</td><td>Grau de lock-in: facilidade de migração entre fornecedores se necessário</td></tr></tbody>
+      </table>
+      <p style="margin-top:14px;"><strong>Conformidade e governança:</strong> RGPD: os contratos com fornecedores de API devem incluir cláusulas de subcontratante de tratamento de dados quando aplicável. Verificar onde os dados são processados e armazenados geograficamente.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="../assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="../assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instrumento 2 — Matriz LLM × BMC · LLM em PME (versão estática)</title>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 /*
@@ -13,19 +20,7 @@
   peso semelhantes) até haver licença de webfont. Ver nota no README.
 */
 
-/* Reserva sempre o espaço da barra de scroll vertical, mesmo quando não
-   é precisa — sem isto, sempre que o conteúdo muda de altura (mudar de
-   idioma, abrir um modal, avançar de passo) e cruza a fronteira de
-   precisar ou não de scroll, a página inteira salta lateralmente pela
-   largura da barra. Afeta sobretudo Windows/Linux, onde a barra ocupa
-   espaço; em macOS com barra sobreposta isto não se nota tanto — mas a
-   correção não faz mal nenhum nesse caso. */
-html {
-  scrollbar-gutter: stable;
-}
-
 :root {
-  color-scheme: light;
   --uab-preto: #000000;
   --uab-azul: #6D8297;
   --uab-azul-tint: #B3BCC9;
@@ -247,6 +242,20 @@ main {
   margin-bottom: 20px;
 }
 
+/* Cartão clicável (os 3 cartões de instrumento no index, que abrem um modal de explicação) */
+.cartao-clicavel {
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cartao-clicavel:hover,
+.cartao-clicavel:focus-visible {
+  border-color: var(--uab-azul);
+  box-shadow: 0 2px 10px rgba(109, 130, 151, 0.15);
+}
+
+.cartao-clicavel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+
 /**
  * Os três estados do percurso "abre um bloco de cada vez" do Instrumento 1
  * (ver calcularVisao() em instrumento1.js):
@@ -265,17 +274,6 @@ main {
   font-family: var(--font-mono);
   font-size: 0.9rem;
   color: var(--ink-soft);
-}
-
-/* Indicador neutro de "já respondido" no Instrumento 1 (percurso de
-   especialistas) — não revela a prioridade calculada (Diferir/Relevante/
-   Prioritário/Investimento necessário) enquanto se está a responder, só
-   confirma que o bloco já tem resposta. A prioridade só aparece na
-   tabela-resumo final, depois dos 9 blocos respondidos. */
-.selo-respondido {
-  font-size: 1rem;
-  color: var(--uab-azul);
-  flex-shrink: 0;
 }
 
 .cartao-colapsado {
@@ -310,13 +308,10 @@ main {
   flex: 1;
 }
 
-/* O selo/cadeado nunca encolhe — fica sempre à direita; pode quebrar
-   para 2 linhas com texto mais comprido ("Investimento necessário"),
-   em vez de sair da caixa. */
+/* O selo/cadeado nunca encolhe nem quebra — fica sempre inteiro e à direita. */
 .cartao-cabecalho .selo,
 .cartao-cabecalho .selo-cadeado {
   flex-shrink: 0;
-  max-width: 130px;
 }
 
 .area-tag {
@@ -398,10 +393,7 @@ main {
   letter-spacing: 0.03em;
   padding: 4px 10px;
   border-radius: 999px;
-  max-width: 100%;
-  white-space: normal; /* "Investimento necessário" é bem mais comprido do que os outros três valores — com nowrap, saía da caixa em vez de quebrar linha */
-  text-align: center;
-  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .selo[data-p="Prioritário"] { background: var(--st-prioritario-bg); color: var(--st-prioritario); }
@@ -479,9 +471,11 @@ th {
   color: var(--ink-soft);
 }
 
-/* Abas genéricas — usadas na navegação entre Fichas de Decisão no
-   Instrumento 3 (.aba-ficha). */
-.abas-fichas {
+/* Abas genéricas — usadas em dois sítios: a navegação entre Fichas de
+   Decisão no Instrumento 3 (.aba-ficha) e as abas Descarregar/Resultados
+   no Passo 2 da página de resultados (.aba-painel). Mesma aparência nos
+   dois casos, por isso as regras estão agrupadas em vez de duplicadas. */
+.abas-fichas, .abas-painel {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -490,7 +484,7 @@ th {
   border-bottom: 1px solid var(--line);
 }
 
-.aba-ficha {
+.aba-ficha, .aba-painel {
   font-family: var(--font-body);
   font-size: 0.88rem;
   font-weight: 500;
@@ -502,15 +496,15 @@ th {
   cursor: pointer;
 }
 
-.aba-ficha:hover { border-color: var(--uab-azul); color: var(--ink); }
+.aba-ficha:hover, .aba-painel:hover { border-color: var(--uab-azul); color: var(--ink); }
 
-.aba-ficha.ativa {
+.aba-ficha.ativa, .aba-painel.ativa {
   background: var(--uab-preto);
   border-color: var(--uab-preto);
   color: #FFFFFF;
 }
 
-.aba-ficha:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+.aba-ficha:focus-visible, .aba-painel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
 
 /* Indicador de passos (as barrinhas no topo do index e da página de resultados) */
 .passos {
@@ -528,220 +522,6 @@ th {
 
 .passos span.ativo { background: var(--uab-azul); }
 .passos span.concluido { background: var(--uab-azul-tint); }
-
-/* Barra de progresso do jogo PME (pme.html) — substitui os "pontinhos"
-   de passo usados no percurso de especialistas, já que aqui não há
-   passos nomeados, só uma progressão contínua pergunta a pergunta. */
-.barra-progresso {
-  flex: 1;
-  max-width: 200px;
-  height: 4px;
-  background: var(--line);
-  border-radius: 2px;
-  margin-left: 24px;
-  overflow: hidden;
-}
-
-.barra-progresso-preenchida {
-  height: 100%;
-  background: var(--uab-azul);
-  border-radius: 2px;
-  transition: width 0.3s ease;
-}
-
-/* Ecrã de pergunta única — largura mais estreita que o resto do site,
-   de propósito: uma pergunta de cada vez, sem distrações à volta. */
-.ecra-pme {
-  max-width: 480px;
-  margin: 40px auto;
-}
-
-/* O ecrã inicial (hook) é mais largo do que os de pergunta — o título
-   é mais comprido do que cabe em 480px, e aqui não há problema em dar
-   mais respiro, já que não é uma pergunta a responder. */
-.ecra-pme--hook {
-  max-width: 600px;
-}
-
-/* .lead tem max-width:60ch (ver a regra global) para as linhas não
-   ficarem compridas demais — nas outras páginas isso é o que se quer
-   (fica encostado à esquerda, alinhado com o resto do texto). Aqui,
-   como o ecrã inteiro está centrado, a caixa do próprio parágrafo
-   também precisa de se autocentrar — sem isto, ficava encostada à
-   esquerda do ecrã, com o texto lá dentro centrado só dentro dessa
-   caixa mais estreita, o que parece descentrado em relação ao título. */
-.ecra-pme--hook .lead {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-@media (min-width: 560px) {
-  .ecra-pme--hook h1 { white-space: nowrap; }
-}
-
-.ecra-pme .area-tag { display: block; margin-bottom: 10px; }
-
-.opcao-jogo {
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 8px;
-  background: var(--paper);
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.opcao-jogo:hover, .opcao-jogo:focus-visible {
-  border-color: var(--uab-azul);
-  background: #EEF1F3;
-  outline: none;
-}
-
-.valor-destaque {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin: 20px 0 28px;
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-}
-
-.valor-destaque span { display: flex; align-items: center; gap: 6px; }
-
-/* Campos maiores para os ecrãs de perfil do jogo PME — o número de
-   colaboradores, país e região usam este estilo em vez do .campo
-   select/input padrão (mais pequeno), para ficarem confortáveis de usar
-   em ecrã de computador, não só em telemóvel. */
-.input-grande {
-  width: 100%;
-  max-width: none;
-  padding: 16px 18px;
-  font-size: 1.05rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  background: var(--paper);
-  color: var(--ink);
-  margin-bottom: 14px;
-}
-
-.input-grande:focus-visible {
-  outline: 2px solid var(--uab-azul);
-  outline-offset: 1px;
-  border-color: var(--uab-azul);
-}
-
-/* Estado selecionado de uma opção do jogo — clicar já não avança
-   automaticamente (ver js/pme.js); fica destacada até se confirmar com
-   "Continuar", para dar a oportunidade de mudar de ideias antes de
-   avançar. */
-.opcao-jogo--selecionada {
-  border-color: var(--uab-azul);
-  background: #EEF1F3;
-  font-weight: 600;
-}
-
-/* Contador "Pergunta X de 18", visível diretamente acima de cada
-   pergunta — mais percetível do que a barra fina do cabeçalho sozinha,
-   sobretudo em ecrãs pequenos onde essa barra fica espremida entre o
-   logótipo e o mini-mapa. */
-.progresso-pergunta {
-  margin-bottom: 18px;
-}
-
-.progresso-pergunta-barra {
-  height: 6px;
-  background: var(--line);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.progresso-pergunta-barra > div {
-  height: 100%;
-  background: var(--uab-azul);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.progresso-pergunta-texto {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-/* Espaço reservado para o vídeo de apresentação (entrevista.html) —
-   substituir por um <iframe> (YouTube/Vimeo) ou uma tag <video> com o
-   ficheiro, mantendo a mesma proporção 16:9, quando o vídeo estiver
-   pronto. */
-.video-placeholder {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%;
-  background: var(--paper-alt);
-  border: 1px dashed var(--uab-cinza);
-  border-radius: var(--radius);
-  margin: 20px 0 28px;
-}
-
-.video-placeholder-conteudo {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
-}
-
-.video-placeholder-conteudo span { font-size: 2rem; }
-
-.escolha-entrada {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 24px 0 32px;
-}
-
-.cartao-escolha {
-  text-align: left;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 24px;
-  cursor: pointer;
-  font-family: var(--font-body);
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.cartao-escolha:hover, .cartao-escolha:focus-visible {
-  border-color: var(--uab-azul);
-  box-shadow: 0 2px 10px rgba(109, 130, 151, 0.15);
-  outline: none;
-}
-
-.cartao-escolha h3 { margin: 8px 0 10px; }
-
-.cartao-escolha-cta {
-  display: inline-block;
-  margin-top: 14px;
-  font-weight: 600;
-  color: var(--uab-azul);
-  font-size: 0.9rem;
-}
-
-@media (max-width: 640px) {
-  .escolha-entrada { grid-template-columns: 1fr; }
-}
 
 /* Campos de formulário (Passo 1 do index — perfil da empresa) */
 .campo { margin-bottom: 22px; }
@@ -802,6 +582,24 @@ th {
 
 .classificacao[hidden] { display: none; }
 
+/* Aviso de bloqueio (ex: "esta empresa não é uma PME") — usa preto, o
+   tom mais forte da paleta, porque impede mesmo de avançar; não é só um
+   alerta informativo como o .marcador-pendente. */
+.aviso-bloqueio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--uab-preto);
+  background: #EFEFED;
+  border-left: 3px solid var(--uab-preto);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-top: 10px;
+}
+
+.aviso-bloqueio[hidden] { display: none; }
+
 /**
  * Diagrama do Business Model Canvas (Passo 2 do index) — replica a
  * disposição clássica de 5 colunas de Osterwalder & Pigneur (2010),
@@ -820,7 +618,7 @@ th {
  */
 .bmc-diagrama {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.575fr) minmax(0, 0.575fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 1fr 1fr 0.575fr 0.575fr 1fr 1fr;
   grid-template-areas:
     "parcerias  atividades  valor  valor  relacionamento  segmentos"
     "parcerias  recursos    valor  valor  canais          segmentos"
@@ -878,6 +676,26 @@ th {
   .bmc-bloco { grid-area: auto; padding: 16px; }
   .bmc-bloco h4 { font-size: 0.95rem; }
   .bmc-bloco p { font-size: 0.82rem; }
+}
+
+/**
+ * Dois estados adicionais do mesmo diagrama, usados na página de
+ * resultados para mostrar de relance quais blocos foram escolhidos para
+ * aprofundamento: "selecionado" ganha destaque (fundo azul institucional,
+ * como o selo de Prioritário), "não selecionado" fica esbatido — a
+ * mesma opacidade reduzida já usada em .cartao-bloqueado no Instrumento 1
+ * para blocos "não aplicáveis nesta fase", por coerência visual.
+ */
+.bmc-bloco--selecionado {
+  background: var(--uab-azul);
+}
+
+.bmc-bloco--selecionado h4 {
+  color: #FFFFFF;
+}
+
+.bmc-bloco--nao-selecionado {
+  opacity: 0.45;
 }
 
 /**
@@ -1031,8 +849,243 @@ th {
 
   .rodape-inner { flex-direction: column; align-items: flex-start; }
   .rodape-texto { text-align: left; }
-  .rodape-logos { gap: 16px; flex-wrap: wrap; }
-  .rodape-logos img { height: 30px; } /* a 40px, os dois logótipos lado a lado ultrapassam a largura de ecrãs estreitos (~375px), causando scroll horizontal */
 
   .modal { padding: 24px 20px; max-height: 90vh; }
 }
+
+.aviso-estatico { background: #F1F1EF; border-left: 3px solid var(--uab-preto); padding: 14px 18px; margin-bottom: 28px; font-size: 0.85rem; color: var(--ink-soft); border-radius: 4px; }
+.checkbox-decorativa { opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <span class="marca">LLM em PME<span>Framework LLM × BMC</span></span>
+    <div class="mapa-bmc" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <div class="aviso-estatico">Versão estática — mostra os 9 blocos todos, com o conteúdo completo da Matriz. Na ferramenta real, só aparecem aqui os blocos que o diagnóstico do Instrumento 1 classificou como Prioritário ou Relevante.</div>
+
+    <span class="eyebrow">Instrumento 2 de 3</span>
+    <h1>Matriz LLM × BMC</h1>
+    <p class="lead">Com base no diagnóstico, estes são os blocos com potencial identificado. Para cada um, a Matriz mapeia aplicações, oportunidades e riscos. Selecione os blocos que pretende aprofundar no Instrumento 3.</p>
+    
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Interface com o Cliente</span>
+          <h3>Segmentos de Clientes</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Segmentação semântica a partir de dados de CRM e interações</li><li>Análise automática de perfis e comportamentos</li><li>Síntese de feedback para caracterização de segmentos</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Personalização da oferta por segmento sem esforço manual</li><li>Identificação de novos segmentos a partir de dados existentes</li><li>Apoio a decisões de targeting</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Qualidade e estrutura dos dados de clientes</li><li>Enviesamentos nos modelos reproduzidos na segmentação</li><li>Privacidade e conformidade no uso de dados pessoais</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:not-allowed;">
+        <input type="checkbox" class="checkbox-decorativa" disabled>
+        <span>Sem Ficha de Decisão disponível — a Matriz é o nível máximo de orientação para este bloco</span>
+      </label>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Produto/Oferta</span>
+          <h3>Proposta de Valor</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Geração de conteúdos comerciais personalizados (propostas, descrições)</li><li>Adaptação automática da mensagem de valor por segmento</li><li>Apoio à criação e atualização de materiais de marketing</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Diferenciação por personalização a custo reduzido</li><li>Redução do tempo de produção de conteúdos</li><li>Escala da comunicação sem crescimento da equipa criativa</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Risco de alucinações em conteúdo factual ou técnico</li><li>Inconsistência de tom e identidade de marca</li><li>Dependência de validação humana para conteúdo publicável</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:not-allowed;">
+        <input type="checkbox" class="checkbox-decorativa" disabled>
+        <span>Sem Ficha de Decisão disponível — a Matriz é o nível máximo de orientação para este bloco</span>
+      </label>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Interface com o Cliente · com Ficha de Decisão</span>
+          <h3>Canais</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Chatbots e assistentes virtuais para atendimento multicanal</li><li>Automação de comunicação</li><li>Geração de respostas personalizadas em tempo real</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Disponibilidade 24/7 sem aumento de equipa</li><li>Redução do tempo de resposta ao cliente</li><li>Comunicação adaptada ao perfil e idioma do utilizador</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Falhas de qualidade expostas diretamente ao cliente</li><li>Lock-in tecnológico</li><li>Conformidade RGPD no tratamento de dados de interação</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:pointer;">
+        <input type="checkbox" class="checkbox-decorativa" >
+        <span>Aprofundar este bloco na Ficha de Decisão</span>
+      </label>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Interface com o Cliente · com Ficha de Decisão</span>
+          <h3>Relacionamento com Clientes</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Atendimento automático personalizado e proativo</li><li>Análise de sentimento em feedback e reclamações</li><li>Suporte pós-venda assistido por IA</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Escalabilidade do serviço sem crescimento linear de custos</li><li>Melhoria da experiência e fidelização baseada em dados</li><li>Identificação precoce de insatisfação</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Risco de alucinações em respostas</li><li>Perda de proximidade humana em contextos relacionais</li><li>Necessidade de validação e supervisão contínua dos outputs</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:pointer;">
+        <input type="checkbox" class="checkbox-decorativa" >
+        <span>Aprofundar este bloco na Ficha de Decisão</span>
+      </label>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Aspetos Financeiros</span>
+          <h3>Fontes de Receita</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Criação de novos serviços baseados em análise e geração de conteúdo com IA</li><li>Personalização de oferta que suporta modelos premium ou de subscrição</li><li>Melhoria de taxas de conversão por comunicação mais eficaz</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Diversificação de fontes de receita com serviços digitais escaláveis</li><li>Aumento de conversão comercial sem aumento proporcional de custos</li><li>Criação de vantagem competitiva sustentável baseada em dados</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Incerteza na medição do retorno do investimento em fases iniciais</li><li>Dificuldade de monetizar benefícios indiretos de eficiência</li><li>Risco de canibalização de serviços existentes por automação</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:not-allowed;">
+        <input type="checkbox" class="checkbox-decorativa" disabled>
+        <span>Sem Ficha de Decisão disponível — a Matriz é o nível máximo de orientação para este bloco</span>
+      </label>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Gestão de Infraestrutura · com Ficha de Decisão</span>
+          <h3>Atividades-Chave</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Geração automática de relatórios e síntese de documentos</li><li>Sumarização e categorização de informação não estruturada</li><li>Apoio ao desenvolvimento de software e documentação técnica</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Redução de carga administrativa em tarefas intensivas em linguagem</li><li>Aceleração de processos de gestão do conhecimento</li><li>Apoio à tomada de decisão baseada em análise documental</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Necessidade de validação humana dos outputs gerados</li><li>Qualidade variável em domínios técnicos especializados</li><li>Integração com sistemas e fluxos de trabalho existentes</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:pointer;">
+        <input type="checkbox" class="checkbox-decorativa" >
+        <span>Aprofundar este bloco na Ficha de Decisão</span>
+      </label>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Gestão de Infraestrutura · com Ficha de Decisão</span>
+          <h3>Recursos-Chave</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Integração de APIs LLM como recurso tecnológico central</li><li>Construção de base de conhecimento organizacional assistida por IA</li><li>Reforço do capital intelectual através de ferramentas de produtividade</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Acesso a capacidades avançadas sem desenvolvimento interno</li><li>Reforço do capital tecnológico com investimento inicial reduzido</li><li>Democratização de ferramentas antes exclusivas de grandes empresas</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Dependência de fornecedores externos e custos recorrentes de API</li><li>Escassez de competências internas para operacionalizar soluções</li><li>Risco de lock-in e dificuldade de migração entre fornecedores</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:pointer;">
+        <input type="checkbox" class="checkbox-decorativa" >
+        <span>Aprofundar este bloco na Ficha de Decisão</span>
+      </label>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Gestão de Infraestrutura</span>
+          <h3>Parcerias-Chave</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Integração com fornecedores de plataformas LLM (APIs comerciais)</li><li>Colaboração com consultoras de transformação digital e IA</li><li>Acesso a ecossistemas de parceiros tecnológicos cloud</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Acesso a tecnologia de ponta sem desenvolvimento próprio</li><li>Redução do risco de implementação com apoio especializado</li><li>Aceleração da curva de aprendizagem organizacional</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Dependência crítica de parceiro tecnológico único</li><li>Custos de mudança elevados em caso de descontinuação</li><li>Alinhamento de interesses e condições contratuais de longo prazo</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:not-allowed;">
+        <input type="checkbox" class="checkbox-decorativa" disabled>
+        <span>Sem Ficha de Decisão disponível — a Matriz é o nível máximo de orientação para este bloco</span>
+      </label>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Aspetos Financeiros</span>
+          <h3>Estrutura de Custos</h3>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Aplicações</th><th>Oportunidades</th><th>Riscos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="margin:0; padding-left:18px;"><li>Automação de tarefas manuais de custo operacional elevado</li><li>Otimização de processos repetitivos com redução de erros</li><li>Substituição parcial de outsourcing em tarefas de conteúdo e análise</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Redução de custos operacionais através de automação escalável</li><li>Libertação de recursos humanos para atividades de maior valor</li><li>Eficiência crescente com volume sem aumento proporcional de custo</li></ul></td>
+            <td><ul style="margin:0; padding-left:18px;"><li>Custos recorrentes de subscrição e API imprevisíveis com volume</li><li>Investimento inicial em formação e adaptação de processos</li><li>Dificuldade de controlo orçamental em modelos de pricing por uso</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+      <label style="display:flex; gap:10px; align-items:center; margin-top:16px; cursor:not-allowed;">
+        <input type="checkbox" class="checkbox-decorativa" disabled>
+        <span>Sem Ficha de Decisão disponível — a Matriz é o nível máximo de orientação para este bloco</span>
+      </label>
+    </div>
+
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="../assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="../assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+</body>
+</html>

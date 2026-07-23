@@ -10,10 +10,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
 <title>Síntese da sessão · LLM em PME</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
-<link rel="stylesheet" href="css/style.css?v=20260719d">
+<link rel="stylesheet" href="css/style.css?v=20260807">
 </head>
 <body>
 
@@ -35,111 +36,108 @@
 <main>
   <div class="container">
     <div id="conteudo-sessao">
-      <span class="eyebrow" data-i18n="sintese-eyebrow">Síntese</span>
-      <h1 data-i18n="sintese-h1">Resultados da sessão</h1>
-      <p class="lead" data-i18n="sintese-lead">Resumo do percurso completo. Pode descarregar este registo, ou terminar a sessão.</p>
+      <span class="eyebrow" data-i18n="sintese-eyebrow">Avaliação</span>
+      <h1 data-i18n="sintese-h1">A sua avaliação</h1>
+      <p class="lead" data-i18n="sintese-lead">Chegámos ao momento de avaliação. A sua opinião como especialista é uma peça central da validação desta dissertação — ajuda a perceber se o framework que desenvolvi é útil, aplicável e consistente com a literatura que o fundamenta. Responda com honestidade a cada critério; não há respostas certas ou erradas.</p>
 
-      <div class="passos" aria-hidden="true">
-        <span id="passo-dot-1"></span><span id="passo-dot-2"></span>
+      <h2 data-i18n="sintese-secao-avaliacao">Avaliação</h2>
+
+      <div class="cartao" data-criterio="utilidade">
+        <div class="campo">
+          <label data-i18n="crit-utilidade">Utilidade percebida — este framework ajuda uma PME a decidir onde adotar LLM de forma estruturada.</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="av-utilidade" value="1"><span>1</span></label>
+            <label><input type="radio" name="av-utilidade" value="2"><span>2</span></label>
+            <label><input type="radio" name="av-utilidade" value="3"><span>3</span></label>
+            <label><input type="radio" name="av-utilidade" value="4"><span>4</span></label>
+            <label><input type="radio" name="av-utilidade" value="5"><span>5</span></label>
+          </div>
+          <textarea id="av-utilidade-comentario" rows="2" placeholder="Comentário (opcional)" style="width:100%; margin-top:8px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        </div>
       </div>
 
-      <!-- PASSO 1 — Satisfação e contacto -->
-      <section id="r-passo-1">
-        <h2 data-i18n="r-passo1-titulo">Passo 1 — A sua opinião</h2>
+      <div class="cartao" data-criterio="aplicabilidade">
+        <div class="campo">
+          <label data-i18n="crit-aplicabilidade">Aplicabilidade — as fichas e a matriz são realistas e aplicáveis ao contexto de uma PME.</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="av-aplicabilidade" value="1"><span>1</span></label>
+            <label><input type="radio" name="av-aplicabilidade" value="2"><span>2</span></label>
+            <label><input type="radio" name="av-aplicabilidade" value="3"><span>3</span></label>
+            <label><input type="radio" name="av-aplicabilidade" value="4"><span>4</span></label>
+            <label><input type="radio" name="av-aplicabilidade" value="5"><span>5</span></label>
+          </div>
+          <textarea id="av-aplicabilidade-comentario" rows="2" placeholder="Comentário (opcional)" style="width:100%; margin-top:8px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        </div>
+      </div>
 
+      <div class="cartao" data-criterio="consistencia">
+        <div class="campo">
+          <label data-i18n="crit-consistencia">Consistência com a literatura — o conteúdo reflete de forma fiel a revisão de literatura subjacente.</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="av-consistencia" value="1"><span>1</span></label>
+            <label><input type="radio" name="av-consistencia" value="2"><span>2</span></label>
+            <label><input type="radio" name="av-consistencia" value="3"><span>3</span></label>
+            <label><input type="radio" name="av-consistencia" value="4"><span>4</span></label>
+            <label><input type="radio" name="av-consistencia" value="5"><span>5</span></label>
+          </div>
+          <textarea id="av-consistencia-comentario" rows="2" placeholder="Comentário (opcional)" style="width:100%; margin-top:8px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        </div>
+      </div>
+
+      <div class="cartao" data-criterio="completude">
+        <div class="campo" style="margin-bottom:0;">
+          <label data-i18n="crit-completude">Completude — o framework cobre adequadamente os aspetos relevantes da adoção de LLM numa PME.</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="av-completude" value="1"><span>1</span></label>
+            <label><input type="radio" name="av-completude" value="2"><span>2</span></label>
+            <label><input type="radio" name="av-completude" value="3"><span>3</span></label>
+            <label><input type="radio" name="av-completude" value="4"><span>4</span></label>
+            <label><input type="radio" name="av-completude" value="5"><span>5</span></label>
+          </div>
+          <textarea id="av-completude-comentario" rows="2" placeholder="Comentário (opcional)" style="width:100%; margin-top:8px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        </div>
+      </div>
+
+      <div class="cartao">
+        <h3 data-i18n="sintese-reflexao-titulo">Reflexão livre</h3>
+        <p class="nota" data-i18n="sintese-reflexao-texto">Espaço aberto para qualquer observação adicional da entrevista — pontos fortes, limitações, sugestões de melhoria. Mínimo de 75 palavras.</p>
+        <textarea id="av-reflexao" rows="5" placeholder="Registe aqui as notas da reflexão livre..." style="width:100%; margin-top:10px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        <p class="nota" id="contador-palavras" style="margin-top:6px; margin-bottom:0;"></p>
+      </div>
+
+      <h2 data-i18n="sintese-secao-resultados">Resultados</h2>
+
+      <div class="cartao" id="resultados-bloqueado" style="text-align:center; padding:32px 24px;">
+        <p class="nota" style="margin:0;" id="texto-bloqueado"></p>
+      </div>
+
+      <div id="resultados-desbloqueado" hidden>
         <div class="cartao">
-          <div class="campo">
-            <label data-i18n="satisfacao-percebeu">Percebeu claramente o resultado deste diagnóstico?</label>
-            <div class="opcoes-inline">
-              <label><input type="radio" name="satisfacao-percebeu" value="sim"><span data-i18n="sim">Sim</span></label>
-              <label><input type="radio" name="satisfacao-percebeu" value="nao"><span data-i18n="nao">Não</span></label>
-            </div>
-          </div>
-          <div class="campo" style="margin-bottom:0;">
-            <label data-i18n="satisfacao-util">Considera que este instrumento será útil para a sua empresa?</label>
-            <div class="opcoes-inline">
-              <label><input type="radio" name="satisfacao-util" value="sim"><span data-i18n="sim">Sim</span></label>
-              <label><input type="radio" name="satisfacao-util" value="nao"><span data-i18n="nao">Não</span></label>
-            </div>
+          <h3 data-i18n="sintese-email-titulo">Receber os resultados finais do estudo</h3>
+          <p class="nota" data-i18n="sintese-email-texto">Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu email. É usado exclusivamente para esse fim. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).</p>
+          <div class="campo" style="margin-top:16px; margin-bottom:0;">
+            <label for="email-especialista" data-i18n="sintese-email-label">Email (opcional)</label>
+            <input type="email" id="email-especialista" placeholder="nome@exemplo.com">
           </div>
         </div>
 
-        <div class="cartao">
-          <h3 data-i18n="contacto-titulo">Receber os resultados do estudo</h3>
-          <p class="nota" data-i18n="contacto-nota">Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu e-mail. É usado exclusivamente para esse fim e não é partilhado com terceiros. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).</p>
-
-          <div class="campo" style="margin-top:16px;">
-            <label for="contacto-email" data-i18n="contacto-email-label">E-mail</label>
-            <input type="email" id="contacto-email" placeholder="nome@exemplo.com">
-          </div>
-
-          <label style="display:flex; gap:10px; align-items:flex-start; margin-bottom:16px; cursor:pointer;">
-            <input type="checkbox" id="contacto-consentimento" style="margin-top:4px;">
-            <span data-i18n="contacto-consentimento">Aceito que o meu e-mail seja utilizado exclusivamente para me contactar com os resultados finais deste estudo.</span>
-          </label>
-
-          <button type="button" class="botao" id="guardar-contacto" data-i18n="contacto-guardar-botao">Guardar contacto</button>
-          <p class="nota" id="contacto-mensagem" style="margin-top:12px;" hidden></p>
-        </div>
-
-        <div class="acoes-rodape">
-          <button type="button" class="botao secundario" id="recomecar-1" data-i18n="sessao-recomecar">Recomeçar</button>
-          <div style="display:flex; gap:10px;">
-            <a class="botao secundario" id="voltar-instrumento" href="instrumento3.html" data-i18n="voltar">← Voltar</a>
-            <button type="button" class="botao" id="ir-passo-2" data-i18n="seguinte" disabled>Seguinte →</button>
+        <div class="cartao" style="border-color: var(--ink);">
+          <h3 data-i18n="sintese-download-titulo">Descarregar a sua avaliação</h3>
+          <p class="nota" data-i18n="sintese-download-texto">Um ficheiro com a sua avaliação, pronto a abrir em qualquer computador. Depois de descarregar, as respostas ficam fixas e deixam de poder ser editadas.</p>
+          <div style="margin-top:16px;">
+            <button class="botao" id="descarregar-resumo" data-i18n="sintese-download-botao">Descarregar resumo →</button>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- PASSO 2 — Resultado do instrumento -->
-      <section id="r-passo-2" hidden>
-        <h2 data-i18n="r-passo2-titulo">Passo 2 — Resultado do diagnóstico</h2>
-
-        <div class="abas-painel">
-          <button type="button" class="aba-painel ativa" data-aba="descarregar" data-i18n="aba-descarregar">Descarregar</button>
-          <button type="button" class="aba-painel" data-aba="resultado" data-i18n="aba-resultado">Resultados</button>
-        </div>
-
-        <div id="aba-descarregar">
-          <div class="cartao" style="border-color: var(--ink);">
-            <h3 data-i18n="sintese-download-titulo">Descarregar o seu resumo</h3>
-            <p class="nota" data-i18n="sintese-download-nota">Um ficheiro simples, pronto a abrir em qualquer computador — sem necessidade de programas técnicos.</p>
-            <div style="margin-top:16px;">
-              <button class="botao" id="descarregar-resumo" data-i18n="sintese-download-botao">Descarregar resumo →</button>
-            </div>
-          </div>
-
-          <div class="acoes-rodape">
-            <button type="button" class="botao secundario" id="recomecar-2" data-i18n="sessao-recomecar">Recomeçar</button>
-            <div style="display:flex; gap:10px;">
-              <button type="button" class="botao secundario" id="voltar-passo-1" data-i18n="voltar">← Voltar</button>
-              <button type="button" class="botao" id="terminar" data-i18n="sessao-terminar">Terminar sessão</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="aba-resultado" hidden>
-          <div class="cartao">
-            <h3 data-i18n="sintese-canvas-titulo">Panorama do seu modelo de negócio</h3>
-            <p class="nota" data-i18n="sintese-canvas-lead">Os blocos a azul foram escolhidos para aprofundamento nas Fichas de Decisão; os restantes não foram considerados nesta fase.</p>
-            <div id="canvas-selecao" class="bmc-diagrama"></div>
-          </div>
-
-          <div class="cartao">
-            <h3 data-i18n="sintese-tabela-titulo">Perfil de prioridade por bloco</h3>
-            <table id="tabela-diagnostico"></table>
-          </div>
-
-          <div class="cartao">
-            <h3 data-i18n="sintese-aprofundados-titulo">Blocos selecionados para aprofundamento</h3>
-            <div id="blocos-aprofundados"></div>
-          </div>
-        </div>
-      </section>
+      <div class="acoes-rodape">
+        <a class="botao secundario" id="voltar-instrumento" href="instrumento3.html">← Voltar</a>
+        <button type="button" class="botao" id="terminar" disabled>Concluir</button>
+      </div>
     </div>
 
     <div class="cartao" id="ecra-fim" style="text-align:center; padding:56px 28px;" hidden>
-      <h2 data-i18n="sessao-terminada-titulo">Sessão terminada</h2>
+      <h2 data-i18n="sessao-terminada-titulo">Sessão concluída</h2>
       <p class="nota" data-i18n="sessao-terminada-agradecimento">Obrigado por participar neste estudo — a sua contribuição é uma ajuda preciosa para esta investigação.</p>
       <p class="nota" data-i18n="sessao-terminada-texto">Os dados desta sessão foram apagados deste navegador. Pode fechar esta janela.</p>
     </div>
@@ -159,20 +157,27 @@
 <div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
     <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
-    <h2 id="modal-sobre-titulo" data-i18n="sobre-titulo">Sobre este projeto</h2>
-
-    <h3 data-i18n="sobre-tese-titulo">Sobre a tese em curso</h3>
-    <p data-i18n="sobre-tese-texto">Esta ferramenta e o artefacto central da dissertacao.</p>
-
-    <h3 data-i18n="sobre-autor-titulo">Sobre o autor</h3>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-autor-titulo">Sobre o autor</h2>
     <p data-i18n="sobre-autor-texto">Sou Ricardo Isaías Serafim, economista, licenciado em Gestão de Informação pela Universidade Nova de Lisboa. Trabalho para o Grupo Schwarz, no Lidl Portugal, e estou atualmente destacado no Lidl Chéquia. Sou responsável por Planeamento Financeiro, Reporting e Data Science, e lidero também a Transformação Digital na área de Controlo de Gestão. Este projeto cruza a minha experiência empresarial com a investigação académica em IA aplicada a PME — o mesmo tema que me entusiasmou a abraçar esta aventura académica. Caso tenha dúvidas, contacte-me através de <a href="mailto:m2302605@estudante.uab.pt">m2302605@estudante.uab.pt</a>.</p>
   </div>
 </div>
 
-<script src="js/i18n.js?v=20260719d"></script>
-<script src="js/modal.js?v=20260719d"></script>
-<script src="js/data.js?v=20260719d"></script>
-<script src="js/state.js?v=20260719d"></script>
-<script src="js/resultados.js?v=20260719d"></script>
+<div class="modal-backdrop" id="modal-confirmar-concluir" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-confirmar-titulo">
+    <h2 id="modal-confirmar-titulo" data-i18n="modal-concluir-titulo">Concluir a sessão?</h2>
+    <p class="nota" data-i18n="sessao-terminar-confirmar">Ao concluir, os seus dados são enviados e depois apagados deste navegador — não será possível recuperá-los. Se ainda não descarregou o resumo, faça-o antes de continuar.</p>
+    <div class="acoes-rodape" style="border-top:none; justify-content:flex-end;">
+      <button type="button" class="botao secundario" id="btn-cancelar-concluir" data-i18n="modal-cancelar">Cancelar</button>
+      <button type="button" class="botao" id="btn-confirmar-concluir" data-i18n="modal-sim">Sim</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/i18n.js?v=20260807"></script>
+<script src="js/modal.js?v=20260807"></script>
+<script src="js/data.js?v=20260807"></script>
+<script src="js/state.js?v=20260807"></script>
+<script src="js/relatorio-utils.js?v=20260807"></script>
+<script src="js/resultados.js?v=20260807"></script>
 </body>
 </html>

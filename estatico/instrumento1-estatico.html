@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instrumento 1 — Diagnóstico de Pré-requisitos · LLM em PME (versão estática)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/*
+  Paleta: Manual de Normas Gráficas UAb, p.17
+  - Preto            CMYK 0.0.0.100  / RGB 0.0.0
+  - Azul UAb         CMYK 70.40.30.0 / RGB 109.130.151  (Pantone 8201)
+  - Azul UAb 50%     CMYK 35.20.15.0 / RGB 179.188.201
+  - Cinzento         CMYK 0.0.0.50   / RGB 150.150.154
+
+  Tipografia: Flama Basic (corpo/títulos institucionais). A Flama é uma
+  fonte comercial (Feliciano Type Foundry) sem distribuição gratuita para
+  web — usa-se aqui a Fira Sans como substituta próxima (proporções e
+  peso semelhantes) até haver licença de webfont. Ver nota no README.
+*/
+
+:root {
+  --uab-preto: #000000;
+  --uab-azul: #6D8297;
+  --uab-azul-tint: #B3BCC9;
+  --uab-cinza: #96969A;
+
+  --paper: #FFFFFF;
+  --paper-alt: #F5F6F5;
+  --ink: #16191B;
+  --ink-soft: #52585C;
+  --line: #DADDD9;
+
+  /* Sistema de estados dos instrumentos (selos de prioridade, mini-mapa)
+     — usa exclusivamente os quatro valores do Manual de Normas Gráficas
+     (preto, azul, azul 50%, cinzento), numa escala de intensidade
+     crescente: Diferir (cinza, o mais discreto) < Relevante < Prioritário
+     < Investimento necessário (preto, o mais forte — é o estado que mais
+     precisa de chamar a atenção, por bloquear o avanço). Assim evita-se
+     introduzir cores fora da identidade institucional só para "semáforo".
+  */
+  --st-diferir: var(--ink-soft);
+  --st-diferir-bg: #ECECEA;
+  --st-relevante: var(--uab-preto);
+  --st-relevante-bg: #DCE2E7;
+  --st-prioritario: #FFFFFF;
+  --st-prioritario-bg: var(--uab-azul);
+  --st-investimento: #FFFFFF;
+  --st-investimento-bg: var(--uab-preto);
+
+  --font-display: 'Fira Sans', 'Flama Basic', system-ui, sans-serif;
+  --font-body: 'Fira Sans', 'Flama Basic', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius: 6px;
+  --max-width: 880px;
+}
+
+* { box-sizing: border-box; }
+
+/* Checkboxes e radio buttons nativos do navegador seguem a cor
+   institucional — sem isto, ficavam azul-padrão do sistema operativo do
+   utilizador, destoando do resto da paleta. */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--uab-azul);
+}
+
+body {
+  margin: 0;
+  background: var(--paper-alt);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.18;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.01em;
+  color: var(--uab-preto);
+}
+
+h1 { font-size: clamp(1.9rem, 3.2vw, 2.6rem); }
+h2 { font-size: clamp(1.35rem, 2.2vw, 1.7rem); }
+h3 { font-size: 1.1rem; font-weight: 600; }
+
+p { margin: 0 0 1em; }
+
+a { color: var(--uab-azul); }
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Cabeçalho — fundo branco obrigatório (a versão a cores da assinatura
+   só pode ser aplicada sobre fundo branco, p.18 do manual) */
+.topo {
+  background: var(--paper);
+  border-bottom: 3px solid var(--uab-azul);
+  padding: 20px 0;
+}
+
+.topo-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap; /* em ecrãs muito estreitos, o seletor de idioma + mini-mapa passam para a linha de baixo em vez de espremer a marca */
+  row-gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.marca {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  color: var(--uab-preto);
+}
+
+.marca span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Seletor de idioma PT/EN, no cabeçalho de todas as páginas */
+.seletor-idioma {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.seletor-idioma button {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 5px 10px;
+  border: none;
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.seletor-idioma button + button { border-left: 1px solid var(--line); }
+
+.seletor-idioma button.ativo {
+  background: var(--uab-azul);
+  color: #FFFFFF;
+}
+
+.seletor-idioma button:focus-visible {
+  outline: 2px solid var(--uab-azul);
+  outline-offset: 2px;
+}
+
+/**
+ * Mini-mapa: a grelha 3x3 que espelha o BMC, no cabeçalho de todas as
+ * páginas. Serve dois propósitos ao mesmo tempo: (1) indicador visual de
+ * progresso do diagnóstico, e (2) botão que abre o modal "Sobre este
+ * projeto" (ver data-modal-trigger="sobre" no HTML e js/modal.js).
+ * É um <button>, não uma <div> — por isso o reset de background/border/
+ * padding a seguir, para não parecer um botão do sistema operativo.
+ */
+.mapa-bmc {
+  display: grid;
+  grid-template-columns: repeat(3, 10px);
+  grid-template-rows: repeat(3, 10px);
+  gap: 3px;
+  background: none;
+  border: none;
+  padding: 4px;
+  margin: -4px; /* compensa o padding, para não empurrar o resto do cabeçalho */
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mapa-bmc:hover { background: var(--paper-alt); }
+
+.mapa-bmc:focus-visible {
+  outline: 2px solid var(--uab-azul);
+  outline-offset: 2px;
+}
+
+.mapa-bmc i {
+  display: block;
+  border-radius: 2px;
+  background: var(--line); /* célula "vazia", por defeito */
+}
+
+/* Cada script de página (instrumento1.js, etc.) acrescenta a classe
+   "preenchido" e o atributo data-p à célula correspondente assim que um
+   bloco é respondido — e remove os dois quando deixa de haver resposta
+   (ver atualizarMapa() nesses ficheiros). Sem essa remoção, uma célula
+   ficava "presa" com a cor antiga depois de se limpar o diagnóstico. */
+.mapa-bmc i.preenchido[data-p="Diferir"] { background: var(--uab-cinza); }
+.mapa-bmc i.preenchido[data-p="Relevante"] { background: var(--uab-azul-tint); }
+.mapa-bmc i.preenchido[data-p="Prioritário"] { background: var(--uab-azul); }
+.mapa-bmc i.preenchido[data-p="Investimento necessário"] { background: var(--uab-preto); }
+
+main {
+  padding: 48px 0 32px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--uab-azul);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.lead {
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  max-width: 60ch; /* linhas de texto longas demais ficam difíceis de ler — 60 caracteres é o valor clássico recomendado para leitura confortável */
+}
+
+/* Cartões — o bloco visual base, reutilizado em quase todo o lado (perguntas, tabelas, cartões de instrumento, etc.) */
+.cartao {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+/* Cartão clicável (os 3 cartões de instrumento no index, que abrem um modal de explicação) */
+.cartao-clicavel {
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cartao-clicavel:hover,
+.cartao-clicavel:focus-visible {
+  border-color: var(--uab-azul);
+  box-shadow: 0 2px 10px rgba(109, 130, 151, 0.15);
+}
+
+.cartao-clicavel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+
+/**
+ * Os três estados do percurso "abre um bloco de cada vez" do Instrumento 1
+ * (ver calcularVisao() em instrumento1.js):
+ *   .cartao-bloqueado  — ainda não se chegou lá; esbatido e sem interação
+ *   .cartao-colapsado  — já respondido, resumo clicável para reabrir
+ *   (o terceiro estado, "expandido", é só o .cartao normal, com os inputs)
+ */
+.cartao-bloqueado {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.cartao-bloqueado .cartao-cabecalho { margin-bottom: 0; }
+
+.selo-cadeado {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.cartao-colapsado {
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.cartao-colapsado .cartao-cabecalho { margin-bottom: 0; }
+
+.cartao-colapsado:hover,
+.cartao-colapsado:focus-visible {
+  border-color: var(--uab-azul);
+}
+
+.cartao-colapsado:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+
+.cartao-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+/* O bloco de texto à esquerda (area-tag + h3) pode encolher e quebrar
+   linha dentro de si mesmo — min-width:0 é o que permite isso num item
+   flex (sem ele, um filho com texto longo nunca encolhe abaixo do
+   tamanho do próprio conteúdo, e era isso que empurrava o selo para
+   baixo em nomes de bloco compridos, como "Relacionamento com Clientes"). */
+.cartao-cabecalho > div {
+  min-width: 0;
+  flex: 1;
+}
+
+/* O selo/cadeado nunca encolhe nem quebra — fica sempre inteiro e à direita. */
+.cartao-cabecalho .selo,
+.cartao-cabecalho .selo-cadeado {
+  flex-shrink: 0;
+}
+
+.area-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.indicadores {
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  border-left: 2px solid var(--uab-azul-tint);
+}
+
+.indicadores li {
+  padding: 4px 0 4px 14px;
+  color: var(--ink-soft);
+  font-size: 0.94rem;
+}
+
+/* Grupos de escolha (Prontidão / Impacto), no Instrumento 1 */
+.eixo { margin-bottom: 16px; }
+
+.eixo-titulo {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.escala {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.escala label {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 0.83rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.escala label:hover { border-color: var(--uab-azul); }
+
+.escala input { margin-right: 6px; }
+
+.escala input:checked + span {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* :has() deixa estilizar o <label> com base no estado do <input> lá
+   dentro, sem precisar de JavaScript para alternar uma classe — só
+   funciona em navegadores relativamente recentes (2023+), mas como isto
+   é só um destaque visual (a opção continua a funcionar sem ele), não há
+   problema em usar sem verificação extra de compatibilidade. */
+.escala label:has(input:checked) {
+  border-color: var(--uab-azul);
+  background: #EEF1F3;
+}
+
+.escala input:focus-visible {
+  outline: 2px solid var(--uab-azul);
+  outline-offset: 2px;
+}
+
+/* Selo de prioridade — reutiliza o sistema de cores --st-* definido no :root */
+.selo {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.selo[data-p="Prioritário"] { background: var(--st-prioritario-bg); color: var(--st-prioritario); }
+.selo[data-p="Relevante"] { background: var(--st-relevante-bg); color: var(--st-relevante); }
+.selo[data-p="Investimento necessário"] { background: var(--st-investimento-bg); color: var(--st-investimento); }
+.selo[data-p="Diferir"] { background: var(--st-diferir-bg); color: var(--ink-soft); }
+
+/* Botões */
+.botao {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 12px 22px;
+  border-radius: var(--radius);
+  border: 1px solid var(--uab-preto);
+  background: var(--uab-preto);
+  color: var(--paper);
+  cursor: pointer;
+  text-decoration: none; /* para quando .botao é aplicado a um <a>, não só a <button> */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.botao:hover { background: var(--uab-azul); border-color: var(--uab-azul); }
+
+.botao.secundario {
+  background: transparent;
+  color: var(--uab-preto);
+}
+
+.botao.secundario:hover {
+  background: var(--paper-alt);
+  color: var(--uab-preto);
+}
+
+.botao:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.botao:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+
+.acoes-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.nota { font-size: 0.85rem; color: var(--ink-soft); }
+
+.marcador-pendente {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  border: 1px dashed var(--uab-cinza);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+
+th, td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+}
+
+/* Abas genéricas — usadas em dois sítios: a navegação entre Fichas de
+   Decisão no Instrumento 3 (.aba-ficha) e as abas Descarregar/Resultados
+   no Passo 2 da página de resultados (.aba-painel). Mesma aparência nos
+   dois casos, por isso as regras estão agrupadas em vez de duplicadas. */
+.abas-fichas, .abas-painel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.aba-ficha, .aba-painel {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.aba-ficha:hover, .aba-painel:hover { border-color: var(--uab-azul); color: var(--ink); }
+
+.aba-ficha.ativa, .aba-painel.ativa {
+  background: var(--uab-preto);
+  border-color: var(--uab-preto);
+  color: #FFFFFF;
+}
+
+.aba-ficha:focus-visible, .aba-painel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+
+/* Indicador de passos (as barrinhas no topo do index e da página de resultados) */
+.passos {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0 32px;
+}
+
+.passos span {
+  flex: 1;
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+}
+
+.passos span.ativo { background: var(--uab-azul); }
+.passos span.concluido { background: var(--uab-azul-tint); }
+
+/* Campos de formulário (Passo 1 do index — perfil da empresa) */
+.campo { margin-bottom: 22px; }
+
+.campo label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.campo select,
+.campo input[type="number"] {
+  width: 100%;
+  max-width: 340px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.campo select:focus-visible,
+.campo input:focus-visible {
+  outline: 2px solid var(--uab-azul);
+  outline-offset: 1px;
+  border-color: var(--uab-azul);
+}
+
+.opcoes-inline {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.opcoes-inline label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Selo com a classificação de PME estimada (micro/pequena/média/grande) */
+.classificacao {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--uab-azul);
+  background: #E7EBEE;
+  border-radius: 999px;
+  padding: 5px 12px;
+  margin-top: 4px;
+}
+
+.classificacao[hidden] { display: none; }
+
+/* Aviso de bloqueio (ex: "esta empresa não é uma PME") — usa preto, o
+   tom mais forte da paleta, porque impede mesmo de avançar; não é só um
+   alerta informativo como o .marcador-pendente. */
+.aviso-bloqueio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--uab-preto);
+  background: #EFEFED;
+  border-left: 3px solid var(--uab-preto);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-top: 10px;
+}
+
+.aviso-bloqueio[hidden] { display: none; }
+
+/**
+ * Diagrama do Business Model Canvas (Passo 2 do index) — replica a
+ * disposição clássica de 5 colunas de Osterwalder & Pigneur (2010),
+ * construído em HTML/CSS real (não uma imagem): mantém a tradução PT/EN
+ * automática já existente no site e adapta-se ao ecrã, o que uma imagem
+ * fixa não conseguiria fazer sem duplicar o trabalho para cada idioma.
+ *
+ * "gap: 1px" + fundo preto no contentor é o truque para desenhar as
+ * linhas da grelha sem duplicar contornos entre células vizinhas — o
+ * fundo do contentor "aparece" só nesse espaço de 1px.
+ *
+ * Abaixo dos ~700px de largura, a forma em grelha deixa de caber com
+ * texto legível (colunas com menos de 100px de texto útil), por isso
+ * simplifica-se para uma lista vertical, pela ordem canónica dos blocos
+ * (ver a media query ao fundo).
+ */
+.bmc-diagrama {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.575fr 0.575fr 1fr 1fr;
+  grid-template-areas:
+    "parcerias  atividades  valor  valor  relacionamento  segmentos"
+    "parcerias  recursos    valor  valor  canais          segmentos"
+    "custos     custos      custos receita receita        receita";
+  gap: 1px;
+  background: var(--uab-preto);
+  border: 2px solid var(--uab-preto);
+  margin: 8px 0 24px;
+}
+
+.bmc-bloco {
+  background: var(--paper);
+  padding: 14px;
+  min-width: 0; /* permite ao texto quebrar corretamente dentro da célula, em vez de forçar a coluna a alargar */
+}
+
+.bmc-bloco .area-tag { display: block; margin-bottom: 4px; }
+
+.bmc-bloco h4 {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 6px;
+  color: var(--uab-preto);
+}
+
+.bmc-bloco p {
+  font-size: 0.72rem;
+  line-height: 1.42;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* As 9 posições clássicas do canvas — cada bloco recebe a sua área
+   consoante o id (ver data-bmc, escrito por renderGrelhaBMC() em
+   index.js). A Proposta de Valor ocupa uma coluna ligeiramente mais
+   larga (1.15fr), tal como no desenho original — é o bloco central,
+   normalmente com mais texto. */
+.bmc-bloco[data-bmc="parcerias-chave"] { grid-area: parcerias; }
+.bmc-bloco[data-bmc="atividades-chave"] { grid-area: atividades; }
+.bmc-bloco[data-bmc="recursos-chave"] { grid-area: recursos; }
+.bmc-bloco[data-bmc="proposta-valor"] { grid-area: valor; }
+.bmc-bloco[data-bmc="relacionamento-clientes"] { grid-area: relacionamento; }
+.bmc-bloco[data-bmc="canais"] { grid-area: canais; }
+.bmc-bloco[data-bmc="segmentos-clientes"] { grid-area: segmentos; }
+.bmc-bloco[data-bmc="estrutura-custos"] { grid-area: custos; }
+.bmc-bloco[data-bmc="fontes-receita"] { grid-area: receita; }
+
+@media (max-width: 700px) {
+  .bmc-diagrama {
+    grid-template-columns: 1fr;
+    grid-template-areas: none;
+  }
+  .bmc-bloco { grid-area: auto; padding: 16px; }
+  .bmc-bloco h4 { font-size: 0.95rem; }
+  .bmc-bloco p { font-size: 0.82rem; }
+}
+
+/**
+ * Dois estados adicionais do mesmo diagrama, usados na página de
+ * resultados para mostrar de relance quais blocos foram escolhidos para
+ * aprofundamento: "selecionado" ganha destaque (fundo azul institucional,
+ * como o selo de Prioritário), "não selecionado" fica esbatido — a
+ * mesma opacidade reduzida já usada em .cartao-bloqueado no Instrumento 1
+ * para blocos "não aplicáveis nesta fase", por coerência visual.
+ */
+.bmc-bloco--selecionado {
+  background: var(--uab-azul);
+}
+
+.bmc-bloco--selecionado h4 {
+  color: #FFFFFF;
+}
+
+.bmc-bloco--nao-selecionado {
+  opacity: 0.45;
+}
+
+/**
+ * Modal "Sobre este projeto" e os modais de explicação dos instrumentos
+ * (todos usam .modal-backdrop / .modal — ver js/modal.js para a lógica
+ * de abrir/fechar, que é genérica para qualquer par gatilho/modal).
+ *
+ * O `.modal-backdrop[hidden] { display: none; }` a seguir não é
+ * redundante — é mesmo necessário: como .modal-backdrop já tem
+ * `display: flex` (para centrar a caixa branca), isso sobrepõe-se ao
+ * comportamento nativo do atributo HTML `hidden`, que só funciona
+ * sozinho quando não há nenhum `display` definido no CSS para esse
+ * elemento. Sem esta regra extra, `elemento.hidden = true` em JavaScript
+ * não escondia o modal nenhuma - ficava sempre visível.
+ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 25, 27, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 100;
+}
+
+.modal-backdrop[hidden] { display: none; }
+
+.modal {
+  background: var(--paper);
+  border-radius: var(--radius);
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 32px;
+  position: relative;
+}
+
+.modal-fechar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.modal-fechar:hover { background: var(--paper-alt); color: var(--uab-preto); }
+.modal-fechar:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+
+.modal h2 { margin-bottom: 18px; padding-right: 24px; }
+.modal h3 { font-size: 0.92rem; color: var(--uab-azul); margin-top: 22px; }
+.modal p:last-child { margin-bottom: 0; }
+
+/* Rodapé institucional — logotipos UAb / UTAD, fundo branco (idem cabeçalho) */
+.rodape {
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  margin-top: 40px;
+}
+
+.rodape-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.rodape-logos {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.rodape-logos img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.rodape-texto {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  max-width: 40ch;
+  text-align: right;
+}
+
+/* Respeita quem desativou animações no sistema operativo (acessibilidade) — desliga todas as transições em vez de as ajustar uma a uma. */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* Ajustes para ecrãs de telemóvel — agrupados no fim de propósito, para
+   ficar fácil de ver tudo o que muda em conjunto num ecrã pequeno. */
+@media (max-width: 640px) {
+  .escala { grid-template-columns: 1fr; }
+  .escala label { padding: 8px 10px; font-size: 0.8rem; }
+  .eixo { margin-bottom: 12px; }
+  .eixo-titulo { margin-bottom: 6px; font-size: 0.85rem; }
+  .cartao { padding: 20px; }
+  .container { padding: 0 16px; }
+  main { padding: 32px 0 28px; }
+
+  table { display: block; overflow-x: auto; } /* scroll horizontal como rede de segurança; o texto quebra linha normalmente dentro de cada célula (sem "nowrap" universal, que tornava as tabelas de texto longo — Fichas de Decisão — praticamente ilegíveis em mobile) */
+
+  /* Exceção: a tabela "Resultado global do diagnóstico" (Instrumento 1 e
+     resultados) tem poucas colunas mas nomes de bloco compridos — em vez
+     de scroll lateral, cada linha vira um pequeno cartão, com o nome da
+     coluna (data-label, escrito pelo JS) a aparecer antes do valor. */
+  #tabela-resumo, #tabela-diagnostico { overflow-x: visible; }
+  #tabela-resumo thead, #tabela-diagnostico thead { display: none; }
+  #tabela-resumo tbody, #tabela-diagnostico tbody,
+  #tabela-resumo tr, #tabela-diagnostico tr { display: block; }
+  #tabela-resumo tr, #tabela-diagnostico tr {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    padding: 4px 12px;
+  }
+  #tabela-resumo td, #tabela-diagnostico td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  #tabela-resumo td:last-child, #tabela-diagnostico td:last-child { border-bottom: none; }
+  #tabela-resumo td::before, #tabela-diagnostico td::before {
+    content: attr(data-label);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+
+  .acoes-rodape { flex-direction: column; align-items: stretch; gap: 12px; }
+  .acoes-rodape .botao { width: 100%; justify-content: center; }
+  .acoes-rodape > div { flex-direction: column; gap: 10px !important; } /* quando há um grupo de 2 botões aninhado dentro de .acoes-rodape (ver resultados.html/index.html) */
+
+  .rodape-inner { flex-direction: column; align-items: flex-start; }
+  .rodape-texto { text-align: left; }
+
+  .modal { padding: 24px 20px; max-height: 90vh; }
+}
+
+.aviso-estatico { background: #F1F1EF; border-left: 3px solid var(--uab-preto); padding: 14px 18px; margin-bottom: 28px; font-size: 0.85rem; color: var(--ink-soft); border-radius: 4px; }
+.checkbox-decorativa { opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <span class="marca">LLM em PME<span>Framework LLM × BMC</span></span>
+    <div class="mapa-bmc" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <div class="aviso-estatico">Versão estática — os 9 blocos aparecem aqui todos abertos ao mesmo tempo, só para leitura do conteúdo. Na ferramenta real, abrem um de cada vez, à medida que responde.</div>
+
+    <span class="eyebrow">Instrumento 1 de 3</span>
+    <h1>Diagnóstico de Pré-requisitos</h1>
+    <p class="lead">Avalie cada bloco do BMC nos eixos <strong>Prontidão</strong> e <strong>Impacto</strong>, numa escala de 1 (Baixo) a 3 (Alto), tendo a sua PME como referência. Os indicadores servem apenas para orientar a reflexão — a classificação final é a sua avaliação global do bloco.</p>
+    
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Interface com o Cliente</span>
+          <h3>Segmentos de Clientes</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>Existem dados estruturados sobre clientes (e.g., CRM)?</li><li>Segmenta ou diferencia clientes por perfil ou necessidade?</li><li>Capacidade de registar e analisar interações com clientes?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="segmentos-clientes-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="segmentos-clientes-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="segmentos-clientes-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="segmentos-clientes-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="segmentos-clientes-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="segmentos-clientes-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Produto/Oferta</span>
+          <h3>Proposta de Valor</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>A proposta de valor inclui personalização ou serviço diferenciado?</li><li>Existe produção regular de conteúdos comerciais?</li><li>Necessidade de adaptação frequente da oferta ao cliente?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="proposta-valor-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="proposta-valor-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="proposta-valor-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="proposta-valor-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="proposta-valor-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="proposta-valor-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Interface com o Cliente · com Ficha de Decisão</span>
+          <h3>Canais</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>Utiliza canais digitais para comunicar com clientes (email, redes sociais)?</li><li>Há plataformas de atendimento ou comunicação já implementadas?</li><li>Existem perguntas frequentes nesses canais?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="canais-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="canais-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="canais-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="canais-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="canais-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="canais-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Interface com o Cliente · com Ficha de Decisão</span>
+          <h3>Relacionamento com Clientes</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>Existe serviço de apoio ao cliente com volume de interações regular?</li><li>Há processos de acompanhamento pós-venda ou fidelização definidos?</li><li>Regista reclamações ou comentários de forma estruturada?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="relacionamento-clientes-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="relacionamento-clientes-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="relacionamento-clientes-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="relacionamento-clientes-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="relacionamento-clientes-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="relacionamento-clientes-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Aspetos Financeiros</span>
+          <h3>Fontes de Receita</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>Existem serviços digitais com potencial de escala?</li><li>Tem capacidade de introduzir novos modelos de serviço baseados em dados?</li><li>Existem processos comerciais ou de conversão que podem ser otimizados por comunicação personalizada?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="fontes-receita-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="fontes-receita-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="fontes-receita-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="fontes-receita-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="fontes-receita-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="fontes-receita-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Gestão de Infraestrutura · com Ficha de Decisão</span>
+          <h3>Atividades-Chave</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>Existem atividades intensivas em linguagem (relatórios, comunicações)?</li><li>Há tarefas administrativas repetitivas com elevado volume de documentos?</li><li>Os processos operacionais estão minimamente documentados?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="atividades-chave-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="atividades-chave-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="atividades-chave-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="atividades-chave-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="atividades-chave-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="atividades-chave-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Gestão de Infraestrutura · com Ficha de Decisão</span>
+          <h3>Recursos-Chave</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>Dispõe de infraestrutura digital básica (computadores, ligação à internet)?</li><li>Pelo menos um colaborador tem literacia digital para operar LLM?</li><li>Existe documentação interna ou base de conhecimento organizada (manuais, FAQs, processos, contratos)?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="recursos-chave-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="recursos-chave-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="recursos-chave-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="recursos-chave-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="recursos-chave-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="recursos-chave-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Gestão de Infraestrutura</span>
+          <h3>Parcerias-Chave</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>Trabalha com fornecedores tecnológicos ou consultores externos?</li><li>Existem relações com plataformas cloud ou de software como serviço (SaaS)?</li><li>Há abertura para estabelecer novos acordos com fornecedores de IA?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="parcerias-chave-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="parcerias-chave-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="parcerias-chave-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="parcerias-chave-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="parcerias-chave-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="parcerias-chave-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+    <div class="cartao">
+      <div class="cartao-cabecalho">
+        <div>
+          <span class="area-tag">Aspetos Financeiros</span>
+          <h3>Estrutura de Custos</h3>
+        </div>
+        <span class="selo">Por avaliar</span>
+      </div>
+      <ul class="indicadores"><li>Existem custos elevados associados a tarefas manuais ou repetitivas?</li><li>Tem capacidade de absorver custos de subscrição recorrentes (SaaS)?</li><li>Há mecanismos de controlo ou monitorização de custos operacionais?</li></ul>
+      <div class="eixo">
+        <div class="eixo-titulo">Prontidão — em que medida a PME dispõe destas condições?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="estrutura-custos-prontidao" disabled>
+      <span><strong>1</strong> — Condições ausentes ou inutilizáveis no estado atual.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="estrutura-custos-prontidao" disabled>
+      <span><strong>2</strong> — Condições existem de forma parcial, informal ou inconsistente.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="estrutura-custos-prontidao" disabled>
+      <span><strong>3</strong> — Condições presentes, estruturadas e utilizáveis.</span>
+    </label>
+  </div>
+      </div>
+      <div class="eixo">
+        <div class="eixo-titulo">Impacto — quão crítico é este bloco para o desempenho atual?</div>
+        <div class="escala">
+    <label>
+      <input type="radio" name="estrutura-custos-impacto" disabled>
+      <span><strong>1</strong> — Bloco estável, sem problemas operacionais relevantes.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="estrutura-custos-impacto" disabled>
+      <span><strong>2</strong> — Bloco relevante, com margem de melhoria moderada.</span>
+    </label>
+  
+    <label>
+      <input type="radio" name="estrutura-custos-impacto" disabled>
+      <span><strong>3</strong> — Bloco crítico, problemas operacionais visíveis ou margem de ganho significativa.</span>
+    </label>
+  </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="../assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="../assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+</body>
+</html>

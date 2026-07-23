@@ -1,8 +1,10 @@
 <!--
-  instrumento2.html — Matriz LLM x BMC (ver js/instrumento2.js). Mostra
-  só os blocos que saíram do diagnóstico como Prioritário ou Relevante,
-  cada um com a matriz de Aplicações/Oportunidades/Riscos (Tabela 10) e
-  uma checkbox para escolher aprofundar no Instrumento 3.
+  cenario.html — página intermédia do percurso de especialistas, entre a
+  entrevista (entrevista.html) e o Instrumento 1. Dá a escolher entre
+  percorrer os instrumentos de forma autónoma (em branco) ou partir de
+  um de três cenários de PME europeia, que pré-preenche o diagnóstico
+  do Instrumento 1 — as respostas continuam editáveis a partir daí (ver
+  js/cenario.js e a nota sobre comparabilidade entre especialistas).
 -->
 <!DOCTYPE html>
 <html lang="pt-PT">
@@ -10,7 +12,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
-<title>Instrumento 2 — Matriz LLM × BMC · LLM em PME</title>
+<title data-i18n="cenario-titulo-pagina">Escolher um cenário · LLM em PME</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
 <link rel="stylesheet" href="css/style.css?v=20260807">
@@ -34,26 +36,25 @@
 
 <main>
   <div class="container">
-    <span class="eyebrow" data-i18n="i2-eyebrow">Instrumento 2 de 3</span>
-    <h1 data-i18n="i2-h1">Matriz LLM × BMC</h1>
-    <p class="lead" id="lead-i2" data-i18n="i2-lead">
-      Com base no diagnóstico, estes são os blocos com potencial identificado.
-      Para cada um, a Matriz mapeia aplicações, oportunidades e riscos. Selecione
-      os blocos que pretende aprofundar no Instrumento 3.
-    </p>
+    <span class="eyebrow" data-i18n="cenario-eyebrow">Antes do Instrumento 1</span>
+    <h1 data-i18n="cenario-h1">Como quer percorrer os instrumentos?</h1>
+    <p class="lead" data-i18n="cenario-lead">Pode preencher o diagnóstico com as suas próprias respostas, ou partir de um cenário de PME já preenchido — em qualquer dos casos, todas as respostas continuam editáveis nos instrumentos seguintes.</p>
 
-    <div id="sem-blocos" class="cartao" hidden>
-      <p class="nota" data-i18n="i2-sem-blocos">Nenhum bloco foi classificado como Prioritário ou Relevante no diagnóstico. Pode rever o <a href="instrumento1.html">Instrumento 1</a> ou avançar diretamente para a síntese.</p>
+    <div class="escolha-entrada" id="grelha-escolhas">
+      <button type="button" class="cartao-escolha" id="escolha-autonomo">
+        <span class="area-tag" data-i18n="cenario-autonomo-tag">Percurso livre</span>
+        <h3 data-i18n="cenario-autonomo-titulo">Continuar de forma autónoma</h3>
+        <p class="nota" data-i18n="cenario-autonomo-texto">Percorra os instrumentos e preencha o diagnóstico com as suas próprias respostas, sem partir de nenhum exemplo.</p>
+        <span class="cartao-escolha-cta" data-i18n="cenario-autonomo-cta">Continuar →</span>
+      </button>
+
+      <!-- Os 3 cartões de cenário são gerados por js/cenario.js, a partir
+           de CENARIOS — assim a ficha mostrada aqui nunca diverge dos
+           dados que realmente são aplicados ao estado ao escolher um. -->
+      <div id="cartoes-cenarios" style="display:contents;"></div>
     </div>
 
-    <div id="lista-blocos"></div>
-
-    <div class="acoes-rodape">
-      <a class="botao secundario" href="instrumento1.html" data-i18n="i2-rever-diagnostico">← Rever diagnóstico</a>
-      <div style="display:flex; gap:10px;">
-        <button class="botao" id="continuar" data-i18n="i2-continuar-fichas">Continuar para o Instrumento 3 →</button>
-      </div>
-    </div>
+    <p class="nota" data-i18n="cenario-nota-rodape" style="max-width:640px; margin-top:8px;">Estes três cenários são exemplos fictícios — servem apenas para explorar os instrumentos com dados já preenchidos, sem ter de responder de forma aleatória só para ver como o framework reage.</p>
   </div>
 </main>
 
@@ -79,6 +80,6 @@
 <script src="js/modal.js?v=20260807"></script>
 <script src="js/data.js?v=20260807"></script>
 <script src="js/state.js?v=20260807"></script>
-<script src="js/instrumento2.js?v=20260807"></script>
+<script src="js/cenario.js?v=20260807"></script>
 </body>
 </html>
