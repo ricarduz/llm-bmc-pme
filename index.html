@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="titulo-pagina">Framework de adoção de LLM em PME</title>
-<meta id="meta-descricao" name="description" content="Ferramenta interativa de demonstração do framework de adoção de Large Language Models por PME, estruturado no Business Model Canvas.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
+<meta id="meta-descricao" name="description" content="Ferramenta interativa de demonstração do framework de adoção de Large Language Models por PME, estruturado no Business Model Canvas.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -32,38 +32,128 @@
     <h1 data-i18n="h1">Um percurso guiado para decidir onde os LLM fazem sentido na sua PME</h1>
     <p class="lead" data-i18n="lead">
       Esta ferramenta instancia sequencialmente os três instrumentos do framework de apoio à adoção de Large Language Models (LLM) por Pequenas e Médias
-      Empresas, estruturado no Business Model Canvas (BMC). Responde, por esta ordem, a três perguntas.
+      Empresas, estruturado no Business Model Canvas (BMC). Responda a estes passos iniciais.
     </p>
 
-    <div class="cartao cartao-clicavel" data-modal-trigger="instrumento1">
-      <h3 data-i18n="card1-titulo">1. A minha empresa está pronta?</h3>
-      <p class="nota" data-i18n="card1-nota">Instrumento 1 — Diagnóstico de Pré-requisitos. Avalia, bloco a bloco, a prontidão operacional e a criticidade de cada área do seu negócio.</p>
-    </div>
-    <div class="cartao cartao-clicavel" data-modal-trigger="instrumento2">
-      <h3 data-i18n="card2-titulo">2. Onde faz sentido para a minha PME?</h3>
-      <p class="nota" data-i18n="card2-nota">Instrumento 2 — Matriz LLM × BMC. Mapeia aplicações, oportunidades e riscos nos blocos identificados como prioritários.</p>
-    </div>
-    <div class="cartao cartao-clicavel" data-modal-trigger="instrumento3">
-      <h3 data-i18n="card3-titulo">3. Como avanço neste bloco?</h3>
-      <p class="nota" data-i18n="card3-nota">Instrumento 3 — Fichas de Decisão. Orientação tecnológica e ações concretas para os blocos com maior densidade de evidência empírica.</p>
+    <div class="passos" aria-hidden="true">
+      <span id="passo-dot-1"></span><span id="passo-dot-2"></span><span id="passo-dot-3"></span>
     </div>
 
-    <div class="cartao" style="border-color: var(--ink); margin-top: 32px;">
-      <h3 data-i18n="antes-titulo">Antes de começar</h3>
-      <p class="nota" data-i18n="antes-texto">
-        As respostas ficam guardadas apenas neste navegador enquanto usa a ferramenta. No final, pode exportar os resultados; nenhum dado pessoal
-        identificativo é recolhido por defeito.
-      </p>
-      <label style="display:flex; gap:10px; align-items:flex-start; margin-top:16px; cursor:pointer;">
-        <input type="checkbox" id="consentimento" style="margin-top:4px;">
-        <span data-i18n="antes-consentimento">Li o parágrafo acima e pretendo iniciar o diagnóstico.</span>
-      </label>
-    </div>
+    <!-- PASSO 1 — Perfil da empresa -->
+    <section id="passo-1">
+      <h2 data-i18n="passo1-titulo">Passo 1 — Perfil da empresa</h2>
+      <p class="nota" data-i18n="passo1-lead">Estes dados servem apenas para caracterizar a sua PME e garantir a qualidade da análise — não são recolhidos dados pessoais.</p>
 
-    <p class="aviso" id="aviso-inicio" data-i18n="aviso-consentimento">Confirme que leu o texto acima para poder iniciar.</p>
-    <div class="acoes-rodape" style="border-top:none; padding-top:8px; justify-content:flex-end;">
-      <button class="botao" id="iniciar" data-i18n="botao-iniciar" disabled>Iniciar diagnóstico →</button>
-    </div>
+      <div class="cartao">
+        <div class="campo">
+          <label for="setor" data-i18n="perfil-setor-label">Setor de atividade</label>
+          <select id="setor">
+            <option value="" data-i18n="perfil-opcao-escolher">Escolha uma opção</option>
+            <option value="comercio" data-i18n="perfil-setor-comercio">Comércio</option>
+            <option value="servicos" data-i18n="perfil-setor-servicos">Serviços</option>
+            <option value="industria" data-i18n="perfil-setor-industria">Indústria e Produção</option>
+            <option value="construcao" data-i18n="perfil-setor-construcao">Construção</option>
+            <option value="tecnologia" data-i18n="perfil-setor-tecnologia">Tecnologia e Informação</option>
+            <option value="turismo" data-i18n="perfil-setor-turismo">Turismo e Restauração</option>
+            <option value="agricultura" data-i18n="perfil-setor-agricultura">Agricultura e Pescas</option>
+            <option value="saude" data-i18n="perfil-setor-saude">Saúde e Ação Social</option>
+            <option value="educacao" data-i18n="perfil-setor-educacao">Educação</option>
+            <option value="outro" data-i18n="perfil-setor-outro">Outro</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="colaboradores" data-i18n="perfil-colaboradores-label">Número de colaboradores</label>
+          <input type="number" id="colaboradores" min="0" step="1" inputmode="numeric">
+        </div>
+
+        <div class="campo">
+          <label data-i18n="perfil-faturacao-label">Faturação anual — escolha o critério que preferir reportar (Recomendação 2003/361/CE)</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="criterio-financeiro" value="volume" checked><span data-i18n="perfil-criterio-volume">Volume de negócios</span></label>
+            <label><input type="radio" name="criterio-financeiro" value="balanco"><span data-i18n="perfil-criterio-balanco">Balanço total</span></label>
+          </div>
+          <select id="escalao-financeiro"></select>
+          <p class="classificacao" id="classificacao-sme" hidden></p>
+        </div>
+
+        <div class="campo">
+          <label for="pais" data-i18n="perfil-pais-label">País</label>
+          <select id="pais">
+            <option value="pt" data-i18n="perfil-pais-pt">Portugal</option>
+            <option value="europa" data-i18n="perfil-pais-europa">Outro país da Europa</option>
+          </select>
+        </div>
+
+        <div class="campo" id="campo-regiao" style="margin-bottom:0;">
+          <label for="regiao" data-i18n="perfil-regiao-label">Região (NUTS II)</label>
+          <select id="regiao">
+            <option value="" data-i18n="perfil-opcao-escolher">Escolha uma opção</option>
+            <option value="norte" data-i18n="perfil-regiao-norte">Norte</option>
+            <option value="centro" data-i18n="perfil-regiao-centro">Centro</option>
+            <option value="lisboa" data-i18n="perfil-regiao-lisboa">Área Metropolitana de Lisboa</option>
+            <option value="alentejo" data-i18n="perfil-regiao-alentejo">Alentejo</option>
+            <option value="algarve" data-i18n="perfil-regiao-algarve">Algarve</option>
+            <option value="acores" data-i18n="perfil-regiao-acores">Região Autónoma dos Açores</option>
+            <option value="madeira" data-i18n="perfil-regiao-madeira">Região Autónoma da Madeira</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="acoes-rodape" style="border-top:none; justify-content:space-between;">
+        <button type="button" class="botao secundario" id="limpar-perfil" data-i18n="perfil-limpar">Limpar respostas</button>
+        <button class="botao" id="ir-passo-2" data-i18n="seguinte" disabled>Seguinte →</button>
+      </div>
+    </section>
+
+    <!-- PASSO 2 — Grelha explicativa do BMC -->
+    <section id="passo-2" hidden>
+      <h2 data-i18n="passo2-titulo">Passo 2 — Os nove blocos do Business Model Canvas</h2>
+      <p class="nota" data-i18n="passo2-lead">O diagnóstico do Instrumento 1 vai perguntar-lhe sobre cada um destes blocos. Esta grelha explica o que cada um significa, para orientar as suas respostas.</p>
+
+      <div class="grelha-explicativa" id="grelha-bmc"></div>
+
+      <div class="acoes-rodape" style="border-top:none; justify-content:space-between;">
+        <button type="button" class="botao secundario" id="voltar-passo-1" data-i18n="voltar">← Voltar</button>
+        <button type="button" class="botao" id="ir-passo-3" data-i18n="seguinte">Seguinte →</button>
+      </div>
+    </section>
+
+    <!-- PASSO 3 — Os instrumentos e o início -->
+    <section id="passo-3" hidden>
+      <h2 data-i18n="passo3-titulo">Passo 3 — Os três instrumentos</h2>
+
+      <div class="cartao cartao-clicavel" data-modal-trigger="instrumento1">
+        <h3 data-i18n="card1-titulo">1. A minha empresa está pronta?</h3>
+        <p class="nota" data-i18n="card1-nota">Instrumento 1 — Diagnóstico de Pré-requisitos. Avalia, bloco a bloco, a prontidão operacional e a criticidade de cada área do seu negócio.</p>
+      </div>
+      <div class="cartao cartao-clicavel" data-modal-trigger="instrumento2">
+        <h3 data-i18n="card2-titulo">2. Onde faz sentido para a minha PME?</h3>
+        <p class="nota" data-i18n="card2-nota">Instrumento 2 — Matriz LLM × BMC. Mapeia aplicações, oportunidades e riscos nos blocos identificados como prioritários.</p>
+      </div>
+      <div class="cartao cartao-clicavel" data-modal-trigger="instrumento3">
+        <h3 data-i18n="card3-titulo">3. Como avanço neste bloco?</h3>
+        <p class="nota" data-i18n="card3-nota">Instrumento 3 — Fichas de Decisão. Orientação tecnológica e ações concretas para os blocos com maior densidade de evidência empírica.</p>
+      </div>
+
+      <div class="cartao" style="border-color: var(--ink); margin-top: 32px;">
+        <h3 data-i18n="antes-titulo">Antes de começar</h3>
+        <p class="nota" data-i18n="antes-texto">
+          As respostas ficam guardadas neste navegador enquanto usa a ferramenta. No final, pode descarregar um resumo dos resultados; os dados do
+          diagnóstico (sem identificação pessoal) poderão também ser enviados para um repositório central de apoio à investigação. Não é recolhido
+          nenhum dado pessoal identificativo, a não ser que opte por deixar o seu email para receber os resultados do estudo.
+        </p>
+        <label style="display:flex; gap:10px; align-items:flex-start; margin-top:16px; cursor:pointer;">
+          <input type="checkbox" id="consentimento" style="margin-top:4px;">
+          <span data-i18n="antes-consentimento">Li o parágrafo acima e pretendo iniciar o diagnóstico.</span>
+        </label>
+      </div>
+
+      <div class="acoes-rodape">
+        <button type="button" class="botao secundario" id="voltar-passo-2" data-i18n="voltar">← Voltar</button>
+        <button class="botao" id="iniciar" data-i18n="botao-iniciar" disabled>Iniciar diagnóstico →</button>
+      </div>
+    </section>
   </div>
 </main>
 
@@ -83,10 +173,10 @@
     <h2 id="modal-sobre-titulo" data-i18n="sobre-titulo">Sobre este projeto</h2>
 
     <h3 data-i18n="sobre-tese-titulo">Sobre a tese em curso</h3>
-    <p data-i18n="sobre-tese-texto">Esta ferramenta e o artefacto central da dissertacao.</p>
+    <p data-i18n="sobre-tese-texto">Esta ferramenta é o artefacto central da dissertação.</p>
 
     <h3 data-i18n="sobre-autor-titulo">Sobre o autor</h3>
-    <p class="placeholder" data-i18n="sobre-autor-texto">[Escreva aqui uma breve apresentacao sua.]</p>
+    <p class="placeholder" data-i18n="sobre-autor-texto">[Escreva aqui uma breve apresentação sua.]</p>
   </div>
 </div>
 
@@ -118,22 +208,6 @@
 <script src="js/modal.js"></script>
 <script src="js/data.js"></script>
 <script src="js/state.js"></script>
-<script>
-  const checkbox = document.getElementById('consentimento');
-  const botao = document.getElementById('iniciar');
-  const aviso = document.getElementById('aviso-inicio');
-
-  checkbox.addEventListener('change', () => {
-    botao.disabled = !checkbox.checked;
-    aviso.hidden = checkbox.checked;
-  });
-
-  botao.addEventListener('click', () => {
-    const estado = lerEstado();
-    estado.consentimento = true;
-    guardarEstado(estado);
-    window.location.href = 'instrumento1.html';
-  });
-</script>
+<script src="js/index.js"></script>
 </body>
 </html>
