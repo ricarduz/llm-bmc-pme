@@ -327,17 +327,17 @@ main {
   color: var(--ink-soft);
 }
 
-.indicadores {
+/* Indicadores de cada bloco do Instrumento 1 — texto corrido (não lista
+   com marcadores), para ficar mais alinhado com a forma como aparecem
+   no corpo da tese. Mantém a barra lateral como referência visual de
+   "isto é material de apoio à reflexão", não uma lista de tarefas. */
+.indicadores-corridos {
   margin: 0 0 20px;
-  padding: 0;
-  list-style: none;
+  padding: 6px 0 6px 14px;
   border-left: 2px solid var(--uab-azul-tint);
-}
-
-.indicadores li {
-  padding: 4px 0 4px 14px;
   color: var(--ink-soft);
   font-size: 0.94rem;
+  line-height: 1.55;
 }
 
 /* Grupos de escolha (Prontidão / Impacto), no Instrumento 1 */
@@ -480,13 +480,15 @@ th {
 }
 
 /* Abas genéricas — usadas na navegação entre Fichas de Decisão no
-   Instrumento 3 (.aba-ficha). */
+   Instrumento 3 (.aba-ficha). Sublinhado em vez de pílula com fundo —
+   uma pílula com borda à volta lê-se facilmente como "botão" (ação),
+   enquanto o sublinhado é o padrão mais reconhecível para "separador"
+   (muda a vista do mesmo conteúdo, não dispara uma ação nova). */
 .abas-fichas {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px;
   margin-bottom: 24px;
-  padding-bottom: 20px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -494,20 +496,23 @@ th {
   font-family: var(--font-body);
   font-size: 0.88rem;
   font-weight: 500;
-  padding: 10px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--paper);
+  padding: 10px 14px 12px;
+  margin-bottom: -1px;
+  border: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
   color: var(--ink-soft);
   cursor: pointer;
 }
 
-.aba-ficha:hover { border-color: var(--uab-azul); color: var(--ink); }
+.aba-ficha:hover { background: #F4F5F4; color: var(--ink); }
 
 .aba-ficha.ativa {
-  background: var(--uab-preto);
-  border-color: var(--uab-preto);
-  color: #FFFFFF;
+  color: var(--ink);
+  background: #EEF1F3;
+  border-bottom-color: var(--uab-azul);
+  font-weight: 600;
 }
 
 .aba-ficha:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
