@@ -2,11 +2,60 @@ const estadoR = lerEstado();
 
 /**
  * Integração opcional com Google Sheets (Apps Script Web App).
- * Deixa GOOGLE_SHEETS_URL vazio para desativar o envio automático —
- * a exportação em JSON funciona sempre, independentemente disto.
- * Preencher com o URL de implementação do Apps Script quando estiver pronto.
+ * Deixa GOOGLE_SHEETS_URL vazio para desativar o envio automático — a
+ * exportação e o contacto por email continuam a funcionar localmente.
+ * Preencher com o URL de implementação do Apps Script quando estiver
+ * pronto (o payload inclui "tipo": "diagnostico" ou "contacto", para
+ * encaminhar para folhas diferentes).
  */
 const GOOGLE_SHEETS_URL = '';
+
+function enviarParaGoogleSheets(payload) {
+  if (!GOOGLE_SHEETS_URL) return;
+  fetch(GOOGLE_SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  }).catch(e => console.error('Envio para a folha de cálculo falhou:', e));
+}
+
+function imagemParaDataURLViaCanvas(caminho) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg'));
+      } catch (e) {
+        console.error(`Canvas não conseguiu converter ${caminho}:`, e);
+        resolve(null);
+      }
+    };
+    img.onerror = () => resolve(null);
+    img.src = caminho;
+  });
+}
+
+async function imagemParaDataURL(caminho) {
+  try {
+    const resposta = await fetch(caminho);
+    if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+    const blob = await resposta.blob();
+    return await new Promise((resolve, reject) => {
+      const leitor = new FileReader();
+      leitor.onload = () => resolve(leitor.result);
+      leitor.onerror = reject;
+      leitor.readAsDataURL(blob);
+    });
+  } catch (e) {
+    // fetch() é bloqueado em páginas abertas via file:// — tenta via <canvas>
+    return await imagemParaDataURLViaCanvas(caminho);
+  }
+}
 
 function renderTabela() {
   const linhas = BMC_BLOCOS
@@ -15,29 +64,48 @@ function renderTabela() {
       const r = estadoR.diagnostico[b.id];
       return `
         <tr>
-          <td>${b.nome}</td>
+          <td>${tBloco(b).nome}</td>
           <td>${r.prontidao}</td>
           <td>${r.impacto}</td>
-          <td><span class="selo" data-p="${r.prioridade}">${r.prioridade}</span></td>
+          <td><span class="selo" data-p="${r.prioridade}">${tPrioridade(r.prioridade)}</span></td>
         </tr>`;
     }).join('');
 
   document.getElementById('tabela-diagnostico').innerHTML = `
-    <thead><tr><th>Bloco BMC</th><th>Prontidão</th><th>Impacto</th><th>Prioridade</th></tr></thead>
-    <tbody>${linhas || '<tr><td colspan="4" class="nota">Nenhum bloco avaliado.</td></tr>'}</tbody>
+    <thead><tr><th>${t('th-bloco')}</th><th>${t('th-prontidao')}</th><th>${t('th-impacto')}</th><th>${t('th-prioridade')}</th></tr></thead>
+    <tbody>${linhas || `<tr><td colspan="4" class="nota">${t('sintese-nenhum-avaliado')}</td></tr>`}</tbody>
   `;
+}
+
+function listaMatriz(itens) {
+  return `<ul style="margin:0; padding-left:18px;">${itens.map(i => `<li>${i}</li>`).join('')}</ul>`;
 }
 
 function renderAprofundados() {
   const el = document.getElementById('blocos-aprofundados');
   if (estadoR.blocosSelecionados.length === 0) {
-    el.innerHTML = '<p class="nota">Nenhum bloco foi selecionado para aprofundamento na Matriz.</p>';
+    el.innerHTML = `<p class="nota">${t('sintese-nenhum-bloco')}</p>`;
     return;
   }
-  el.innerHTML = '<ul>' + estadoR.blocosSelecionados.map(id => {
+  el.innerHTML = estadoR.blocosSelecionados.map(id => {
     const bloco = BMC_BLOCOS.find(b => b.id === id);
-    return `<li>${bloco ? bloco.nome : id}${bloco?.ficha ? ' — com Ficha de Decisão' : ''}</li>`;
-  }).join('') + '</ul>';
+    if (!bloco) return '';
+    const conteudo = tBloco(bloco);
+    return `
+      <div style="margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--line);">
+        <h4 style="margin-bottom:10px;">${conteudo.nome}${bloco.ficha ? t('sintese-com-ficha') : ''}</h4>
+        <table>
+          <thead><tr><th>${t('th-aplicacoes')}</th><th>${t('th-oportunidades')}</th><th>${t('th-riscos')}</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>${listaMatriz(conteudo.matriz.aplicacoes)}</td>
+              <td>${listaMatriz(conteudo.matriz.oportunidades)}</td>
+              <td>${listaMatriz(conteudo.matriz.riscos)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>`;
+  }).join('');
 }
 
 function atualizarMapa() {
@@ -51,45 +119,236 @@ function atualizarMapa() {
   });
 }
 
+function irParaPasso(n) {
+  [1, 2].forEach(i => {
+    document.getElementById(`r-passo-${i}`).hidden = i !== n;
+    const dot = document.getElementById(`passo-dot-${i}`);
+    dot.classList.toggle('ativo', i === n);
+    dot.classList.toggle('concluido', i < n);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validarSatisfacao() {
+  const percebeu = document.querySelector('input[name="satisfacao-percebeu"]:checked');
+  const util = document.querySelector('input[name="satisfacao-util"]:checked');
+  document.getElementById('ir-passo-2').disabled = !(percebeu && util);
+  return { percebeu, util };
+}
+
+function guardarSatisfacao() {
+  const { percebeu, util } = validarSatisfacao();
+  if (!percebeu || !util) return;
+  const estadoAtual = lerEstado();
+  estadoAtual.satisfacao = { percebeu: percebeu.value, util: util.value };
+  guardarEstado(estadoAtual);
+}
+
+function restaurarSatisfacao() {
+  const satisfacao = estadoR.satisfacao;
+  if (!satisfacao) return;
+  if (satisfacao.percebeu) {
+    const el = document.querySelector(`input[name="satisfacao-percebeu"][value="${satisfacao.percebeu}"]`);
+    if (el) el.checked = true;
+  }
+  if (satisfacao.util) {
+    const el = document.querySelector(`input[name="satisfacao-util"][value="${satisfacao.util}"]`);
+    if (el) el.checked = true;
+  }
+  validarSatisfacao();
+}
+
+document.querySelectorAll('input[name="satisfacao-percebeu"], input[name="satisfacao-util"]').forEach(input => {
+  input.addEventListener('change', () => { validarSatisfacao(); guardarSatisfacao(); });
+});
+
+document.getElementById('ir-passo-2').addEventListener('click', () => irParaPasso(2));
+document.getElementById('voltar-passo-1').addEventListener('click', () => irParaPasso(1));
+
 function construirRegisto() {
   return {
+    tipo: 'diagnostico',
     concluidoEm: new Date().toISOString(),
+    perfilEmpresa: estadoR.perfilEmpresa,
+    satisfacao: estadoR.satisfacao,
     diagnostico: estadoR.diagnostico,
     blocosSelecionados: estadoR.blocosSelecionados
   };
 }
 
-document.getElementById('exportar').addEventListener('click', async () => {
-  const registo = construirRegisto();
-  const blob = new Blob([JSON.stringify(registo, null, 2)], { type: 'application/json' });
+function descarregarFicheiro(conteudo, nomeFicheiro, tipoMime) {
+  const blob = new Blob([conteudo], { type: tipoMime });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `llm-bmc-pme-sessao-${Date.now()}.json`;
+  a.download = nomeFicheiro;
   a.click();
   URL.revokeObjectURL(url);
+}
 
-  if (GOOGLE_SHEETS_URL) {
-    try {
-      await fetch(GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(registo)
-      });
-    } catch (e) {
-      console.error('Envio para a folha de cálculo falhou (o ficheiro local foi sempre exportado):', e);
-    }
+function rotuloEscalao(criterio, escalao) {
+  if (escalao === 'media' || escalao === 'grande') return t(`perfil-escalao-${escalao}-${criterio}`);
+  return t(`perfil-escalao-${escalao}`);
+}
+
+function classificacaoSME(colaboradores, escalao) {
+  const ordem = ['micro', 'pequena', 'media', 'grande'];
+  const tierStaff = colaboradores < 10 ? 'micro' : colaboradores < 50 ? 'pequena' : colaboradores < 250 ? 'media' : 'grande';
+  return ordem[Math.max(ordem.indexOf(tierStaff), ordem.indexOf(escalao))];
+}
+
+async function construirResumoHTML() {
+  const perfil = estadoR.perfilEmpresa || {};
+  const idioma = obterIdioma();
+  const dataGeracao = new Date().toLocaleDateString(idioma === 'pt' ? 'pt-PT' : 'en-GB');
+
+  const [logoUab, logoUtad] = await Promise.all([
+    imagemParaDataURL('assets/logo-uab-placeholder.jpeg'),
+    imagemParaDataURL('assets/logo-utad-placeholder.jpeg')
+  ]);
+
+  const linhasDiagnostico = BMC_BLOCOS
+    .filter(b => estadoR.diagnostico[b.id])
+    .map(b => {
+      const r = estadoR.diagnostico[b.id];
+      return `<tr><td>${tBloco(b).nome}</td><td>${r.prontidao}</td><td>${r.impacto}</td><td>${tPrioridade(r.prioridade)}</td></tr>`;
+    }).join('');
+
+  const listaAprofundados = estadoR.blocosSelecionados.length
+    ? estadoR.blocosSelecionados.map(id => {
+        const bloco = BMC_BLOCOS.find(b => b.id === id);
+        if (!bloco) return '';
+        const conteudo = tBloco(bloco);
+        const linha = (rotulo, itens) => `<tr><th>${rotulo}</th><td><ul style="margin:0; padding-left:18px;">${itens.map(i => `<li>${i}</li>`).join('')}</ul></td></tr>`;
+        return `
+          <h3>${conteudo.nome}${bloco.ficha ? t('sintese-com-ficha') : ''}</h3>
+          <table>
+            ${linha(t('th-aplicacoes'), conteudo.matriz.aplicacoes)}
+            ${linha(t('th-oportunidades'), conteudo.matriz.oportunidades)}
+            ${linha(t('th-riscos'), conteudo.matriz.riscos)}
+          </table>`;
+      }).join('')
+    : `<p>${t('sintese-nenhum-bloco')}</p>`;
+
+  const blocoPerfil = perfil.setor ? `
+    <h2>${t('passo1-titulo')}</h2>
+    <table>
+      <tr><th>${t('perfil-setor-label')}</th><td>${t('perfil-setor-' + perfil.setor)}</td></tr>
+      <tr><th>${t('perfil-colaboradores-label')}</th><td>${perfil.colaboradores}</td></tr>
+      <tr><th>${t('perfil-faturacao-label')}</th><td>${rotuloEscalao(perfil.criterioFinanceiro, perfil.escalaoFinanceiro)}</td></tr>
+      <tr><th>${t('classificacao-label')}</th><td>${t('classificacao-valor-' + classificacaoSME(perfil.colaboradores, perfil.escalaoFinanceiro))}</td></tr>
+      <tr><th>${t('perfil-pais-label')}</th><td>${perfil.pais === 'pt' ? `${t('perfil-pais-pt')}${perfil.regiao ? ' — ' + t('perfil-regiao-' + perfil.regiao) : ''}` : t('perfil-pais-europa')}</td></tr>
+    </table>
+  ` : '';
+
+  return `<!DOCTYPE html>
+<html lang="${idioma === 'pt' ? 'pt-PT' : 'en'}">
+<head>
+<meta charset="UTF-8">
+<title>LLM em PME — ${t('sintese-h1')}</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 24px; color: #16191B; line-height: 1.5; }
+  h1 { font-size: 1.6rem; margin-bottom: 4px; }
+  h2 { font-size: 1.1rem; margin-top: 32px; border-bottom: 2px solid #6D8297; padding-bottom: 6px; }
+  .data { color: #52585C; font-size: 0.9rem; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #DADDD9; font-size: 0.92rem; }
+  th { color: #52585C; font-weight: 600; }
+  footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #DADDD9; }
+  footer .logos { display: flex; align-items: center; gap: 24px; margin-bottom: 12px; }
+  footer .logos img { height: 40px; width: auto; display: block; }
+  footer p { font-size: 0.8rem; color: #52585C; margin: 0; }
+  @media print { body { margin: 0; } }
+</style>
+</head>
+<body>
+  <h1>LLM em PME — ${t('sintese-h1')}</h1>
+  <p class="data">${dataGeracao}</p>
+
+  ${blocoPerfil}
+
+  <h2>${t('sintese-tabela-titulo')}</h2>
+  <table>
+    <thead><tr><th>${t('th-bloco')}</th><th>${t('th-prontidao')}</th><th>${t('th-impacto')}</th><th>${t('th-prioridade')}</th></tr></thead>
+    <tbody>${linhasDiagnostico || `<tr><td colspan="4">${t('sintese-nenhum-avaliado')}</td></tr>`}</tbody>
+  </table>
+
+  <h2>${t('sintese-aprofundados-titulo')}</h2>
+  ${listaAprofundados}
+
+  <footer>
+    <div class="logos">
+      ${logoUab ? `<img src="${logoUab}" alt="Universidade Aberta">` : ''}
+      ${logoUtad ? `<img src="${logoUtad}" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">` : ''}
+    </div>
+    <p>${t('rodape-texto')}</p>
+  </footer>
+</body>
+</html>`;
+}
+
+document.getElementById('descarregar-resumo').addEventListener('click', async () => {
+  const botao = document.getElementById('descarregar-resumo');
+  botao.disabled = true;
+  try {
+    const html = await construirResumoHTML();
+    descarregarFicheiro(html, `llm-em-pme-resumo-${Date.now()}.html`, 'text/html');
+  } finally {
+    botao.disabled = false;
   }
 });
 
-document.getElementById('reiniciar').addEventListener('click', () => {
-  if (confirm('Reiniciar apaga todas as respostas guardadas neste navegador. Continuar?')) {
+document.getElementById('exportar').addEventListener('click', () => {
+  const registo = construirRegisto();
+  descarregarFicheiro(JSON.stringify(registo, null, 2), `llm-bmc-pme-sessao-${Date.now()}.json`, 'application/json');
+  enviarParaGoogleSheets(registo);
+});
+
+document.getElementById('guardar-contacto').addEventListener('click', () => {
+  const email = document.getElementById('contacto-email').value.trim();
+  const aceite = document.getElementById('contacto-consentimento').checked;
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const mensagem = document.getElementById('contacto-mensagem');
+
+  if (!emailValido || !aceite) {
+    mensagem.textContent = t('contacto-email-invalido');
+    mensagem.hidden = false;
+    return;
+  }
+
+  const estadoAtual = lerEstado();
+  estadoAtual.contacto = { email, consentimento: true, guardadoEm: new Date().toISOString() };
+  guardarEstado(estadoAtual);
+
+  enviarParaGoogleSheets({ tipo: 'contacto', email, consentimento: true, data: new Date().toISOString() });
+
+  mensagem.textContent = t('contacto-confirmacao');
+  mensagem.hidden = false;
+});
+
+document.getElementById('recomecar').addEventListener('click', () => {
+  if (confirm(t('sessao-recomecar-confirmar'))) {
     limparEstado();
     window.location.href = 'index.html';
   }
 });
 
+document.getElementById('terminar').addEventListener('click', () => {
+  if (confirm(t('sessao-terminar-confirmar'))) {
+    limparEstado();
+    document.getElementById('conteudo-sessao').hidden = true;
+    document.getElementById('ecra-fim').hidden = false;
+    window.close();
+  }
+});
+
+document.addEventListener('idioma:alterado', () => {
+  renderTabela();
+  renderAprofundados();
+});
+
 renderTabela();
 renderAprofundados();
 atualizarMapa();
+restaurarSatisfacao();
+irParaPasso(1);
