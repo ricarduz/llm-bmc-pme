@@ -41,20 +41,28 @@ function tierPorColaboradores(n) {
   return 'grande';
 }
 
-function atualizarClassificacaoSME() {
-  const colaboradores = Number(document.getElementById('colaboradores').value);
+function classificacaoAtual() {
+  const colaboradoresVal = document.getElementById('colaboradores').value;
   const escalao = document.getElementById('escalao-financeiro').value;
-  const badge = document.getElementById('classificacao-sme');
+  if (!colaboradoresVal || !escalao) return null;
+  const tierStaff = tierPorColaboradores(Number(colaboradoresVal));
+  return ORDEM_TIERS[Math.max(ORDEM_TIERS.indexOf(tierStaff), ORDEM_TIERS.indexOf(escalao))];
+}
 
-  if (!document.getElementById('colaboradores').value || !escalao) {
+function atualizarClassificacaoSME() {
+  const badge = document.getElementById('classificacao-sme');
+  const aviso = document.getElementById('aviso-nao-pme');
+  const tierFinal = classificacaoAtual();
+
+  if (!tierFinal) {
     badge.hidden = true;
+    aviso.hidden = true;
     return;
   }
 
-  const tierStaff = tierPorColaboradores(colaboradores);
-  const tierFinal = ORDEM_TIERS[Math.max(ORDEM_TIERS.indexOf(tierStaff), ORDEM_TIERS.indexOf(escalao))];
   badge.textContent = t(`classificacao-${tierFinal}`);
   badge.hidden = false;
+  aviso.hidden = tierFinal !== 'grande';
 }
 
 function validarPasso1() {
@@ -64,7 +72,8 @@ function validarPasso1() {
   const pais = document.getElementById('pais').value;
   const regiao = document.getElementById('regiao').value;
   const regiaoOk = pais !== 'pt' || regiao !== '';
-  document.getElementById('ir-passo-2').disabled = !(setor && colaboradores !== '' && escalao && regiaoOk);
+  const naoPME = classificacaoAtual() === 'grande';
+  document.getElementById('ir-passo-2').disabled = !(setor && colaboradores !== '' && escalao && regiaoOk) || naoPME;
 }
 
 function atualizarVisibilidadeRegiao() {
