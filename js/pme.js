@@ -26,7 +26,7 @@ const PERGUNTAS = [
   { bloco: 'segmentos-clientes', eixo: 'prontidao', pergunta: 'Sabe identificar e organizar informação sobre os seus clientes?', opcoes: ['Não, está tudo misturado', 'Mais ou menos, de forma informal', 'Sim, temos isso bem organizado'] },
   { bloco: 'segmentos-clientes', eixo: 'impacto', pergunta: 'Conhecer melhor os seus clientes ajudaria a vender mais ou a servi-los melhor?', opcoes: ['Não é prioridade agora', 'Ajudaria alguma coisa', 'Seria um ganho importante'] },
 
-  { bloco: 'proposta-valor', eixo: 'prontidao', pergunta: 'Costuma personalizar o que oferece a cada cliente, ou produzir conteúdo comercial com regularidade?', opcoes: ['Raramente', 'Às vezes', 'Sim, com frequência'] },
+  { bloco: 'proposta-valor', eixo: 'prontidao', pergunta: 'Costuma adaptar o que oferece a cada cliente — seja o produto, o serviço ou o conteúdo comercial?', opcoes: ['Raramente', 'Às vezes', 'Sim, com frequência'] },
   { bloco: 'proposta-valor', eixo: 'impacto', pergunta: 'Faria diferença se conseguisse adaptar mais depressa a sua oferta a cada cliente?', opcoes: ['Pouca diferença', 'Alguma diferença', 'Muita diferença'] },
 
   { bloco: 'canais', eixo: 'prontidao', pergunta: 'Já usa canais digitais (website, redes sociais, email) para comunicar com os seus clientes?', opcoes: ['Quase nada', 'Alguns, mas pouco estruturados', 'Sim, de forma organizada'] },
@@ -720,8 +720,8 @@ async function construirRelatorioHTMLPME() {
   ${oportunidadesHTML}
 
   <p class="nota" style="margin-top:24px;">${idioma === 'pt'
-    ? 'Em caso de dúvidas sobre este relatório ou sobre o estudo, pode contactar o autor através de m2302605@estudante.uab.pt.'
-    : 'If you have any questions about this report or the study, you can contact the author at m2302605@estudante.uab.pt.'}</p>
+    ? 'Em caso de dúvidas sobre este relatório ou sobre o estudo, pode contactar o autor através de 2302605@estudante.uab.pt.'
+    : 'If you have any questions about this report or the study, you can contact the author at 2302605@estudante.uab.pt.'}</p>
 
   <footer>
     <div class="logos">
@@ -749,7 +749,7 @@ function renderConcluido() {
  * do resultados.js). Mantém o mesmo tipo "diagnostico" já usado pela
  * folha de cálculo existente.
  */
-const GOOGLE_SHEETS_URL_PME = 'https://script.google.com/macros/s/AKfycbwWeHTrITtp3lAA4RsfNMEG0ZOajQTKbwJNQvZor6O3sJzEwehLwx-R1Z31u__wur4/exec';
+const GOOGLE_SHEETS_URL_PME = 'https://script.google.com/macros/s/AKfycbyxCM6rhINk_XpIJvqoUC4UUmz1CMEHsA19lLqf7ktTB0R4bidqpD3QFqgO9qE60r8T/exec';
 
 function enviarParaGoogleSheetsPME(origem) {
   if (!GOOGLE_SHEETS_URL_PME) return;

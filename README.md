@@ -11,7 +11,7 @@ Este repositório operacionaliza o artefacto central da dissertação
 Oportunidades*, submetida para obtenção do grau de Mestre em Engenharia
 Informática e Tecnologia Web (Universidade Aberta, em parceria com a UTAD).
 
-Autor: Ricardo Isaías Serafim (m2302605@estudante.uab.pt)
+Autor: Ricardo Isaías Serafim (2302605@estudante.uab.pt)
 Orientação: Prof. Doutor Frederico Branco
 
 A ferramenta instancia sequencialmente os três instrumentos descritos no
@@ -79,7 +79,7 @@ js/resultados.js        lógica da página de avaliação do painel de especiali
 js/relatorio-utils.js   funções partilhadas entre pme.js e resultados.js para construir os relatórios exportados (escape de HTML, imagens em base64, rótulos de escalão)
 assets/                 favicon e logótipos institucionais
 apps-script/            cópia de referência do Google Apps Script (o código que corre de facto vive na Google Sheet — ver apps-script/README.md)
-estatico/               ⚠ instantâneos HTML não-interativos, gerados antes da separação em dois percursos — desatualizados face à estrutura atual; ver estatico/README.md antes de reutilizar ou regenerar
+estatico/               ⚠ o propósito mantém-se (instantâneos HTML não-interativos, para anexar à dissertação sem depender de JavaScript) — mas os 5 ficheiros atuais descrevem a estrutura ANTIGA (um só index.html com perfil + grelha BMC + os 3 instrumentos todos juntos), anterior à separação em dois percursos; precisam de ser regenerados para refletir pme.html/entrevista.html/cenario.html/instrumento1-3.html/resultados.html, ver estatico/README.md
 ```
 
 ## Como usar

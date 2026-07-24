@@ -1,5 +1,19 @@
 # estatico/
 
+⚠ **Os 5 ficheiros abaixo estão desatualizados.** Foram gerados antes
+da separação do site em dois percursos (PME e painel de
+especialistas) e descrevem a estrutura ANTIGA — um só `index.html`
+com o perfil da empresa, a grelha do BMC e os 3 instrumentos todos
+juntos numa página. Essa estrutura já não existe: hoje o site tem
+`index.html` (só a bifurcação), `pme.html` (o jogo + relatório),
+`entrevista.html` + `cenario.html` (apresentação do protocolo e
+escolha de cenário) e só depois os instrumentos.
+
+O propósito da pasta mantém-se válido — instantâneos HTML
+não-interativos, para leitura, partilha ou anexo à dissertação, sem
+depender de JavaScript nem de um diagnóstico real preenchido. Só
+precisam de ser regenerados para refletirem a estrutura atual.
+
 Versões estáticas das 5 páginas do site, geradas a partir do conteúdo
 real (`js/data.js`) — sem depender de JavaScript para mostrar o
 conteúdo. Servem para leitura, partilha ou anexo (ex: dissertação),
