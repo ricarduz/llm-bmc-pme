@@ -1,8 +1,11 @@
 /**
  * Dados dos três instrumentos do framework.
  * Fonte: Apêndice "Instrumentos" da dissertação (Ricardo Serafim, UAb/UTAD).
- * Conteúdo marcado com "[A INTEGRAR]" ainda não foi confirmado contra o
- * texto da tese e não deve ser tratado como definitivo.
+ * Instrumento 1, Instrumento 2 (Tabela 10) e as 4 Fichas de Decisão do
+ * Instrumento 3 (Canais, Relacionamento com Clientes, Atividades-Chave,
+ * Recursos-Chave) já confirmados e completos. Tradução EN ainda cobre
+ * apenas Instrumento 1 e a Matriz do Instrumento 2 — as Fichas do
+ * Instrumento 3 estão, por agora, só em português.
  */
 
 const AREAS = {
@@ -17,8 +20,26 @@ const BMC_BLOCOS = [
     id: 'segmentos-clientes',
     nome: 'Segmentos de Clientes',
     area: 'interface-cliente',
+    descricao: 'Os grupos de clientes que a empresa serve. Diferentes segmentos podem ter necessidades distintas.',
     ficha: false,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Segmentação semântica a partir de dados de CRM e interações',
+      'Análise automática de perfis e comportamentos',
+      'Síntese de feedback para caracterização de segmentos'
+    ],
+      oportunidades: [
+      'Personalização da oferta por segmento sem esforço manual',
+      'Identificação de novos segmentos a partir de dados existentes',
+      'Apoio a decisões de targeting'
+    ],
+      riscos: [
+      'Qualidade e estrutura dos dados de clientes',
+      'Enviesamentos nos modelos reproduzidos na segmentação',
+      'Privacidade e conformidade no uso de dados pessoais'
+    ]
+    },
+        indicadores: [
       'Existem dados estruturados sobre clientes (e.g., CRM)?',
       'Segmenta ou diferencia clientes por perfil ou necessidade?',
       'Capacidade de registar e analisar interações com clientes?'
@@ -28,8 +49,26 @@ const BMC_BLOCOS = [
     id: 'proposta-valor',
     nome: 'Proposta de Valor',
     area: 'produto-oferta',
+    descricao: 'O que a empresa oferece para resolver um problema ou satisfazer uma necessidade do cliente.',
     ficha: false,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Geração de conteúdos comerciais personalizados (propostas, descrições)',
+      'Adaptação automática da mensagem de valor por segmento',
+      'Apoio à criação e atualização de materiais de marketing'
+    ],
+      oportunidades: [
+      'Diferenciação por personalização a custo reduzido',
+      'Redução do tempo de produção de conteúdos',
+      'Escala da comunicação sem crescimento da equipa criativa'
+    ],
+      riscos: [
+      'Risco de alucinações em conteúdo factual ou técnico',
+      'Inconsistência de tom e identidade de marca',
+      'Dependência de validação humana para conteúdo publicável'
+    ]
+    },
+        indicadores: [
       'A proposta de valor inclui personalização ou serviço diferenciado?',
       'Existe produção regular de conteúdos comerciais?',
       'Necessidade de adaptação frequente da oferta ao cliente?'
@@ -39,8 +78,26 @@ const BMC_BLOCOS = [
     id: 'canais',
     nome: 'Canais',
     area: 'interface-cliente',
+    descricao: 'Como a empresa comunica e entrega valor aos clientes — site, redes sociais, loja, apoio ao cliente.',
     ficha: true,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Chatbots e assistentes virtuais para atendimento multicanal',
+      'Automação de comunicação',
+      'Geração de respostas personalizadas em tempo real'
+    ],
+      oportunidades: [
+      'Disponibilidade 24/7 sem aumento de equipa',
+      'Redução do tempo de resposta ao cliente',
+      'Comunicação adaptada ao perfil e idioma do utilizador'
+    ],
+      riscos: [
+      'Falhas de qualidade expostas diretamente ao cliente',
+      'Lock-in tecnológico',
+      'Conformidade RGPD no tratamento de dados de interação'
+    ]
+    },
+        indicadores: [
       'Utiliza canais digitais para comunicar com clientes (email, redes sociais)?',
       'Há plataformas de atendimento ou comunicação já implementadas?',
       'Existem perguntas frequentes nesses canais?'
@@ -50,8 +107,26 @@ const BMC_BLOCOS = [
     id: 'relacionamento-clientes',
     nome: 'Relacionamento com Clientes',
     area: 'interface-cliente',
+    descricao: 'O tipo de relação estabelecida com cada segmento — apoio, fidelização, acompanhamento pós-venda.',
     ficha: true,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Atendimento automático personalizado e proativo',
+      'Análise de sentimento em feedback e reclamações',
+      'Suporte pós-venda assistido por IA'
+    ],
+      oportunidades: [
+      'Escalabilidade do serviço sem crescimento linear de custos',
+      'Melhoria da experiência e fidelização baseada em dados',
+      'Identificação precoce de insatisfação'
+    ],
+      riscos: [
+      'Risco de alucinações em respostas',
+      'Perda de proximidade humana em contextos relacionais',
+      'Necessidade de validação e supervisão contínua dos outputs'
+    ]
+    },
+        indicadores: [
       'Existe serviço de apoio ao cliente com volume de interações regular?',
       'Há processos de acompanhamento pós-venda ou fidelização definidos?',
       'Regista reclamações ou comentários de forma estruturada?'
@@ -61,8 +136,26 @@ const BMC_BLOCOS = [
     id: 'fontes-receita',
     nome: 'Fontes de Receita',
     area: 'aspetos-financeiros',
+    descricao: 'Como a empresa gera rendimento a partir de cada segmento de clientes — vendas, subscrições, serviços.',
     ficha: false,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Criação de novos serviços baseados em análise e geração de conteúdo com IA',
+      'Personalização de oferta que suporta modelos premium ou de subscrição',
+      'Melhoria de taxas de conversão por comunicação mais eficaz'
+    ],
+      oportunidades: [
+      'Diversificação de fontes de receita com serviços digitais escaláveis',
+      'Aumento de conversão comercial sem aumento proporcional de custos',
+      'Criação de vantagem competitiva sustentável baseada em dados'
+    ],
+      riscos: [
+      'Incerteza na medição do retorno do investimento em fases iniciais',
+      'Dificuldade de monetizar benefícios indiretos de eficiência',
+      'Risco de canibalização de serviços existentes por automação'
+    ]
+    },
+        indicadores: [
       'Existem serviços digitais com potencial de escala?',
       'Tem capacidade de introduzir novos modelos de serviço baseados em dados?',
       'Existem processos comerciais ou de conversão que podem ser otimizados por comunicação personalizada?'
@@ -72,8 +165,26 @@ const BMC_BLOCOS = [
     id: 'atividades-chave',
     nome: 'Atividades-Chave',
     area: 'gestao-infraestrutura',
+    descricao: 'As tarefas mais importantes para o modelo de negócio funcionar — produção, operações, comunicação.',
     ficha: true,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Geração automática de relatórios e síntese de documentos',
+      'Sumarização e categorização de informação não estruturada',
+      'Apoio ao desenvolvimento de software e documentação técnica'
+    ],
+      oportunidades: [
+      'Redução de carga administrativa em tarefas intensivas em linguagem',
+      'Aceleração de processos de gestão do conhecimento',
+      'Apoio à tomada de decisão baseada em análise documental'
+    ],
+      riscos: [
+      'Necessidade de validação humana dos outputs gerados',
+      'Qualidade variável em domínios técnicos especializados',
+      'Integração com sistemas e fluxos de trabalho existentes'
+    ]
+    },
+        indicadores: [
       'Existem atividades intensivas em linguagem (relatórios, comunicações)?',
       'Há tarefas administrativas repetitivas com elevado volume de documentos?',
       'Os processos operacionais estão minimamente documentados?'
@@ -83,8 +194,26 @@ const BMC_BLOCOS = [
     id: 'recursos-chave',
     nome: 'Recursos-Chave',
     area: 'gestao-infraestrutura',
+    descricao: 'Os ativos mais importantes de que a empresa precisa — pessoas, equipamento, conhecimento, infraestrutura.',
     ficha: true,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Integração de APIs LLM como recurso tecnológico central',
+      'Construção de base de conhecimento organizacional assistida por IA',
+      'Reforço do capital intelectual através de ferramentas de produtividade'
+    ],
+      oportunidades: [
+      'Acesso a capacidades avançadas sem desenvolvimento interno',
+      'Reforço do capital tecnológico com investimento inicial reduzido',
+      'Democratização de ferramentas antes exclusivas de grandes empresas'
+    ],
+      riscos: [
+      'Dependência de fornecedores externos e custos recorrentes de API',
+      'Escassez de competências internas para operacionalizar soluções',
+      'Risco de lock-in e dificuldade de migração entre fornecedores'
+    ]
+    },
+        indicadores: [
       'Dispõe de infraestrutura digital básica (computadores, ligação à internet)?',
       'Pelo menos um colaborador tem literacia digital para operar LLM?',
       'Existe documentação interna ou base de conhecimento organizada (manuais, FAQs, processos, contratos)?'
@@ -94,8 +223,26 @@ const BMC_BLOCOS = [
     id: 'parcerias-chave',
     nome: 'Parcerias-Chave',
     area: 'gestao-infraestrutura',
+    descricao: 'Os fornecedores e parceiros externos com quem a empresa trabalha para complementar recursos ou reduzir riscos.',
     ficha: false,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Integração com fornecedores de plataformas LLM (APIs comerciais)',
+      'Colaboração com consultoras de transformação digital e IA',
+      'Acesso a ecossistemas de parceiros tecnológicos cloud'
+    ],
+      oportunidades: [
+      'Acesso a tecnologia de ponta sem desenvolvimento próprio',
+      'Redução do risco de implementação com apoio especializado',
+      'Aceleração da curva de aprendizagem organizacional'
+    ],
+      riscos: [
+      'Dependência crítica de parceiro tecnológico único',
+      'Custos de mudança elevados em caso de descontinuação',
+      'Alinhamento de interesses e condições contratuais de longo prazo'
+    ]
+    },
+        indicadores: [
       'Trabalha com fornecedores tecnológicos ou consultores externos?',
       'Existem relações com plataformas cloud ou de software como serviço (SaaS)?',
       'Há abertura para estabelecer novos acordos com fornecedores de IA?'
@@ -105,8 +252,26 @@ const BMC_BLOCOS = [
     id: 'estrutura-custos',
     nome: 'Estrutura de Custos',
     area: 'aspetos-financeiras',
+    descricao: 'Os principais custos envolvidos em operar o modelo de negócio.',
     ficha: false,
-    indicadores: [
+    matriz: {
+      aplicacoes: [
+      'Automação de tarefas manuais de custo operacional elevado',
+      'Otimização de processos repetitivos com redução de erros',
+      'Substituição parcial de outsourcing em tarefas de conteúdo e análise'
+    ],
+      oportunidades: [
+      'Redução de custos operacionais através de automação escalável',
+      'Libertação de recursos humanos para atividades de maior valor',
+      'Eficiência crescente com volume sem aumento proporcional de custo'
+    ],
+      riscos: [
+      'Custos recorrentes de subscrição e API imprevisíveis com volume',
+      'Investimento inicial em formação e adaptação de processos',
+      'Dificuldade de controlo orçamental em modelos de pricing por uso'
+    ]
+    },
+        indicadores: [
       'Existem custos elevados associados a tarefas manuais ou repetitivas?',
       'Tem capacidade de absorver custos de subscrição recorrentes (SaaS)?',
       'Há mecanismos de controlo ou monitorização de custos operacionais?'
@@ -192,7 +357,134 @@ const FICHAS = {
     ],
     governanca: 'RGPD: os contratos com fornecedores de API devem incluir cláusulas de subcontratante de tratamento de dados quando aplicável. Verificar onde os dados são processados e armazenados geograficamente.'
   },
-  'canais': { titulo: 'Canais', area: 'I - Interface com o Cliente', pendente: true },
-  'relacionamento-clientes': { titulo: 'Relacionamento com Clientes', area: 'I - Interface com o Cliente', pendente: true },
-  'atividades-chave': { titulo: 'Atividades-Chave', area: 'III - Gestão de Infraestrutura', pendente: true }
+  'canais': {
+    titulo: 'Canais',
+    area: 'I - Interface com o Cliente',
+    requisitos: 'RF1 · RF2 · RF3 · RF4',
+    contexto: 'Os Canais definem como a PME comunica e entrega valor aos seus segmentos de clientes. Em PMEs, os canais digitais (email, website, redes sociais) coexistem frequentemente com canais presenciais, com baixo nível de automação e elevada dependência de intervenção humana. A adoção de LLM neste bloco visa automatizar e personalizar a comunicação, reduzindo o tempo de resposta e aumentando a capacidade de interação sem crescimento proporcional da equipa.',
+    aplicacoes: [
+      'Chatbots e assistentes virtuais para atendimento e qualificação de leads em website',
+      'Automação de respostas a perguntas frequentes por email ou redes sociais',
+      'Geração de conteúdos personalizados para campanhas multicanal',
+      'Tradução e adaptação automática de comunicações para diferentes mercados'
+    ],
+    orientacaoTecnologica: [
+      {
+        opcao: 'API comercial (GPT, Claude, Gemini)',
+        quando: 'Volume de interações moderado; sem dados sensíveis; necessidade de implementação rápida',
+        consideracoes: 'Custo previsível a baixo volume; dependência de fornecedor; conformidade RGPD exige revisão contratual'
+      },
+      {
+        opcao: 'Open-source (LLaMA, Mistral)',
+        quando: 'Dados sensíveis que não podem sair da organização; maior controlo sobre o modelo',
+        consideracoes: 'Requer infraestrutura própria ou cloud dedicada; maior investimento inicial em configuração'
+      },
+      {
+        opcao: 'RAG',
+        quando: 'Chatbot que responde com base em documentação interna (catálogos, FAQs, contratos)',
+        consideracoes: 'Solução recomendada para PMEs com documentação estruturada; reduz alucinações; integrável com APIs comerciais'
+      }
+    ],
+    acoes: [
+      'Identificar os canais com maior volume de interações repetitivas (email, chat, formulários)',
+      'Selecionar um canal piloto de baixo risco para implementação inicial',
+      'Definir o âmbito de resposta automática e os limites de escalamento para humano',
+      'Integrar o LLM com as plataformas de comunicação existentes via API',
+      'Estabelecer processo de revisão periódica da qualidade das respostas geradas'
+    ],
+    criterios: [
+      { criterio: 'Eficiência', indicador: 'Redução do tempo médio de resposta ao cliente' },
+      { criterio: 'Qualidade', indicador: 'Taxa de resolução sem escalamento para humano' },
+      { criterio: 'Satisfação', indicador: 'Avaliação da experiência pelo cliente (NPS ou equivalente)' },
+      { criterio: 'Custo', indicador: 'Custo por interação antes e após implementação' }
+    ],
+    governanca: 'RGPD: os dados de interação com clientes (nome, email, histórico de conversa) são dados pessoais. Garantir base legal para tratamento, informar o utilizador da presença de sistema automatizado e assegurar mecanismo de opt-out. AI Act: sistemas de interação com utilizadores finais estão sujeitos a requisitos de transparência (o utilizador deve ser informado de que interage com um sistema de IA). Risco de reputação: falhas visíveis ao cliente têm impacto direto na imagem da PME. Definir limiar de confiança abaixo do qual a resposta é sempre revista por humano antes de envio.'
+  },
+  'relacionamento-clientes': {
+    titulo: 'Relacionamento com Clientes',
+    area: 'I - Interface com o Cliente',
+    requisitos: 'RF1 · RF2 · RF3 · RF4',
+    contexto: 'O Relacionamento com Clientes define o tipo de relação que a PME estabelece com cada segmento — desde o atendimento reativo até abordagens proativas de fidelização. Em PMEs, este bloco é frequentemente gerido de forma informal e intensiva em tempo humano, com baixa capacidade de escala. A adoção de LLM permite tornar o relacionamento mais responsivo, personalizado e orientado por dados, sem exigir crescimento proporcional da equipa.',
+    aplicacoes: [
+      'Atendimento automático 24/7 com respostas personalizadas e contextualmente adequadas',
+      'Análise de sentimento em feedbacks, reclamações e avaliações de clientes',
+      'Suporte pós-venda automatizado: seguimento, confirmações e resolução de dúvidas',
+      'Geração de comunicações proativas personalizadas (follow-up, renovações, alertas)'
+    ],
+    orientacaoTecnologica: [
+      {
+        opcao: 'API comercial',
+        quando: 'PME sem infraestrutura própria; necessidade de arranque rápido; volume de interações baixo a moderado',
+        consideracoes: 'Opção de menor barreira de entrada; avaliar custos recorrentes face ao volume esperado'
+      },
+      {
+        opcao: 'RAG sobre CRM',
+        quando: 'PME com histórico de clientes estruturado em CRM ou base de dados interna',
+        consideracoes: 'Permite respostas contextualizadas com o histórico do cliente; recomendado para PMEs com dados organizados'
+      },
+      {
+        opcao: 'Fine-tuning',
+        quando: 'Tom e linguagem muito específicos da marca; volume elevado de interações justifica investimento',
+        consideracoes: 'Maior investimento inicial; requer dados de treino de qualidade; adequado em fases de maturidade avançada'
+      }
+    ],
+    acoes: [
+      'Mapear os pontos de contacto com o cliente onde o volume ou repetição é maior',
+      'Definir o tom e os limites de autonomia do sistema (o que responde automaticamente versus escala)',
+      'Integrar o LLM com o CRM existente para acesso ao histórico do cliente',
+      'Implementar análise de sentimento em canais de feedback para deteção precoce de insatisfação',
+      'Criar processo de revisão e melhoria contínua com base nos casos de escalamento'
+    ],
+    criterios: [
+      { criterio: 'Responsividade', indicador: 'Tempo médio de primeira resposta ao cliente' },
+      { criterio: 'Fidelização', indicador: 'Taxa de retenção de clientes antes e após implementação' },
+      { criterio: 'Qualidade relacional', indicador: 'Pontuação de satisfação em interações assistidas por IA' },
+      { criterio: 'Escalamento', indicador: 'Percentagem de casos resolvidos sem intervenção humana' }
+    ],
+    governanca: 'RGPD: o processamento de dados pessoais de clientes para personalização do relacionamento exige base legal explícita. O histórico de interações não deve ser partilhado com modelos externos sem anonimização ou acordo contratual adequado. AI Act: sistemas que tomam decisões com impacto no relacionamento com o cliente (e.g., classificação de risco de churn) podem requerer explicabilidade e supervisão humana.'
+  },
+  'atividades-chave': {
+    titulo: 'Atividades-Chave',
+    area: 'III - Gestão de Infraestrutura',
+    requisitos: 'RF1 · RF2 · RF3 · RF4',
+    contexto: 'As Atividades-Chave representam as ações mais importantes que a PME deve executar para que o seu modelo de negócio funcione. Em PMEs, estas atividades incluem frequentemente tarefas intensivas em linguagem, produção de relatórios, análise documental, comunicações internas e externas, e gestão do conhecimento, com elevado consumo de tempo e baixo grau de automação. A adoção de LLM neste bloco tem o potencial de libertar capacidade operacional significativa.',
+    aplicacoes: [
+      'Geração automática de relatórios operacionais e sumários executivos',
+      'Extração, sumarização e categorização de informação em documentos não estruturados',
+      'Apoio à redação de propostas comerciais, contratos e comunicações formais',
+      'Assistência ao desenvolvimento de software e geração de documentação técnica',
+      'Automatização de fluxos de aprovação e triagem documental'
+    ],
+    orientacaoTecnologica: [
+      {
+        opcao: 'API comercial',
+        quando: 'Tarefas de geração de texto sem dados sensíveis; necessidade de flexibilidade e variedade de tarefas',
+        consideracoes: 'Custo variável com volume de tokens; avaliar exposição de documentos internos ao fornecedor'
+      },
+      {
+        opcao: 'RAG sobre documentação interna',
+        quando: 'PME com repositório de documentos interno (manuais, processos, contratos, relatórios anteriores)',
+        consideracoes: 'Solução recomendada para geração de relatórios contextualizados; reduz alucinações em domínios especializados'
+      },
+      {
+        opcao: 'Open-source local',
+        quando: 'Documentos confidenciais que não podem sair da organização (dados financeiros, jurídicos)',
+        consideracoes: 'Maior controlo e privacidade; requer infraestrutura de suporte; adequado a PMEs com apoio técnico externo'
+      }
+    ],
+    acoes: [
+      'Identificar as atividades com maior volume de produção documental ou análise de texto',
+      'Selecionar um processo piloto de baixa criticidade para primeira implementação',
+      'Definir templates e prompts padronizados para os outputs mais frequentes',
+      'Estabelecer fluxo de validação humana obrigatória antes de publicação ou envio',
+      'Monitorizar tempo poupado e qualidade dos outputs para justificar escala'
+    ],
+    criterios: [
+      { criterio: 'Eficiência', indicador: 'Tempo médio de produção documental antes e após implementação' },
+      { criterio: 'Qualidade', indicador: 'Taxa de aprovação dos outputs sem revisão substantiva' },
+      { criterio: 'Adoção interna', indicador: 'Percentagem de colaboradores que utilizam regularmente as ferramentas LLM' },
+      { criterio: 'Poupança', indicador: 'Estimativa de horas libertadas por mês para atividades de maior valor' }
+    ],
+    governanca: 'RGPD: documentos internos que contenham dados pessoais (colaboradores, clientes, fornecedores) não devem ser submetidos a APIs externas sem avaliação do impacto de proteção de dados (DPIA). AI Act: sistemas de apoio a decisões internas com impacto em processos críticos devem assegurar rastreabilidade e possibilidade de auditoria dos outputs gerados.'
+  }
 };
