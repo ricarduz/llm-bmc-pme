@@ -415,21 +415,168 @@ th {
   color: var(--ink-soft);
 }
 
-/* Aviso — mensagem sobre um botão desativado, explicando o que falta */
-.aviso {
+/* Abas genéricas (Instrumento 3 e Passo 2 dos resultados) */
+.abas-fichas, .abas-painel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.aba-ficha, .aba-painel {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.aba-ficha:hover, .aba-painel:hover { border-color: var(--uab-azul); color: var(--ink); }
+
+.aba-ficha.ativa, .aba-painel.ativa {
+  background: var(--uab-preto);
+  border-color: var(--uab-preto);
+  color: #FFFFFF;
+}
+
+.aba-ficha:focus-visible, .aba-painel:focus-visible { outline: 2px solid var(--uab-azul); outline-offset: 2px; }
+
+/* Indicador de passos (index) */
+.passos {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0 32px;
+}
+
+.passos span {
+  flex: 1;
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+}
+
+.passos span.ativo { background: var(--uab-azul); }
+.passos span.concluido { background: var(--uab-azul-tint); }
+
+/* Campos de formulário (perfil da empresa) */
+.campo { margin-bottom: 22px; }
+
+.campo label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.campo select,
+.campo input[type="number"] {
+  width: 100%;
+  max-width: 340px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.campo select:focus-visible,
+.campo input:focus-visible {
+  outline: 2px solid var(--uab-azul);
+  outline-offset: 1px;
+  border-color: var(--uab-azul);
+}
+
+.campo-ajuda {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+
+.opcoes-inline {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.opcoes-inline label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.classificacao {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--uab-azul);
+  background: #E7EBEE;
+  border-radius: 999px;
+  padding: 5px 12px;
+  margin-top: 4px;
+}
+
+.aviso-bloqueio {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 0.85rem;
-  color: var(--uab-azul);
-  background: #EEF1F3;
-  border-left: 3px solid var(--uab-azul);
+  color: var(--uab-preto);
+  background: #EFEFED;
+  border-left: 3px solid var(--uab-preto);
   border-radius: 4px;
   padding: 10px 14px;
-  margin-bottom: 16px;
+  margin-top: 10px;
 }
 
-.aviso[hidden] { display: none; }
+/* Grelha explicativa do BMC (passo 2) */
+.grelha-explicativa {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 8px 0 24px;
+}
+
+.grelha-explicativa .bloco-exp {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.grelha-explicativa .bloco-exp .area-tag { display: block; margin-bottom: 4px; }
+
+.grelha-explicativa h4 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--uab-preto);
+}
+
+.grelha-explicativa p {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .grelha-explicativa { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .grelha-explicativa { grid-template-columns: 1fr; }
+}
 
 /* Modal "Sobre este projeto" */
 .modal-backdrop {
