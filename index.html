@@ -1,3 +1,13 @@
+<!--
+  index.html — página inicial, em 3 passos (ver js/index.js):
+    Passo 1: perfil da empresa (setor, dimensão, país/região)
+    Passo 2: grelha explicativa dos 9 blocos do BMC
+    Passo 3: os três instrumentos + consentimento + botão de início
+  Os três passos ficam todos no DOM ao mesmo tempo, cada um numa secção
+  própria; só se mostra/esconde com o atributo "hidden" (sem isto, cada
+  passo teria de ser uma página à parte, e perdia-se o estado ao navegar
+  entre elas).
+-->
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -11,6 +21,8 @@
 </head>
 <body>
 
+<!-- Cabeçalho, igual em todas as páginas: marca, seletor PT/EN, e a
+     mini-grelha BMC que também funciona como botão do modal "Sobre". -->
 <header class="topo">
   <div class="topo-inner">
     <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
@@ -75,6 +87,7 @@
           </div>
           <select id="escalao-financeiro"></select>
           <p class="classificacao" id="classificacao-sme" hidden></p>
+          <p class="aviso-bloqueio" id="aviso-nao-pme" data-i18n="aviso-nao-pme" hidden>Este estudo aplica-se apenas a Pequenas e Médias Empresas (PME). Não é possível avançar com os dados indicados.</p>
         </div>
 
         <div class="campo">
