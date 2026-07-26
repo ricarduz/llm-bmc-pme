@@ -1,9 +1,19 @@
 /**
- * Seletor de idioma PT/EN.
- * Marca qualquer elemento traduzível com data-i18n="chave" e regista o
- * texto correspondente em TRADUCOES.pt / TRADUCOES.en, abaixo.
- * A preferência de idioma é guardada em localStorage e aplica-se a todas
- * as páginas que incluírem este ficheiro.
+ * i18n.js — tudo o que é preciso para o site funcionar em PT e EN.
+ *
+ * Como usar num elemento HTML: marca-se com data-i18n="chave", e a
+ * função aplicarTraducoes() (mais abaixo) substitui o texto lá dentro
+ * pelo que estiver em TRADUCOES[idioma][chave].
+ *
+ * A preferência de idioma fica guardada em localStorage (chave
+ * IDIOMA_KEY) — por isso é partilhada por todas as páginas do site: se
+ * o utilizador muda para inglês no index, o Instrumento 1 já abre em
+ * inglês também.
+ *
+ * Este ficheiro tem duas partes bem distintas:
+ *   1. Os dicionários (TRADUCOES e TRADUCOES_I1_EN) — só dados.
+ *   2. As funções (a partir de "t()", perto do fim) — a lógica que decide
+ *      qual idioma mostrar e aplica as traduções à página.
  */
 
 const IDIOMA_KEY = 'llm-bmc-pme:idioma';
@@ -34,7 +44,7 @@ const TRADUCOES = {
     'i1-por-avaliar': 'por avaliar',
     'i1-com-ficha': ' · com Ficha de Decisão',
     'i1-progresso': ' de 9 blocos avaliados',
-    'i1-continuar': 'Continuar para a Matriz LLM × BMC →',
+    'i1-continuar': 'Continuar →',
     'i1-limpar': 'Limpar respostas',
     'i1-limpar-confirmar': 'Isto apaga todas as respostas do diagnóstico guardadas neste navegador. Continuar?',
     'seguinte': 'Seguinte →',
@@ -97,6 +107,7 @@ const TRADUCOES = {
     'sintese-tabela-titulo': 'Perfil de prioridade por bloco',
     'sintese-aprofundados-titulo': 'Blocos selecionados para aprofundamento',
     'sintese-nenhum-bloco': 'Nenhum bloco foi selecionado para aprofundamento na Matriz.',
+    'sintese-todos-diferir': 'O diagnóstico classificou todos os blocos do seu negócio como "Diferir" — a sua empresa não cumpre atualmente os critérios de prioridade para a adoção de Large Language Models. Pode repetir o diagnóstico no futuro, à medida que o negócio evoluir.',
     'sintese-nenhum-avaliado': 'Nenhum bloco avaliado.',
     'sintese-com-ficha': ' — com Ficha de Decisão',
     'sintese-download-titulo': 'Descarregar o seu resumo',
@@ -193,7 +204,7 @@ const TRADUCOES = {
     'i1-por-avaliar': 'not yet assessed',
     'i1-com-ficha': ' · has a Decision Sheet',
     'i1-progresso': ' of 9 blocks assessed',
-    'i1-continuar': 'Continue to the LLM × BMC Matrix →',
+    'i1-continuar': 'Continue →',
     'i1-limpar': 'Clear answers',
     'i1-limpar-confirmar': 'This clears all diagnostic answers saved in this browser. Continue?',
     'seguinte': 'Next →',
@@ -256,6 +267,7 @@ const TRADUCOES = {
     'sintese-tabela-titulo': 'Priority profile by block',
     'sintese-aprofundados-titulo': 'Blocks selected for further exploration',
     'sintese-nenhum-bloco': 'No block was selected for further exploration in the Matrix.',
+    'sintese-todos-diferir': 'The diagnostic classified every block of your business as "Defer" — your company does not currently meet the priority criteria for adopting Large Language Models. You can repeat the diagnostic in the future, as the business evolves.',
     'sintese-nenhum-avaliado': 'No block assessed.',
     'sintese-com-ficha': ' — with Decision Sheet',
     'sintese-download-titulo': 'Download your summary',
@@ -596,16 +608,32 @@ const TRADUCOES_I1_EN = {
   }
 };
 
+/**
+ * A partir daqui: funções auxiliares. As duas constantes acima (TRADUCOES
+ * e TRADUCOES_I1_EN) são só dados; é aqui que se decide QUAL idioma usar
+ * e COMO aplicar as traduções à página.
+ */
+
+/** Atalho para ir buscar uma string simples ao dicionário, no idioma atual. Se a chave não existir, devolve a própria chave (mais fácil de detetar um erro de nome do que ver "undefined" no ecrã). */
 function t(chave) {
   const dicionario = TRADUCOES[obterIdioma()] || TRADUCOES.pt;
   return dicionario[chave] || chave;
 }
 
+/** Nome de uma área do BMC (as 4 agregações de blocos) no idioma atual. */
 function tArea(id) {
   if (obterIdioma() === 'en') return TRADUCOES_I1_EN.areas[id] || AREAS[id];
   return AREAS[id];
 }
 
+/**
+ * Devolve o conteúdo de um bloco do BMC (nome, indicadores, descrição,
+ * matriz) já no idioma certo. O português vem sempre diretamente de
+ * data.js — não há uma cópia "TRADUCOES_PT" redundante — e o inglês, só
+ * quando existe tradução para aquele bloco em concreto. Isto permite
+ * adicionar/editar conteúdo em data.js sem ter de duplicar nada aqui,
+ * desde que a tradução EN exista (ou fica só em português, sem rebentar).
+ */
 function tBloco(bloco) {
   if (obterIdioma() === 'en' && TRADUCOES_I1_EN.blocos[bloco.id]) {
     return { descricao: bloco.descricao, matriz: bloco.matriz, ...TRADUCOES_I1_EN.blocos[bloco.id] };
@@ -613,16 +641,26 @@ function tBloco(bloco) {
   return { nome: bloco.nome, indicadores: bloco.indicadores, descricao: bloco.descricao, matriz: bloco.matriz };
 }
 
+/** Texto da escala de Prontidão ou Impacto (1/2/3) no idioma atual. `eixo` é 'prontidao' ou 'impacto'. */
 function tEscala(eixo, valor) {
   if (obterIdioma() === 'en') return TRADUCOES_I1_EN[eixo][valor];
   return (eixo === 'prontidao' ? PRONTIDAO_DEF : IMPACTO_DEF)[valor];
 }
 
+/**
+ * Traduz o nome de uma prioridade (Prioritário, Relevante, Diferir,
+ * Investimento necessário). Importante: isto é só para o TEXTO mostrado
+ * ao utilizador — o valor "canónico" guardado no estado e usado nos
+ * seletores CSS (data-p="Prioritário") mantém-se sempre em português,
+ * mesmo com a página em inglês. Ou seja, tPrioridade() nunca deve ser
+ * usado para comparar valores, só para os mostrar.
+ */
 function tPrioridade(p) {
   if (obterIdioma() === 'en') return TRADUCOES_I1_EN.prioridade[p] || p;
   return p;
 }
 
+/** Idioma atual ('pt' ou 'en'), guardado em localStorage — por isso é o mesmo em todas as páginas do site. Por defeito, português. */
 function obterIdioma() {
   return localStorage.getItem(IDIOMA_KEY) || 'pt';
 }
@@ -631,6 +669,20 @@ function definirIdioma(idioma) {
   localStorage.setItem(IDIOMA_KEY, idioma);
 }
 
+/**
+ * O "motor" da tradução: corre sempre que a página carrega, e outra vez
+ * sempre que o utilizador troca de idioma no seletor PT/EN. Faz três
+ * coisas:
+ *   1. Atualiza o atributo lang do <html> (bom para acessibilidade/SEO).
+ *   2. Substitui o texto de todos os elementos marcados com data-i18n.
+ *   3. Marca visualmente qual botão do seletor (PT ou EN) está ativo.
+ *
+ * O que NÃO faz: não atualiza conteúdo gerado dinamicamente por JavaScript
+ * (como os blocos do Instrumento 1 ou a tabela de resultados) — esse
+ * conteúdo tem o seu próprio listener para o evento "idioma:alterado"
+ * (disparado no fundo deste ficheiro) e volta a chamar a sua função de
+ * render() própria.
+ */
 function aplicarTraducoes() {
   const idioma = obterIdioma();
   const dicionario = TRADUCOES[idioma] || TRADUCOES.pt;
@@ -642,6 +694,8 @@ function aplicarTraducoes() {
     if (dicionario[chave]) el.innerHTML = dicionario[chave];
   });
 
+  // A meta description não tem data-i18n (não faria sentido, não é visível
+  // na página), por isso trata-se à parte aqui.
   const metaDescricao = document.getElementById('meta-descricao');
   if (metaDescricao && dicionario['meta-descricao']) {
     metaDescricao.setAttribute('content', dicionario['meta-descricao']);
@@ -658,6 +712,10 @@ document.addEventListener('DOMContentLoaded', () => {
     botao.addEventListener('click', () => {
       definirIdioma(botao.dataset.lang);
       aplicarTraducoes();
+      // Avisa o resto da página (o script específico de cada instrumento)
+      // de que o idioma mudou, para poder voltar a desenhar o conteúdo
+      // dinâmico com o texto certo. Ver, por exemplo, o final de
+      // instrumento1.js: document.addEventListener('idioma:alterado', render).
       document.dispatchEvent(new CustomEvent('idioma:alterado'));
     });
   });
