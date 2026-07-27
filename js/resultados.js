@@ -1,3 +1,12 @@
+/**
+ * resultados.js — página final, em dois passos:
+ *   Passo 1 — duas perguntas de satisfação + contacto por email
+ *   Passo 2 — o resultado do diagnóstico, em duas abas (Descarregar / Resultados)
+ *
+ * Tal como nas outras páginas, os passos são só <section> escondidas/
+ * mostradas com "hidden" — não há navegação real entre páginas.
+ */
+
 const estadoR = lerEstado();
 
 /**
@@ -6,10 +15,11 @@ const estadoR = lerEstado();
  * exportação e o contacto por email continuam a funcionar localmente.
  * Preencher com o URL de implementação do Apps Script quando estiver
  * pronto (o payload inclui "tipo": "diagnostico" ou "contacto", para
- * encaminhar para folhas diferentes).
+ * encaminhar para folhas diferentes na mesma folha de cálculo).
  */
 const GOOGLE_SHEETS_URL = '';
 
+/** Envio "melhor esforço": se falhar (sem rede, URL por preencher, etc.), só regista no console — nunca impede o utilizador de continuar a usar a página. `mode: 'no-cors'` evita o preflight de CORS, ao custo de não se conseguir ler a resposta (aceitável, porque não se precisa dela). */
 function enviarParaGoogleSheets(payload) {
   if (!GOOGLE_SHEETS_URL) return;
   fetch(GOOGLE_SHEETS_URL, {
@@ -20,6 +30,17 @@ function enviarParaGoogleSheets(payload) {
   }).catch(e => console.error('Envio para a folha de cálculo falhou:', e));
 }
 
+/**
+ * Plano B para incorporar uma imagem no ficheiro exportado, usado quando
+ * o fetch() abaixo falha — o que acontece sempre que a página é aberta
+ * por duplo-clique (protocolo file://), onde os navegadores bloqueiam
+ * fetch() a outros ficheiros locais por política de CORS. Um <img> não
+ * tem essa restrição, por isso carrega-se a imagem "à moda antiga" e
+ * lê-se o resultado através de um <canvas>.
+ * Exporta-se sempre em PNG (não JPEG): se um dia os logótipos passarem a
+ * ter fundo transparente, um JPEG preenchia essa transparência a preto —
+ * o PNG evita essa armadilha, sem custo real (são ficheiros pequenos).
+ */
 function imagemParaDataURLViaCanvas(caminho) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -29,7 +50,7 @@ function imagemParaDataURLViaCanvas(caminho) {
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
         canvas.getContext('2d').drawImage(img, 0, 0);
-        resolve(canvas.toDataURL('image/jpeg'));
+        resolve(canvas.toDataURL('image/png'));
       } catch (e) {
         console.error(`Canvas não conseguiu converter ${caminho}:`, e);
         resolve(null);
@@ -40,6 +61,13 @@ function imagemParaDataURLViaCanvas(caminho) {
   });
 }
 
+/**
+ * Tenta primeiro o caminho "normal" (fetch + FileReader, preserva os
+ * bytes originais tal e qual). Se isso rebentar — tipicamente por causa
+ * do file:// — cai para o plano B via <canvas>. Se os dois falharem,
+ * devolve null e quem chama trata disso mostrando o rodapé sem logótipo,
+ * em vez de partir o ficheiro inteiro.
+ */
 async function imagemParaDataURL(caminho) {
   try {
     const resposta = await fetch(caminho);
@@ -52,11 +80,11 @@ async function imagemParaDataURL(caminho) {
       leitor.readAsDataURL(blob);
     });
   } catch (e) {
-    // fetch() é bloqueado em páginas abertas via file:// — tenta via <canvas>
     return await imagemParaDataURLViaCanvas(caminho);
   }
 }
 
+/** Tabela "Perfil de prioridade por bloco" — só os blocos já respondidos no Instrumento 1 (nem todos têm de estar preenchidos para se chegar aqui). */
 function renderTabela() {
   const linhas = BMC_BLOCOS
     .filter(b => estadoR.diagnostico[b.id])
@@ -77,10 +105,12 @@ function renderTabela() {
   `;
 }
 
+/** Pequeno utilitário para transformar um array de strings numa lista <ul> — repete-se várias vezes por ficha. */
 function listaMatriz(itens) {
   return `<ul style="margin:0; padding-left:18px;">${itens.map(i => `<li>${i}</li>`).join('')}</ul>`;
 }
 
+/** A Ficha de Decisão de um bloco aprofundado, resumida para leitura na página (mesmas seis secções do Instrumento 3, formatadas em prosa/tabelas em vez de cartões separados). */
 function renderFichaResumo(bloco, ficha) {
   return `
     <div style="margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--line);">
@@ -115,8 +145,33 @@ function renderFichaResumo(bloco, ficha) {
     </div>`;
 }
 
+/**
+ * "Blocos selecionados para aprofundamento": mostra a Ficha de Decisão
+ * completa de cada bloco escolhido no Instrumento 2 — não só o nome, que
+ * era o que se mostrava numa versão anterior desta página. Como todo o
+ * bloco em blocosSelecionados tem garantidamente ficha (ver Instrumento 2),
+ * o `if (!bloco || !ficha) return ''` é só uma proteção defensiva, não
+ * um caminho que se espere que aconteça na prática.
+ */
+/**
+ * True só quando o diagnóstico está completo (os 9 blocos respondidos) E
+ * todos saíram como "Diferir" — o único caso em que faz sentido dizer
+ * explicitamente "esta empresa não cumpre os critérios", em vez da
+ * mensagem genérica de "nenhum bloco selecionado" (que também aparece,
+ * por exemplo, se houver blocos Prioritário/Relevante mas o utilizador
+ * simplesmente não escolheu aprofundar nenhum).
+ */
+function todosBlocosDiferir() {
+  const valores = Object.values(estadoR.diagnostico);
+  return valores.length === BMC_BLOCOS.length && valores.every(v => v.prioridade === 'Diferir');
+}
+
 function renderAprofundados() {
   const el = document.getElementById('blocos-aprofundados');
+  if (todosBlocosDiferir()) {
+    el.innerHTML = `<p class="nota">${t('sintese-todos-diferir')}</p>`;
+    return;
+  }
   if (estadoR.blocosSelecionados.length === 0) {
     el.innerHTML = `<p class="nota">${t('sintese-nenhum-bloco')}</p>`;
     return;
@@ -129,29 +184,37 @@ function renderAprofundados() {
   }).join('');
 }
 
+/** Mini-grelha do cabeçalho com o resultado do diagnóstico (mesma lógica das outras páginas — reset explícito das células sem resultado, para não ficarem presas com a cor de uma sessão anterior). */
 function atualizarMapa() {
   const celulas = document.querySelectorAll('#mapa i');
   BMC_BLOCOS.forEach((bloco, idx) => {
+    if (!celulas[idx]) return;
     const resultado = estadoR.diagnostico[bloco.id];
-    if (resultado && celulas[idx]) {
+    if (resultado) {
       celulas[idx].classList.add('preenchido');
       celulas[idx].setAttribute('data-p', resultado.prioridade);
+    } else {
+      celulas[idx].classList.remove('preenchido');
+      celulas[idx].removeAttribute('data-p');
     }
   });
 }
 
+/** Troca entre as abas "Descarregar" e "Resultados" dentro do Passo 2. */
 function irParaAba(aba) {
   document.getElementById('aba-descarregar').hidden = aba !== 'descarregar';
   document.getElementById('aba-resultado').hidden = aba !== 'resultado';
   document.querySelectorAll('.aba-painel').forEach(botao => {
     botao.classList.toggle('ativa', botao.dataset.aba === aba);
   });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 document.querySelectorAll('.aba-painel').forEach(botao => {
   botao.addEventListener('click', () => irParaAba(botao.dataset.aba));
 });
 
+/** Troca entre o Passo 1 (satisfação/contacto) e o Passo 2 (resultado). Ao entrar no Passo 2, volta sempre à aba "Descarregar" primeiro — é a ação mais importante (e a mais rápida de encontrar), não faz sentido abrir sempre na aba de leitura. */
 function irParaPasso(n) {
   [1, 2].forEach(i => {
     document.getElementById(`r-passo-${i}`).hidden = i !== n;
@@ -163,11 +226,25 @@ function irParaPasso(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/**
+ * O link "← Voltar" do Passo 1 devolve ao instrumento certo, espelhando
+ * exatamente o caminho de ida (ver o "Continuar" de instrumento1.js e
+ * instrumento2.js): se todos os blocos deram "Diferir", nem Instrumento 2
+ * nem 3 chegaram a ser visitados, por isso volta-se ao Instrumento 1;
+ * caso contrário, ao Instrumento 3 se houver alguma ficha selecionada, ou
+ * ao Instrumento 2 caso contrário.
+ */
 function configurarLinkVoltarInstrumento() {
+  const link = document.getElementById('voltar-instrumento');
+  if (todosBlocosDiferir()) {
+    link.setAttribute('href', 'instrumento1.html');
+    return;
+  }
   const temFicha = estadoR.blocosSelecionados.some(id => BMC_BLOCOS.find(b => b.id === id)?.ficha);
-  document.getElementById('voltar-instrumento').setAttribute('href', temFicha ? 'instrumento3.html' : 'instrumento2.html');
+  link.setAttribute('href', temFicha ? 'instrumento3.html' : 'instrumento2.html');
 }
 
+/** O botão "Seguinte" do Passo 1 só ativa quando as duas perguntas de satisfação têm resposta — o contacto por email fica sempre opcional. */
 function validarSatisfacao() {
   const percebeu = document.querySelector('input[name="satisfacao-percebeu"]:checked');
   const util = document.querySelector('input[name="satisfacao-util"]:checked');
@@ -175,6 +252,7 @@ function validarSatisfacao() {
   return { percebeu, util };
 }
 
+/** Grava a satisfação assim que as duas perguntas tiverem resposta (não espera por um botão "Guardar" — a diferença de fricção não compensa aqui). */
 function guardarSatisfacao() {
   const { percebeu, util } = validarSatisfacao();
   if (!percebeu || !util) return;
@@ -183,6 +261,7 @@ function guardarSatisfacao() {
   guardarEstado(estadoAtual);
 }
 
+/** Se a página for recarregada a meio (ex: F5), repõe as respostas de satisfação já dadas antes. */
 function restaurarSatisfacao() {
   const satisfacao = estadoR.satisfacao;
   if (!satisfacao) return;
@@ -204,6 +283,7 @@ document.querySelectorAll('input[name="satisfacao-percebeu"], input[name="satisf
 document.getElementById('ir-passo-2').addEventListener('click', () => irParaPasso(2));
 document.getElementById('voltar-passo-1').addEventListener('click', () => irParaPasso(1));
 
+/** Reúne tudo o que interessa sobre a sessão num único objeto — usado para o envio (opcional) ao Google Sheets. Já não é oferecido para download direto (o utilizador final não precisa de JSON), mas mantém-se como estrutura de dados para fins de investigação. */
 function construirRegisto() {
   return {
     tipo: 'diagnostico',
@@ -215,6 +295,7 @@ function construirRegisto() {
   };
 }
 
+/** Utilitário genérico para descarregar uma string como ficheiro — cria um link temporário, "clica" nele por código, e limpa logo a seguir (URL.revokeObjectURL evita acumular URLs órfãos na memória do separador). */
 function descarregarFicheiro(conteudo, nomeFicheiro, tipoMime) {
   const blob = new Blob([conteudo], { type: tipoMime });
   const url = URL.createObjectURL(blob);
@@ -225,17 +306,19 @@ function descarregarFicheiro(conteudo, nomeFicheiro, tipoMime) {
   URL.revokeObjectURL(url);
 }
 
+/** Texto do escalão financeiro para o resumo exportado — "média" e "grande" têm limiares diferentes consoante o critério (volume vs. balanço), por isso a chave de tradução inclui o critério; "micro" e "pequena" são iguais nos dois, por isso não. */
 function rotuloEscalao(criterio, escalao) {
   if (escalao === 'media' || escalao === 'grande') return t(`perfil-escalao-${escalao}-${criterio}`);
   return t(`perfil-escalao-${escalao}`);
 }
 
-function classificacaoSME(colaboradores, escalao) {
-  const ordem = ['micro', 'pequena', 'media', 'grande'];
-  const tierStaff = colaboradores < 10 ? 'micro' : colaboradores < 50 ? 'pequena' : colaboradores < 250 ? 'media' : 'grande';
-  return ordem[Math.max(ordem.indexOf(tierStaff), ordem.indexOf(escalao))];
-}
-
+/**
+ * Monta o ficheiro .html "para toda a gente" — o que se descarrega no
+ * botão principal desta página. Tem de ser assíncrona por causa dos
+ * logótipos (imagemParaDataURL devolve uma Promise). Nota como todos os
+ * textos vêm de t()/tBloco() no idioma atual: se o utilizador estiver
+ * com a página em inglês, o ficheiro exportado também sai em inglês.
+ */
 async function construirResumoHTML() {
   const perfil = estadoR.perfilEmpresa || {};
   const idioma = obterIdioma();
@@ -253,7 +336,9 @@ async function construirResumoHTML() {
       return `<tr><td>${tBloco(b).nome}</td><td>${r.prontidao}</td><td>${r.impacto}</td><td>${tPrioridade(r.prioridade)}</td></tr>`;
     }).join('');
 
-  const listaAprofundados = estadoR.blocosSelecionados.length
+  const listaAprofundados = todosBlocosDiferir()
+    ? `<p>${t('sintese-todos-diferir')}</p>`
+    : estadoR.blocosSelecionados.length
     ? estadoR.blocosSelecionados.map(id => {
         const bloco = BMC_BLOCOS.find(b => b.id === id);
         const ficha = FICHAS[id];
@@ -277,6 +362,9 @@ async function construirResumoHTML() {
       }).join('<hr style="margin:24px 0; border:none; border-top:1px solid #DADDD9;">')
     : `<p>${t('sintese-nenhum-bloco')}</p>`;
 
+  // O perfil da empresa só aparece se o Passo 1 do index chegou a ser
+  // preenchido (perfil.setor existe) — sessões antigas, de antes desse
+  // ecrã existir, não têm este bloco no ficheiro exportado.
   const blocoPerfil = perfil.setor ? `
     <h2>${t('passo1-titulo')}</h2>
     <table>
@@ -288,6 +376,10 @@ async function construirResumoHTML() {
     </table>
   ` : '';
 
+  // Ficheiro HTML autónomo: CSS embutido (não depende de style.css) e
+  // logótipos como data: URLs (não dependem da pasta assets/) — para
+  // continuar a abrir bem mesmo copiado para outro computador, sem o
+  // resto do site à volta.
   return `<!DOCTYPE html>
 <html lang="${idioma === 'pt' ? 'pt-PT' : 'en'}">
 <head>
@@ -336,7 +428,7 @@ async function construirResumoHTML() {
 
 document.getElementById('descarregar-resumo').addEventListener('click', async () => {
   const botao = document.getElementById('descarregar-resumo');
-  botao.disabled = true;
+  botao.disabled = true; // evita duplo-clique disparar o download/envio duas vezes enquanto os logótipos ainda estão a carregar
   try {
     const html = await construirResumoHTML();
     descarregarFicheiro(html, `llm-em-pme-resumo-${Date.now()}.html`, 'text/html');
@@ -368,6 +460,9 @@ document.getElementById('guardar-contacto').addEventListener('click', () => {
   mensagem.hidden = false;
 });
 
+// Há dois botões "Recomeçar" (um em cada passo), mas fazem exatamente a
+// mesma coisa — por isso um único querySelectorAll com os dois ids, em
+// vez de duplicar o listener.
 document.querySelectorAll('#recomecar-1, #recomecar-2').forEach(botao => {
   botao.addEventListener('click', () => {
     if (confirm(t('sessao-recomecar-confirmar'))) {
@@ -377,6 +472,13 @@ document.querySelectorAll('#recomecar-1, #recomecar-2').forEach(botao => {
   });
 });
 
+/**
+ * "Terminar sessão": apaga os dados e tenta fechar a janela. window.close()
+ * só funciona em separadores abertos por script — numa aba normal, a
+ * maioria dos navegadores ignora o pedido, por isso mostra-se sempre o
+ * ecrã de despedida por trás, para o utilizador não ficar preso a meio
+ * se o fecho automático não resultar (o cenário mais provável).
+ */
 document.getElementById('terminar').addEventListener('click', () => {
   if (confirm(t('sessao-terminar-confirmar'))) {
     limparEstado();
@@ -386,6 +488,9 @@ document.getElementById('terminar').addEventListener('click', () => {
   }
 });
 
+// O conteúdo gerado por JavaScript (tabela, fichas) não se atualiza
+// sozinho quando o idioma muda — só o texto marcado com data-i18n é que
+// tem esse comportamento automático (ver aplicarTraducoes, em i18n.js).
 document.addEventListener('idioma:alterado', () => {
   renderTabela();
   renderAprofundados();
