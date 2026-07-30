@@ -15,6 +15,11 @@
 
 const STORAGE_KEY = 'llm-bmc-pme:sessao';
 
+/** Gera um identificador curto e único o suficiente para distinguir sessões — não é preciso robustez de nível criptográfico, só evitar colisões entre sessões diferentes. */
+function gerarSessionId() {
+  return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+}
+
 /**
  * Formato "vazio" de uma sessão nova. Sempre que se acede a uma página
  * sem ainda haver nada guardado (primeira visita, ou depois de limpar/
@@ -22,6 +27,7 @@ const STORAGE_KEY = 'llm-bmc-pme:sessao';
  */
 function estadoInicial() {
   return {
+    sessionId: gerarSessionId(), // permite juntar, na folha do Google, várias submissões da mesma sessão (ver enviarParaGoogleSheets em resultados.js)
     iniciadoEm: new Date().toISOString(),
     consentimento: false,
     perfilEmpresa: {},   // setor, colaboradores, criterioFinanceiro, escalaoFinanceiro, pais, regiao (Passo 1 do index)
@@ -49,6 +55,7 @@ function lerEstado() {
     if (!raw) return estadoInicial();
     const estado = JSON.parse(raw);
     if (!estado.perfilEmpresa) estado.perfilEmpresa = {};
+    if (!estado.sessionId) estado.sessionId = gerarSessionId();
     return estado;
   } catch (e) {
     console.error('Não foi possível ler o estado guardado:', e);

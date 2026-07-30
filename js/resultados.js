@@ -17,7 +17,7 @@ const estadoR = lerEstado();
  * pronto (o payload inclui "tipo": "diagnostico" ou "contacto", para
  * encaminhar para folhas diferentes na mesma folha de cálculo).
  */
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw1vFMPlQKtTkFVJGOIGPfw8dSrGu7GRmxfl3atrX4WOZgVvqCsD-YS66RCD3i8L4_t/exec';
+const GOOGLE_SHEETS_URL = '';
 
 /** Envio "melhor esforço": se falhar (sem rede, URL por preencher, etc.), só regista no console — nunca impede o utilizador de continuar a usar a página. `mode: 'no-cors'` evita o preflight de CORS, ao custo de não se conseguir ler a resposta (aceitável, porque não se precisa dela). */
 function enviarParaGoogleSheets(payload) {
@@ -280,18 +280,84 @@ document.querySelectorAll('input[name="satisfacao-percebeu"], input[name="satisf
   input.addEventListener('change', () => { validarSatisfacao(); guardarSatisfacao(); });
 });
 
-document.getElementById('ir-passo-2').addEventListener('click', () => irParaPasso(2));
+document.getElementById('ir-passo-2').addEventListener('click', () => {
+  // Envio de segurança: garante que os dados chegam mesmo que o
+  // utilizador nunca chegue a carregar em "Descarregar resumo" (por
+  // exemplo, se só quiser ver o resultado e fechar a página). Como isto
+  // pode fazer com que a mesma sessão gere mais do que uma linha na
+  // folha (se depois também descarregar ou terminar a sessão), usa-se o
+  // sessionId para as identificar como a mesma pessoa.
+  enviarParaGoogleSheets(construirRegisto('seguinte'));
+  irParaPasso(2);
+});
 document.getElementById('voltar-passo-1').addEventListener('click', () => irParaPasso(1));
 
-/** Reúne tudo o que interessa sobre a sessão num único objeto — usado para o envio (opcional) ao Google Sheets. Já não é oferecido para download direto (o utilizador final não precisa de JSON), mas mantém-se como estrutura de dados para fins de investigação. */
-function construirRegisto() {
+/**
+ * Reúne tudo o que interessa sobre a sessão num único objeto — usado
+ * para o envio (opcional) ao Google Sheets. Já não é oferecido para
+ * download direto (o utilizador final não precisa de JSON), mas
+ * mantém-se como estrutura de dados para fins de investigação.
+ *
+ * Importante: lê o estado de novo aqui (`lerEstado()`), em vez de usar a
+ * constante `estadoR` do topo do ficheiro. `estadoR` é lida uma única
+ * vez quando a página carrega — mas a satisfação só é respondida DEPOIS
+ * disso, e `guardarSatisfacao()` grava num objeto de estado à parte, sem
+ * atualizar `estadoR`. Se este registo usasse `estadoR`, a satisfação
+ * enviada ficaria sempre vazia, mesmo depois de respondida (foi
+ * exatamente este bug que fazia "percebeu"/"útil" chegarem em branco à
+ * folha do Google).
+ *
+ * Os valores se enviam já traduzidos para texto legível (ex: "Portugal"
+ * em vez de "pt", "Pequena empresa" em vez de "pequena") — o código
+ * interno (setor, escalões, ids de bloco) serve para a lógica da
+ * ferramenta, mas quem vai analisar a folha de cálculo não devia ter de
+ * decifrar esses códigos.
+ *
+ * `origem` identifica qual ação disparou este envio em concreto
+ * (Seguinte / Descarregar / Terminar — ver mais abaixo). Como há três
+ * pontos de envio diferentes para garantir que os dados chegam mesmo que
+ * o utilizador não descarregue o resumo, a mesma sessão pode gerar mais
+ * do que uma linha na folha — `sessionId` é o que permite identificar
+ * quais linhas pertencem à mesma sessão (por exemplo, para manter só a
+ * mais completa/recente de cada uma numa análise).
+ */
+function construirRegisto(origem) {
+  const estadoAtual = lerEstado();
+  const perfil = estadoAtual.perfilEmpresa || {};
+  const satisfacao = estadoAtual.satisfacao || {};
+
+  const perfilLegivel = perfil.setor ? {
+    setor: t('perfil-setor-' + perfil.setor),
+    colaboradores: perfil.colaboradores,
+    faturacao: rotuloEscalao(perfil.criterioFinanceiro, perfil.escalaoFinanceiro),
+    classificacaoSME: t('classificacao-valor-' + classificacaoSME(perfil.colaboradores, perfil.escalaoFinanceiro)),
+    pais: perfil.pais === 'pt' ? t('perfil-pais-pt') : t('perfil-pais-europa'),
+    regiao: perfil.pais === 'pt' && perfil.regiao ? t('perfil-regiao-' + perfil.regiao) : ''
+  } : {};
+
+  // { "Nome do Bloco": "Prioridade" }, só os blocos já respondidos —
+  // nomes por extenso, não os ids internos (ex: "canais").
+  const diagnosticoLegivel = {};
+  BMC_BLOCOS.forEach(bloco => {
+    const resultado = estadoAtual.diagnostico[bloco.id];
+    if (resultado) diagnosticoLegivel[tBloco(bloco).nome] = tPrioridade(resultado.prioridade);
+  });
+
+  const simNao = (valor) => valor === 'sim' ? 'Sim' : (valor === 'nao' ? 'Não' : '');
+
   return {
     tipo: 'diagnostico',
+    origem: origem,
+    sessionId: estadoAtual.sessionId,
     concluidoEm: new Date().toISOString(),
-    perfilEmpresa: estadoR.perfilEmpresa,
-    satisfacao: estadoR.satisfacao,
-    diagnostico: estadoR.diagnostico,
-    blocosSelecionados: estadoR.blocosSelecionados
+    consentimentoInicial: estadoAtual.consentimento ? 'Sim' : 'Não',
+    satisfacaoPercebeu: simNao(satisfacao.percebeu),
+    satisfacaoUtil: simNao(satisfacao.util),
+    perfil: perfilLegivel,
+    diagnostico: diagnosticoLegivel,
+    blocosAprofundados: estadoAtual.blocosSelecionados
+      .map(id => { const b = BMC_BLOCOS.find(x => x.id === id); return b ? tBloco(b).nome : id; })
+      .join(', ')
   };
 }
 
@@ -432,7 +498,7 @@ document.getElementById('descarregar-resumo').addEventListener('click', async ()
   try {
     const html = await construirResumoHTML();
     descarregarFicheiro(html, `llm-em-pme-resumo-${Date.now()}.html`, 'text/html');
-    enviarParaGoogleSheets(construirRegisto());
+    enviarParaGoogleSheets(construirRegisto('descarregar'));
   } finally {
     botao.disabled = false;
   }
@@ -454,7 +520,13 @@ document.getElementById('guardar-contacto').addEventListener('click', () => {
   estadoAtual.contacto = { email, consentimento: true, guardadoEm: new Date().toISOString() };
   guardarEstado(estadoAtual);
 
-  enviarParaGoogleSheets({ tipo: 'contacto', email, consentimento: true, data: new Date().toISOString() });
+  enviarParaGoogleSheets({
+    tipo: 'contacto',
+    sessionId: lerEstado().sessionId,
+    email,
+    consentimento: true,
+    data: new Date().toISOString()
+  });
 
   mensagem.textContent = t('contacto-confirmacao');
   mensagem.hidden = false;
@@ -481,6 +553,7 @@ document.querySelectorAll('#recomecar-1, #recomecar-2').forEach(botao => {
  */
 document.getElementById('terminar').addEventListener('click', () => {
   if (confirm(t('sessao-terminar-confirmar'))) {
+    enviarParaGoogleSheets(construirRegisto('terminar')); // tem de ser antes do limparEstado() — depois disso já não há dados para enviar
     limparEstado();
     document.getElementById('conteudo-sessao').hidden = true;
     document.getElementById('ecra-fim').hidden = false;
