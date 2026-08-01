@@ -14,7 +14,6 @@
  *      dados chegam mesmo que não descarregue nada), quando descarrega
  *      o resumo, quando termina a sessão, e quando guarda um contacto
  *      por email — ver enviarParaGoogleSheets() em resultados.js.
- *
  */
 
 /**
@@ -34,7 +33,7 @@ function doPost(e) {
   } else if (dados.tipo === 'diagnostico') {
     guardarDiagnostico(dados);
   }
-  // Não há "else" com erro - se chegar um tipo desconhecido, ignora-se
+  // Não há "else" com erro — se chegar um tipo desconhecido, ignora-se
   // em silêncio. O site nunca lê a resposta desta função (usa
   // mode: 'no-cors'), por isso devolver um erro aqui não ajudaria em
   // nada quem está do lado do navegador; o que importa é nunca
@@ -48,7 +47,7 @@ function doPost(e) {
 
 /**
  * Pedidos GET (por exemplo, colar o URL diretamente no navegador) não
- * fazem parte do fluxo normal - o site só usa POST. Isto serve só para,
+ * fazem parte do fluxo normal — o site só usa POST. Isto serve só para,
  * se alguém (tu, a testar) abrir o URL à mão, aparecer uma mensagem
  * clara em vez do ecrã genérico e confuso do Google Drive a dizer que
  * "não é possível abrir o ficheiro".
@@ -67,7 +66,7 @@ function doGet(e) {
 /**
  * Nomes dos 9 blocos do BMC, pela mesma ordem canónica usada no site
  * (ver BMC_BLOCOS em js/data.js). Usa-se para desenhar as colunas fixas
- * da folha "Diagnostico" - o site envia dados.diagnostico como um
+ * da folha "Diagnostico" — o site envia dados.diagnostico como um
  * objeto { "Nome do Bloco": "Prioridade" }, só com os blocos já
  * respondidos, por isso aqui percorre-se sempre esta lista fixa (em vez
  * das chaves do objeto recebido) para todas as linhas terem sempre as
@@ -87,22 +86,26 @@ const NOMES_BLOCOS_BMC = [
 
 /**
  * Devolve a folha com o nome dado, criando-a (com o cabeçalho indicado)
- * se ainda não existir. Evita repetir esta lógica nas duas funções de
- * gravação a seguir.
+ * se ainda não existir. Também escreve o cabeçalho se a folha já existir
+ * mas estiver vazia (por exemplo, se alguém limpar o conteúdo sem apagar
+ * a folha) — sem isto, uma folha "existente mas vazia" nunca recebia
+ * cabeçalho, só linhas de dados por baixo de nada.
  */
 function obterOuCriarFolha(nome, cabecalho) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let aba = ss.getSheetByName(nome);
   if (!aba) {
     aba = ss.insertSheet(nome);
+  }
+  if (aba.getLastRow() === 0) {
     aba.appendRow(cabecalho);
-    aba.setFrozenRows(1); // o cabeçalho fica sempre visível ao fazer scroll na folha
+    aba.setFrozenRows(1);
   }
   return aba;
 }
 
 /**
- * Grava uma linha na folha "Contacto" - email de quem quer receber os
+ * Grava uma linha na folha "Contacto" — email de quem quer receber os
  * resultados finais do estudo. `sessionId` permite, se precisares,
  * cruzar este contacto com a respetiva sessão de diagnóstico na folha
  * "Diagnostico" (não é obrigatório para nada, só útil para análise).
@@ -115,7 +118,7 @@ function guardarContacto(dados) {
 /**
  * Grava uma linha na folha "Diagnostico" com o resultado completo de
  * uma sessão. Como há três momentos em que o site pode enviar isto
- * (Seguinte / Descarregar / Terminar - ver dados.origem), a mesma pessoa
+ * (Seguinte / Descarregar / Terminar — ver dados.origem), a mesma pessoa
  * pode gerar mais do que uma linha; usa `sessionId` para identificares
  * quais pertencem à mesma sessão (por exemplo, filtrando para manter só
  * a última linha de cada sessionId antes de analisar os dados).
