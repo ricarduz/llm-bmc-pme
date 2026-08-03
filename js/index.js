@@ -174,12 +174,17 @@ function restaurarPerfilEmpresa() {
   validarPasso1();
 }
 
-/** Desenha a grelha do Passo 2: um cartão por bloco do BMC, com nome e descrição em linguagem simples (para orientar quem vai responder ao Instrumento 1, que pressupõe já se saber o que é cada bloco). */
+/**
+ * Desenha o diagrama do BMC no Passo 2: um bloco por posição clássica
+ * do canvas (ver .bmc-diagrama em style.css para a disposição em grelha
+ * e as 9 posições). O atributo data-bmc é o que liga cada bloco à sua
+ * área correta no desenho — o CSS lê esse atributo para posicionar.
+ */
 function renderGrelhaBMC() {
   document.getElementById('grelha-bmc').innerHTML = BMC_BLOCOS.map(bloco => {
     const conteudo = tBloco(bloco);
     return `
-      <div class="bloco-exp">
+      <div class="bmc-bloco" data-bmc="${bloco.id}">
         <span class="area-tag">${tArea(bloco.area)}</span>
         <h4>${conteudo.nome}</h4>
         <p>${conteudo.descricao}</p>

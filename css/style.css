@@ -593,43 +593,82 @@ th {
 
 .aviso-bloqueio[hidden] { display: none; }
 
-/* Grelha explicativa do BMC (Passo 2 do index) */
-.grelha-explicativa {
+/**
+ * Diagrama do Business Model Canvas (Passo 2 do index) — replica a
+ * disposição clássica de 5 colunas de Osterwalder & Pigneur (2010),
+ * construído em HTML/CSS real (não uma imagem): mantém a tradução PT/EN
+ * automática já existente no site e adapta-se ao ecrã, o que uma imagem
+ * fixa não conseguiria fazer sem duplicar o trabalho para cada idioma.
+ *
+ * "gap: 1px" + fundo preto no contentor é o truque para desenhar as
+ * linhas da grelha sem duplicar contornos entre células vizinhas — o
+ * fundo do contentor "aparece" só nesse espaço de 1px.
+ *
+ * Abaixo dos ~700px de largura, a forma em grelha deixa de caber com
+ * texto legível (colunas com menos de 100px de texto útil), por isso
+ * simplifica-se para uma lista vertical, pela ordem canónica dos blocos
+ * (ver a media query ao fundo).
+ */
+.bmc-diagrama {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  grid-template-columns: 1fr 1fr 1.15fr 1fr 1fr;
+  grid-template-areas:
+    "parcerias  atividades  valor  relacionamento  segmentos"
+    "parcerias  recursos    valor  canais          segmentos"
+    "custos     custos      custos receita         receita";
+  gap: 1px;
+  background: var(--uab-preto);
+  border: 2px solid var(--uab-preto);
   margin: 8px 0 24px;
 }
 
-.grelha-explicativa .bloco-exp {
+.bmc-bloco {
   background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 18px;
+  padding: 14px;
+  min-width: 0; /* permite ao texto quebrar corretamente dentro da célula, em vez de forçar a coluna a alargar */
 }
 
-.grelha-explicativa .bloco-exp .area-tag { display: block; margin-bottom: 4px; }
+.bmc-bloco .area-tag { display: block; margin-bottom: 4px; }
 
-.grelha-explicativa h4 {
+.bmc-bloco h4 {
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: 0.86rem;
   font-weight: 700;
-  margin: 0 0 8px;
+  line-height: 1.2;
+  margin: 0 0 6px;
   color: var(--uab-preto);
 }
 
-.grelha-explicativa p {
-  font-size: 0.82rem;
+.bmc-bloco p {
+  font-size: 0.72rem;
+  line-height: 1.42;
   color: var(--ink-soft);
   margin: 0;
 }
 
-@media (max-width: 900px) {
-  .grelha-explicativa { grid-template-columns: repeat(2, 1fr); }
-}
+/* As 9 posições clássicas do canvas — cada bloco recebe a sua área
+   consoante o id (ver data-bmc, escrito por renderGrelhaBMC() em
+   index.js). A Proposta de Valor ocupa uma coluna ligeiramente mais
+   larga (1.15fr), tal como no desenho original — é o bloco central,
+   normalmente com mais texto. */
+.bmc-bloco[data-bmc="parcerias-chave"] { grid-area: parcerias; }
+.bmc-bloco[data-bmc="atividades-chave"] { grid-area: atividades; }
+.bmc-bloco[data-bmc="recursos-chave"] { grid-area: recursos; }
+.bmc-bloco[data-bmc="proposta-valor"] { grid-area: valor; }
+.bmc-bloco[data-bmc="relacionamento-clientes"] { grid-area: relacionamento; }
+.bmc-bloco[data-bmc="canais"] { grid-area: canais; }
+.bmc-bloco[data-bmc="segmentos-clientes"] { grid-area: segmentos; }
+.bmc-bloco[data-bmc="estrutura-custos"] { grid-area: custos; }
+.bmc-bloco[data-bmc="fontes-receita"] { grid-area: receita; }
 
-@media (max-width: 640px) {
-  .grelha-explicativa { grid-template-columns: 1fr; }
+@media (max-width: 700px) {
+  .bmc-diagrama {
+    grid-template-columns: 1fr;
+    grid-template-areas: none;
+  }
+  .bmc-bloco { grid-area: auto; padding: 16px; }
+  .bmc-bloco h4 { font-size: 0.95rem; }
+  .bmc-bloco p { font-size: 0.82rem; }
 }
 
 /**
