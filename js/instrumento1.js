@@ -219,22 +219,25 @@ function atualizarProgresso() {
 }
 
 /** Tabela com o resultado dos 9 blocos, mostrada só depois de o diagnóstico estar completo. */
+/**
+ * "Resultado global do diagnóstico": usa o mesmo diagrama do Business
+ * Model Canvas do Passo 2 do index (ver .bmc-diagrama em style.css), mas
+ * em vez da descrição de cada bloco, mostra o selo de prioridade obtido
+ * — a mesma cor usada em todo o resto do site (mini-mapa, cartões,
+ * Instrumento 2). Prontidão e Impacto (os dois valores que levaram a
+ * esta prioridade) não aparecem aqui — continuam visíveis no cartão de
+ * cada bloco, logo acima, e no resumo exportado; esta vista é só o
+ * panorama rápido antes de avançar para o Instrumento 2.
+ */
 function renderResumo(estadoAtual) {
-  const linhas = BMC_BLOCOS.map(bloco => {
+  document.getElementById('tabela-resumo').innerHTML = BMC_BLOCOS.map(bloco => {
     const r = estadoAtual.diagnostico[bloco.id];
     return `
-      <tr>
-        <td data-label="${t('th-bloco')}">${tBloco(bloco).nome}</td>
-        <td data-label="${t('th-prontidao')}">${r.prontidao}</td>
-        <td data-label="${t('th-impacto')}">${r.impacto}</td>
-        <td data-label="${t('th-prioridade')}"><span class="selo" data-p="${r.prioridade}">${tPrioridade(r.prioridade)}</span></td>
-      </tr>`;
+      <div class="bmc-bloco" data-bmc="${bloco.id}">
+        <h4>${tBloco(bloco).nome}</h4>
+        <span class="selo" data-p="${r.prioridade}">${tPrioridade(r.prioridade)}</span>
+      </div>`;
   }).join('');
-
-  document.getElementById('tabela-resumo').innerHTML = `
-    <thead><tr><th>${t('th-bloco')}</th><th>${t('th-prontidao')}</th><th>${t('th-impacto')}</th><th>${t('th-prioridade')}</th></tr></thead>
-    <tbody>${linhas}</tbody>
-  `;
 }
 
 /**
