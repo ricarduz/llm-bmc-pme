@@ -14,6 +14,12 @@
  *      dados chegam mesmo que não descarregue nada), quando descarrega
  *      o resumo, quando termina a sessão, e quando guarda um contacto
  *      por email — ver enviarParaGoogleSheets() em resultados.js.
+ *
+ * IMPORTANTE: sempre que editares este código, tens de voltar a fazer
+ * Implementar → Gerir implementações → ✏️ → Versão: Nova versão →
+ * Implementar. Só gravar o ficheiro (Ctrl+S) NÃO atualiza a implementação
+ * já publicada — o site continua a falar com o código antigo até
+ * publicares uma versão nova.
  */
 
 /**
