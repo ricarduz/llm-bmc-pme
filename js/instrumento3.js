@@ -10,10 +10,11 @@
  * de seguida tornava-se confuso.
  *
  * Nota: a página em si já tem seletor de idioma (título, botões, etc.
- * traduzem-se normalmente) — mas o conteúdo das fichas propriamente
- * dito (contexto, aplicações, ações, etc.) só existe em português; com
- * o site em inglês, mostra-se um aviso em vez de fingir uma tradução
- * que não existe (ver avisoSoPortugues(), mais abaixo).
+ * traduzem-se normalmente), e o conteúdo das fichas já tem uma tradução
+ * de trabalho para inglês (TRADUCOES_I1_EN.fichas, em i18n.js) — mas é
+ * uma tradução ainda não revista, por isso mostra-se sempre um aviso a
+ * dizer isso mesmo quando o site está em inglês (ver
+ * avisoTraducaoIndicativa(), mais abaixo).
  */
 
 const estado3 = lerEstado();
@@ -34,15 +35,15 @@ function renderAbas() {
     <div class="abas-fichas">
       ${idsSelecionados.map(id => {
         const bloco = BMC_BLOCOS.find(b => b.id === id);
-        return `<button type="button" class="aba-ficha ${id === fichaAtivaId ? 'ativa' : ''}" data-aba="${id}">${bloco ? tBloco(bloco).nome : FICHAS[id].titulo}</button>`;
+        return `<button type="button" class="aba-ficha ${id === fichaAtivaId ? 'ativa' : ''}" data-aba="${id}">${bloco ? tBloco(bloco).nome : tFicha(id).titulo}</button>`;
       }).join('')}
     </div>`;
 }
 
-/** Aviso mostrado no topo de uma ficha quando o site está em inglês — o conteúdo em si (contexto, aplicações, etc.) continua só em português, e é mais honesto avisar disso do que fingir uma tradução que não existe. */
-function avisoSoPortugues() {
+/** Aviso mostrado no topo de uma ficha quando o site está em inglês — a tradução (ver tFicha(), em i18n.js) ainda não foi revista formalmente, por isso é mais honesto avisar disso do que apresentá-la como definitiva. */
+function avisoTraducaoIndicativa() {
   if (obterIdioma() !== 'en') return '';
-  return `<p class="nota" style="margin-bottom:20px;">${t('i3-so-portugues')}</p>`;
+  return `<p class="nota" style="margin-bottom:20px;">${t('i3-traducao-indicativa')}</p>`;
 }
 
 /** As seis secções de uma Ficha de Decisão completa: contexto, aplicações, orientação tecnológica (tabela de opções), ações concretas, critérios de avaliação (tabela), e conformidade/governança. */
@@ -52,22 +53,22 @@ function renderFichaCompleta(bloco, ficha) {
       <div class="cartao-cabecalho">
         <div>
           <span class="area-tag">${ficha.area} · ${ficha.requisitos}</span>
-          <h2 style="margin-bottom:0;">Ficha de Decisão — ${ficha.titulo}</h2>
+          <h2 style="margin-bottom:0;">${t('ficha-titulo-sufixo')} — ${ficha.titulo}</h2>
         </div>
         <span class="selo" data-p="${estado3.diagnostico[bloco.id].prioridade}">${estado3.diagnostico[bloco.id].prioridade}</span>
       </div>
 
-      ${avisoSoPortugues()}
+      ${avisoTraducaoIndicativa()}
 
-      <h3>1. Contexto do bloco</h3>
+      <h3>1. ${t('ficha-contexto')}</h3>
       <p>${ficha.contexto}</p>
 
-      <h3>2. Aplicações LLM prioritárias</h3>
+      <h3>2. ${t('ficha-aplicacoes')}</h3>
       <ul>${ficha.aplicacoes.map(a => `<li>${a}</li>`).join('')}</ul>
 
-      <h3>3. Orientação tecnológica</h3>
+      <h3>3. ${t('ficha-tecnologia')}</h3>
       <table>
-        <thead><tr><th>Opção</th><th>Adequada quando</th><th>Considerações para PME</th></tr></thead>
+        <thead><tr><th>${t('th-opcao')}</th><th>${t('th-adequada-quando')}</th><th>${t('th-consideracoes')}</th></tr></thead>
         <tbody>
           ${ficha.orientacaoTecnologica.map(o => `
             <tr><td>${o.opcao}</td><td>${o.quando}</td><td>${o.consideracoes}</td></tr>
@@ -75,18 +76,18 @@ function renderFichaCompleta(bloco, ficha) {
         </tbody>
       </table>
 
-      <h3 style="margin-top:20px;">4. Ações concretas</h3>
+      <h3 style="margin-top:20px;">4. ${t('ficha-acoes')}</h3>
       <ul>${ficha.acoes.map(a => `<li>${a}</li>`).join('')}</ul>
 
-      <h3>5. Critérios de avaliação</h3>
+      <h3>5. ${t('ficha-criterios')}</h3>
       <table>
-        <thead><tr><th>Critério</th><th>Indicador de impacto</th></tr></thead>
+        <thead><tr><th>${t('th-criterio')}</th><th>${t('th-indicador')}</th></tr></thead>
         <tbody>
           ${ficha.criterios.map(c => `<tr><td>${c.criterio}</td><td>${c.indicador}</td></tr>`).join('')}
         </tbody>
       </table>
 
-      <h3 style="margin-top:20px;">6. Conformidade e governança</h3>
+      <h3 style="margin-top:20px;">6. ${t('ficha-governanca')}</h3>
       <p>${ficha.governanca}</p>
     </div>
   `;
@@ -125,7 +126,7 @@ function render() {
   if (idsSelecionados.length === 0) {
     document.getElementById('lista-fichas').innerHTML = `
       <div class="cartao">
-        <p class="nota">Nenhum bloco com Ficha de Decisão foi selecionado no Instrumento 2. Pode <a href="instrumento2.html">rever a seleção</a> ou avançar para a síntese.</p>
+        <p class="nota">${t('i3-nenhuma-ficha')}</p>
       </div>`;
     return;
   }
@@ -133,7 +134,7 @@ function render() {
   if (!idsSelecionados.includes(fichaAtivaId)) fichaAtivaId = idsSelecionados[0];
 
   const bloco = BMC_BLOCOS.find(b => b.id === fichaAtivaId);
-  const ficha = FICHAS[fichaAtivaId];
+  const ficha = tFicha(fichaAtivaId);
   const conteudoFicha = ficha.pendente ? renderFichaPendente(bloco, ficha) : renderFichaCompleta(bloco, ficha);
 
   document.getElementById('lista-fichas').innerHTML = renderAbas() + conteudoFicha;

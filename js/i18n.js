@@ -146,7 +146,8 @@ const TRADUCOES = {
     'i3-lead': 'Orientação tecnológica, ações concretas, critérios de avaliação e conformidade para os blocos selecionados na Matriz.',
     'i2-rever-diagnostico-i3': '← Rever seleção',
     'i3-ver-sintese': 'Ver síntese →',
-    'i3-so-portugues': 'O conteúdo desta ficha está disponível apenas em português.',
+    'i3-traducao-indicativa': 'Esta tradução ainda não foi revista nem certificada — serve apenas de indicação; a versão de referência é sempre a portuguesa.',
+    'i3-nenhuma-ficha': 'Nenhum bloco com Ficha de Decisão foi selecionado no Instrumento 2. Pode <a href="instrumento2.html">rever a seleção</a> ou avançar para a síntese.',
     'i2-continuar-fichas': 'Continuar para as Fichas de Decisão →',
     'i2-continuar-sintese': 'Continuar para a síntese →',
     'i2-limpar': 'Limpar seleção',
@@ -314,7 +315,8 @@ const TRADUCOES = {
     'i3-lead': 'Technological guidance, concrete actions, evaluation criteria and compliance for the blocks selected in the Matrix.',
     'i2-rever-diagnostico-i3': '← Review selection',
     'i3-ver-sintese': 'View summary →',
-    'i3-so-portugues': 'This content is only available in Portuguese.',
+    'i3-traducao-indicativa': 'This translation has not been reviewed or certified — it is provided for guidance only; the Portuguese original remains the reference version.',
+    'i3-nenhuma-ficha': 'No block with a Decision Sheet was selected in Instrument 2. You can <a href="instrumento2.html">review your selection</a> or move on to the summary.',
     'i2-continuar-fichas': 'Continue to the Decision Sheets →',
     'i2-continuar-sintese': 'Continue to the summary →',
     'i2-limpar': 'Clear selection',
@@ -344,7 +346,7 @@ const TRADUCOES = {
     'th-prioridade': 'Priority',
     'sobre-titulo': 'About this project',
     'sobre-autor-titulo': 'About the author',
-    'sobre-autor-texto': 'I\'m Ricardo Isaías Serafim, an economist with a degree in Information Management from Universidade Nova de Lisboa. I work for the Schwarz Group at Lidl Portugal, currently on assignment with Lidl Czechia. I\'m responsible for Financial Planning, Reporting and Data Science, and I also lead Digital Transformation within Management Control. This project brings together my professional experience with academic research into AI applied to SMEs — the very topic that got me excited to take on this academic adventure.',
+    'sobre-autor-texto': 'I\'m Ricardo Isaías Serafim, an economist with a degree in Information Management from Universidade Nova de Lisboa. I work for the Schwarz Group at Lidl Portugal, currently on assignment with Lidl Czechia. I\'m responsible for Financial Planning, Reporting and Data Science, and I also lead Digital Transformation within Management Control. This project brings together my professional experience with academic research into AI applied to SMEs — the very topic that got me excited to take on this academic adventure. In any case, contact me at m2302605@estudante.uab.pt.',
     'sobre-tese-titulo': 'About the ongoing dissertation',
     'sobre-tese-texto': 'This dissertation develops an operational framework that helps SME managers decide, in a structured way, where and how to adopt Large Language Models (LLMs) in their business. Built from a systematic literature review and the Design Science Research methodology, it brings together three instruments — a prerequisite diagnostic, an application matrix by Business Model Canvas block, and decision sheets with technology guidance — validated with a panel of experts. This interactive tool is the central artefact of the research, developed for the degree of Master in Computer Engineering and Web Technology at Universidade Aberta, in partnership with UTAD, supervised by Prof. Dr. Frederico Branco.',
     'modal-fechar': 'Close',
@@ -621,6 +623,141 @@ const TRADUCOES_I1_EN = {
     'Relevante': 'Relevant',
     'Prioritário': 'Priority',
     'Investimento necessário': 'Investment needed'
+  },
+  /**
+   * Tradução de trabalho das 4 Fichas de Decisão (Instrumento 3) — feita
+   * diretamente a partir do texto em data.js, sem revisão formal ainda.
+   * Por isso, sempre que se mostra este conteúdo com o site em inglês,
+   * aparece também um aviso a dizer que é uma tradução indicativa, não
+   * certificada (ver 'i3-traducao-indicativa', mais acima nos dois
+   * dicionários, e avisoTraducaoIndicativa() em instrumento3.js).
+   */
+  fichas: {
+    'recursos-chave': {
+      titulo: 'Key Resources',
+      area: 'III - Infrastructure Management',
+      requisitos: 'RF1 · RF2 · RF3 · RF4',
+      contexto: 'Key Resources describe the most important assets an SME needs for its business model to work. Adopting LLMs brings in new technological and intellectual resources — APIs, cloud infrastructure, prompt engineering skills and organisational knowledge bases — that reshape the organisation\'s resource profile. This block is both a prerequisite and an outcome of adoption: an SME needs a minimum set of resources to adopt LLMs, and by adopting them, builds new resources in turn.',
+      aplicacoes: [
+        'Integrating LLM APIs as a core technological resource within operational processes',
+        'Building a structured, searchable organisational knowledge base with AI',
+        'Developing in-house skills in prompt writing and output supervision',
+        'Creating a repository of reusable prompts and templates by function or process'
+      ],
+      orientacaoTecnologica: [
+        { opcao: 'Commercial API as a base resource', quando: 'SMEs without in-house development capacity; speed of implementation is the priority', consideracoes: 'Lower upfront cost; external dependency; assess the provider\'s continuity and terms of service' },
+        { opcao: 'RAG as a knowledge resource', quando: 'SMEs with valuable organisational knowledge scattered across documents', consideracoes: 'Turns existing documentation into a searchable resource; moderate investment; high return for knowledge-intensive SMEs' },
+        { opcao: 'In-house infrastructure', quando: 'SMEs with high privacy requirements, or volume that justifies the investment', consideracoes: 'Greater control and independence; requires technical skills or an external support partner' }
+      ],
+      acoes: [
+        'Audit existing technological resources against the minimum requirements for LLM adoption',
+        'Select and contract the API provider or LLM platform best suited to the SME\'s profile',
+        'Identify and train the employee responsible for managing and overseeing the LLM tools',
+        'Build an initial repository of validated prompts for the priority tasks identified',
+        'Define an internal policy on the use and autonomy limits of the LLM tools'
+      ],
+      criterios: [
+        { criterio: 'Availability', indicador: 'Uptime and reliability of the LLM service integrated into processes' },
+        { criterio: 'Internal competence', indicador: 'Number of employees able to use the tools autonomously' },
+        { criterio: 'Cost-effectiveness', indicador: 'Monthly subscription/API cost against value generated (hours saved, outputs produced)' },
+        { criterio: 'Independence', indicador: 'Degree of lock-in: how easily the organisation could switch providers if needed' }
+      ],
+      governanca: 'GDPR: contracts with API providers should include data sub-processing clauses where applicable. Check where data is processed and stored geographically.'
+    },
+    'canais': {
+      titulo: 'Channels',
+      area: 'I - Customer Interface',
+      requisitos: 'RF1 · RF2 · RF3 · RF4',
+      contexto: 'Channels define how the SME communicates and delivers value to its customer segments. In SMEs, digital channels (email, website, social media) often coexist with in-person channels, with low automation and heavy reliance on human intervention. Adopting LLMs in this block aims to automate and personalise communication, reducing response times and increasing the capacity to engage without a proportional increase in headcount.',
+      aplicacoes: [
+        'Chatbots and virtual assistants for website customer service and lead qualification',
+        'Automated responses to frequently asked questions by email or social media',
+        'Generating personalised content for multichannel campaigns',
+        'Automatic translation and adaptation of communications for different markets'
+      ],
+      orientacaoTecnologica: [
+        { opcao: 'Commercial API (GPT, Claude, Gemini)', quando: 'Moderate interaction volume; no sensitive data; fast implementation needed', consideracoes: 'Predictable cost at low volume; provider dependency; GDPR compliance requires contract review' },
+        { opcao: 'Open-source (LLaMA, Mistral)', quando: 'Sensitive data that cannot leave the organisation; greater control over the model needed', consideracoes: 'Requires own infrastructure or dedicated cloud; higher upfront investment in setup' },
+        { opcao: 'RAG', quando: 'Chatbot answering from internal documentation (catalogues, FAQs, contracts)', consideracoes: 'Recommended for SMEs with structured documentation; reduces hallucinations; integrates with commercial APIs' }
+      ],
+      acoes: [
+        'Identify the channels with the highest volume of repetitive interactions (email, chat, forms)',
+        'Select a low-risk pilot channel for initial implementation',
+        'Define the scope of automated responses and the thresholds for escalating to a human',
+        'Integrate the LLM with existing communication platforms via API',
+        'Establish a process for periodically reviewing the quality of generated responses'
+      ],
+      criterios: [
+        { criterio: 'Efficiency', indicador: 'Reduction in average customer response time' },
+        { criterio: 'Quality', indicador: 'Resolution rate without escalation to a human' },
+        { criterio: 'Satisfaction', indicador: 'Customer experience rating (NPS or equivalent)' },
+        { criterio: 'Cost', indicador: 'Cost per interaction before and after implementation' }
+      ],
+      governanca: 'GDPR: customer interaction data (name, email, conversation history) is personal data. Ensure a legal basis for processing, inform users they are interacting with an automated system, and provide an opt-out mechanism. AI Act: systems interacting with end users are subject to transparency requirements (users must be informed they are interacting with an AI system). Reputational risk: visible failures have a direct impact on the SME\'s image. Set a confidence threshold below which a response is always reviewed by a human before it is sent.'
+    },
+    'relacionamento-clientes': {
+      titulo: 'Customer Relationships',
+      area: 'I - Customer Interface',
+      requisitos: 'RF1 · RF2 · RF3 · RF4',
+      contexto: 'Customer Relationships define the type of relationship the SME establishes with each segment — from reactive support to proactive loyalty-building. In SMEs, this block is often managed informally and is highly time-intensive, with limited capacity to scale. Adopting LLMs makes the relationship more responsive, personalised and data-driven, without requiring a proportional increase in headcount.',
+      aplicacoes: [
+        '24/7 automated support with personalised, context-appropriate responses',
+        'Sentiment analysis of customer feedback, complaints and reviews',
+        'Automated post-sale support: follow-up, confirmations and query resolution',
+        'Generating personalised proactive communications (follow-ups, renewals, alerts)'
+      ],
+      orientacaoTecnologica: [
+        { opcao: 'Commercial API', quando: 'SMEs without their own infrastructure; need for a quick start; low to moderate interaction volume', consideracoes: 'Lowest barrier to entry; weigh recurring costs against expected volume' },
+        { opcao: 'RAG over CRM', quando: 'SMEs with customer history structured in a CRM or internal database', consideracoes: 'Enables responses informed by customer history; recommended for SMEs with organised data' },
+        { opcao: 'Fine-tuning', quando: 'Very specific brand tone and language; high interaction volume justifies the investment', consideracoes: 'Higher upfront investment; requires quality training data; suited to more mature adoption stages' }
+      ],
+      acoes: [
+        'Map the customer touchpoints with the highest volume or repetition',
+        'Define the tone and the limits of the system\'s autonomy (what it answers automatically versus what it escalates)',
+        'Integrate the LLM with the existing CRM for access to customer history',
+        'Implement sentiment analysis on feedback channels for early detection of dissatisfaction',
+        'Create a process for continuous review and improvement based on escalated cases'
+      ],
+      criterios: [
+        { criterio: 'Responsiveness', indicador: 'Average time to first response to the customer' },
+        { criterio: 'Loyalty', indicador: 'Customer retention rate before and after implementation' },
+        { criterio: 'Relationship quality', indicador: 'Satisfaction score in AI-assisted interactions' },
+        { criterio: 'Escalation', indicador: 'Percentage of cases resolved without human intervention' }
+      ],
+      governanca: 'GDPR: processing customers\' personal data to personalise the relationship requires an explicit legal basis. Interaction history should not be shared with external models without anonymisation or an appropriate contractual agreement. AI Act: systems that make decisions affecting the customer relationship (e.g., churn risk scoring) may require explainability and human oversight.'
+    },
+    'atividades-chave': {
+      titulo: 'Key Activities',
+      area: 'III - Infrastructure Management',
+      requisitos: 'RF1 · RF2 · RF3 · RF4',
+      contexto: 'Key Activities represent the most important actions an SME must carry out for its business model to work. In SMEs, these activities often include language-intensive tasks — report writing, document analysis, internal and external communications, and knowledge management — that are time-consuming and have a low degree of automation. Adopting LLMs in this block has the potential to free up significant operational capacity.',
+      aplicacoes: [
+        'Automatic generation of operational reports and executive summaries',
+        'Extracting, summarising and categorising information from unstructured documents',
+        'Support in drafting commercial proposals, contracts and formal communications',
+        'Assistance with software development and generating technical documentation',
+        'Automating approval workflows and document triage'
+      ],
+      orientacaoTecnologica: [
+        { opcao: 'Commercial API', quando: 'Text-generation tasks with no sensitive data; need for flexibility across varied tasks', consideracoes: 'Cost scales with token volume; assess exposure of internal documents to the provider' },
+        { opcao: 'RAG over internal documentation', quando: 'SMEs with an internal document repository (manuals, processes, contracts, past reports)', consideracoes: 'Recommended for generating context-aware reports; reduces hallucinations in specialised domains' },
+        { opcao: 'Local open-source', quando: 'Confidential documents that cannot leave the organisation (financial, legal data)', consideracoes: 'Greater control and privacy; requires supporting infrastructure; suited to SMEs with external technical support' }
+      ],
+      acoes: [
+        'Identify the activities with the highest volume of document production or text analysis',
+        'Select a low-criticality pilot process for the first implementation',
+        'Define standardised templates and prompts for the most frequent outputs',
+        'Establish a mandatory human validation step before publishing or sending outputs',
+        'Monitor time saved and output quality to justify scaling up'
+      ],
+      criterios: [
+        { criterio: 'Efficiency', indicador: 'Average document production time before and after implementation' },
+        { criterio: 'Quality', indicador: 'Approval rate of outputs without substantive revision' },
+        { criterio: 'Internal adoption', indicador: 'Percentage of employees who regularly use the LLM tools' },
+        { criterio: 'Savings', indicador: 'Estimated hours freed up per month for higher-value activities' }
+      ],
+      governanca: 'GDPR: internal documents containing personal data (employees, customers, suppliers) should not be submitted to external APIs without a Data Protection Impact Assessment (DPIA). AI Act: systems supporting internal decisions that affect critical processes must ensure traceability and the ability to audit generated outputs.'
+    }
   }
 };
 
@@ -655,6 +792,20 @@ function tBloco(bloco) {
     return { descricao: bloco.descricao, matriz: bloco.matriz, ...TRADUCOES_I1_EN.blocos[bloco.id] };
   }
   return { nome: bloco.nome, indicadores: bloco.indicadores, descricao: bloco.descricao, matriz: bloco.matriz };
+}
+
+/**
+ * Devolve o conteúdo de uma Ficha de Decisão no idioma atual — a versão
+ * inglesa (TRADUCOES_I1_EN.fichas) é uma tradução de trabalho, ainda não
+ * revista, por isso sempre que se usa esta função com o site em inglês
+ * deve mostrar-se também o aviso 'i3-traducao-indicativa' junto ao
+ * conteúdo (ver avisoTraducaoIndicativa() em instrumento3.js).
+ */
+function tFicha(id) {
+  if (obterIdioma() === 'en' && TRADUCOES_I1_EN.fichas && TRADUCOES_I1_EN.fichas[id]) {
+    return TRADUCOES_I1_EN.fichas[id];
+  }
+  return FICHAS[id];
 }
 
 /** Texto da escala de Prontidão ou Impacto (1/2/3) no idioma atual. `eixo` é 'prontidao' ou 'impacto'. */
