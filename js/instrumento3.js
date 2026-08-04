@@ -9,10 +9,11 @@
  * fichas completas (cada uma com 6 secções e várias tabelas), ler tudo
  * de seguida tornava-se confuso.
  *
- * Nota: esta página ainda não tem seletor de idioma — o conteúdo das
- * fichas (FICHAS, em data.js) só existe em português. Por isso os
- * textos fixos aqui (títulos das secções, "Ficha de Decisão —", etc.)
- * estão escritos diretamente em português, sem passar por t()/tBloco().
+ * Nota: a página em si já tem seletor de idioma (título, botões, etc.
+ * traduzem-se normalmente) — mas o conteúdo das fichas propriamente
+ * dito (contexto, aplicações, ações, etc.) só existe em português; com
+ * o site em inglês, mostra-se um aviso em vez de fingir uma tradução
+ * que não existe (ver avisoSoPortugues(), mais abaixo).
  */
 
 const estado3 = lerEstado();
@@ -33,9 +34,15 @@ function renderAbas() {
     <div class="abas-fichas">
       ${idsSelecionados.map(id => {
         const bloco = BMC_BLOCOS.find(b => b.id === id);
-        return `<button type="button" class="aba-ficha ${id === fichaAtivaId ? 'ativa' : ''}" data-aba="${id}">${bloco ? bloco.nome : FICHAS[id].titulo}</button>`;
+        return `<button type="button" class="aba-ficha ${id === fichaAtivaId ? 'ativa' : ''}" data-aba="${id}">${bloco ? tBloco(bloco).nome : FICHAS[id].titulo}</button>`;
       }).join('')}
     </div>`;
+}
+
+/** Aviso mostrado no topo de uma ficha quando o site está em inglês — o conteúdo em si (contexto, aplicações, etc.) continua só em português, e é mais honesto avisar disso do que fingir uma tradução que não existe. */
+function avisoSoPortugues() {
+  if (obterIdioma() !== 'en') return '';
+  return `<p class="nota" style="margin-bottom:20px;">${t('i3-so-portugues')}</p>`;
 }
 
 /** As seis secções de uma Ficha de Decisão completa: contexto, aplicações, orientação tecnológica (tabela de opções), ações concretas, critérios de avaliação (tabela), e conformidade/governança. */
@@ -49,6 +56,8 @@ function renderFichaCompleta(bloco, ficha) {
         </div>
         <span class="selo" data-p="${estado3.diagnostico[bloco.id].prioridade}">${estado3.diagnostico[bloco.id].prioridade}</span>
       </div>
+
+      ${avisoSoPortugues()}
 
       <h3>1. Contexto do bloco</h3>
       <p>${ficha.contexto}</p>
@@ -157,6 +166,8 @@ function atualizarMapa() {
 document.getElementById('continuar').addEventListener('click', () => {
   window.location.href = 'resultados.html';
 });
+
+document.addEventListener('idioma:alterado', render);
 
 render();
 atualizarMapa();

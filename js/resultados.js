@@ -112,9 +112,11 @@ function listaMatriz(itens) {
 
 /** A Ficha de Decisão de um bloco aprofundado, resumida para leitura na página (mesmas seis secções do Instrumento 3, formatadas em prosa/tabelas em vez de cartões separados). */
 function renderFichaResumo(bloco, ficha) {
+  const aviso = obterIdioma() === 'en' ? `<p class="nota" style="margin-bottom:14px;">${t('i3-so-portugues')}</p>` : '';
   return `
     <div style="margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--line);">
       <h4 style="margin-bottom:4px;">${tBloco(bloco).nome} — ${t('ficha-titulo-sufixo')}</h4>
+      ${aviso}
       <p class="nota" style="margin-bottom:14px;">${ficha.area} · ${ficha.requisitos}</p>
 
       <p><strong>${t('ficha-contexto')}:</strong> ${ficha.contexto}</p>
@@ -450,6 +452,7 @@ async function construirResumoHTML() {
         const linha = (rotulo, itens) => `<tr><th>${rotulo}</th><td><ul style="margin:0; padding-left:18px;">${itens.map(i => `<li>${i}</li>`).join('')}</ul></td></tr>`;
         return `
           <h3>${tBloco(bloco).nome} — ${t('ficha-titulo-sufixo')}</h3>
+          ${idioma === 'en' ? `<p>${t('i3-so-portugues')}</p>` : ''}
           <p><em>${ficha.area} · ${ficha.requisitos}</em></p>
           <p><strong>${t('ficha-contexto')}:</strong> ${ficha.contexto}</p>
           <table>${linha(t('ficha-aplicacoes'), ficha.aplicacoes)}</table>
