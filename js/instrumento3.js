@@ -32,10 +32,11 @@ let fichaAtivaId = idsSelecionados[0];
 function renderAbas() {
   if (idsSelecionados.length <= 1) return '';
   return `
-    <div class="abas-fichas">
+    <div class="abas-fichas" role="tablist">
       ${idsSelecionados.map(id => {
         const bloco = BMC_BLOCOS.find(b => b.id === id);
-        return `<button type="button" class="aba-ficha ${id === fichaAtivaId ? 'ativa' : ''}" data-aba="${id}">${bloco ? tBloco(bloco).nome : tFicha(id).titulo}</button>`;
+        const ativa = id === fichaAtivaId;
+        return `<button type="button" class="aba-ficha ${ativa ? 'ativa' : ''}" data-aba="${id}" role="tab" aria-selected="${ativa}">${bloco ? tBloco(bloco).nome : tFicha(id).titulo}</button>`;
       }).join('')}
     </div>`;
 }

@@ -52,9 +52,7 @@ function renderBlocoExpandido(bloco, guardado) {
         ${guardado ? `<span class="selo-respondido" aria-hidden="true">&#10003;</span>` : ''}
       </div>
 
-      <ul class="indicadores">
-        ${conteudo.indicadores.map(i => `<li>${i}</li>`).join('')}
-      </ul>
+      <p class="indicadores-corridos">${t('i1-indicadores-intro')} ${conteudo.indicadores.join(' ')}</p>
 
       <div class="eixo">
         <div class="eixo-titulo">${t('i1-eixo-prontidao')}</div>
@@ -136,13 +134,22 @@ function calcularVisao(estadoAtual) {
  */
 function render() {
   const estadoAtual = lerEstado();
-  const { indiceAtual, idExpandido } = calcularVisao(estadoAtual);
+  const { idExpandido } = calcularVisao(estadoAtual);
 
-  document.getElementById('lista-blocos').innerHTML = BMC_BLOCOS.map((bloco, idx) => {
+  document.getElementById('lista-blocos').innerHTML = BMC_BLOCOS.map((bloco) => {
     const guardado = estadoAtual.diagnostico[bloco.id];
-    if (idx > indiceAtual) return renderBlocoBloqueado(bloco);
+    // A verdade sobre o que mostrar vem sempre de `guardado` (tem
+    // resposta ou não), nunca da posição do bloco na lista — usar a
+    // posição (idx > indiceAtual) tinha um efeito secundário: ao
+    // reabrir um bloco já respondido mais atrás, o bloco seguinte
+    // (ainda por responder) deixava de coincidir com idExpandido, mas
+    // continuava a passar o teste de posição, e caía em
+    // renderBlocoColapsado — que mostra sempre o visto de "respondido",
+    // mesmo sem guardado nenhum. Aqui, um bloco sem resposta que não
+    // seja o expandido mostra-se sempre bloqueado, nunca com o visto.
     if (bloco.id === idExpandido) return renderBlocoExpandido(bloco, guardado);
-    return renderBlocoColapsado(bloco, guardado);
+    if (guardado) return renderBlocoColapsado(bloco, guardado);
+    return renderBlocoBloqueado(bloco);
   }).join('');
 
   attachListeners();

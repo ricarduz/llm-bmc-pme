@@ -101,6 +101,7 @@ function renderHook() {
       <div class="valor-destaque">
         <span>${t('pme-tempo')}</span><span>${t('pme-areas')}</span>
       </div>
+      <p class="nota" style="max-width:440px; margin:0 auto 20px;">${t('pme-sem-julgamento')}</p>
       <label style="display:flex; gap:10px; align-items:flex-start; text-align:left; cursor:pointer; max-width:440px; margin:0 auto 20px;">
         <input type="checkbox" id="consentimento-pme" style="margin-top:4px;">
         <span style="font-size:0.85rem; color:var(--ink-soft);">${t('pme-consentimento')}</span>
@@ -282,9 +283,11 @@ function renderBloqueioNaoPME() {
 
 function renderPergunta() {
   const p = perguntasAtivas()[perguntaIndice];
-  const bloco = BMC_BLOCOS.find(b => b.id === p.bloco);
+  const pPT = PERGUNTAS[perguntaIndice]; // ids (bloco/eixo) são iguais nos dois idiomas, só o texto muda
+  const bloco = BMC_BLOCOS.find(b => b.id === pPT.bloco);
   const total = PERGUNTAS.length;
   const percentagem = Math.round((perguntaIndice / total) * 100);
+  const respostaAnterior = respostasPerfil._diagnosticoTemp?.[pPT.bloco]?.[pPT.eixo];
   return `
     <div class="ecra-pme">
       <div class="progresso-pergunta">
@@ -294,7 +297,10 @@ function renderPergunta() {
       <span class="area-tag">${tBloco(bloco).nome}</span>
       <h3 style="margin-bottom:20px;">${p.pergunta}</h3>
       <div id="opcoes-pergunta">
-        ${p.opcoes.map((o, i) => `<button type="button" class="opcao-jogo" data-nivel="${i + 1}">${o}</button>`).join('')}
+        ${p.opcoes.map((o, i) => `<button type="button" class="opcao-jogo ${respostaAnterior === i + 1 ? 'opcao-jogo--selecionada' : ''}" data-nivel="${i + 1}">${o}</button>`).join('')}
+      </div>
+      <div class="acoes-rodape" style="border-top:none; justify-content:flex-start; margin-top:20px;">
+        <button type="button" class="botao secundario" id="btn-pergunta-voltar">${t('voltar')}</button>
       </div>
     </div>`;
 }
@@ -320,6 +326,17 @@ function ligarPergunta() {
       render();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+  });
+
+  document.getElementById('btn-pergunta-voltar').addEventListener('click', () => {
+    perguntaIndice--;
+    if (perguntaIndice < 0) {
+      // antes da primeira pergunta — volta ao último passo do perfil, não para trás de mais nada
+      fase = 'perfil';
+      perfilPasso = 3;
+    }
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
 
@@ -408,15 +425,15 @@ function renderRelatorio() {
         <div class="campo">
           <label>${t('pme-satisfacao-percebeu')}</label>
           <div class="opcoes-inline">
-            <label><input type="radio" name="satisfacao-percebeu" value="sim"><span>${t('sim')}</span></label>
             <label><input type="radio" name="satisfacao-percebeu" value="nao"><span>${t('nao')}</span></label>
+            <label><input type="radio" name="satisfacao-percebeu" value="sim"><span>${t('sim')}</span></label>
           </div>
         </div>
         <div class="campo" style="margin-bottom:0;">
           <label>${t('pme-satisfacao-util')}</label>
           <div class="opcoes-inline">
-            <label><input type="radio" name="satisfacao-util" value="sim"><span>${t('sim')}</span></label>
             <label><input type="radio" name="satisfacao-util" value="nao"><span>${t('nao')}</span></label>
+            <label><input type="radio" name="satisfacao-util" value="sim"><span>${t('sim')}</span></label>
           </div>
         </div>
       </div>
