@@ -82,21 +82,20 @@ function renderBlocoMatriz(bloco) {
  */
 function render() {
   if (blocosElegiveis.length === 0) {
+    document.getElementById('lead-i2').hidden = true;
     document.getElementById('sem-blocos').hidden = false;
     document.getElementById('continuar').textContent = t('i2-continuar-sintese');
-    document.getElementById('limpar').hidden = true;
     return;
   }
 
+  document.getElementById('lead-i2').hidden = false;
   document.getElementById('lista-blocos').innerHTML = blocosElegiveis.map(renderBlocoMatriz).join('');
 
   // Se nenhum dos blocos elegíveis tiver Ficha de Decisão disponível
   // (todas as checkboxes ficam desativadas), não faz sentido o botão
-  // dizer "Continuar para as Fichas de Decisão" nem mostrar "Limpar
-  // seleção" — não há nada para selecionar nem para limpar.
+  // dizer "Continuar para o Instrumento 3" — vai direto para a síntese.
   const algumComFicha = blocosElegiveis.some(b => b.ficha);
   document.getElementById('continuar').textContent = algumComFicha ? t('i2-continuar-fichas') : t('i2-continuar-sintese');
-  document.getElementById('limpar').hidden = !algumComFicha;
 
   document.querySelectorAll('input[data-bloco]').forEach(input => {
     input.addEventListener('change', () => {
@@ -146,14 +145,6 @@ document.getElementById('continuar').addEventListener('click', () => {
   const semFichaDisponivel = blocosElegiveis.length === 0 ||
     lerEstado().blocosSelecionados.filter(id => BMC_BLOCOS.find(b => b.id === id)?.ficha).length === 0;
   window.location.href = semFichaDisponivel ? 'resultados.html' : 'instrumento3.html';
-});
-
-document.getElementById('limpar').addEventListener('click', () => {
-  if (confirm(t('i2-limpar-confirmar'))) {
-    limparSelecao();
-    estado2.blocosSelecionados = []; // mantém a cópia em memória alinhada com o que se acabou de gravar
-    document.querySelectorAll('input[data-bloco]').forEach(input => { input.checked = false; });
-  }
 });
 
 document.addEventListener('idioma:alterado', render);

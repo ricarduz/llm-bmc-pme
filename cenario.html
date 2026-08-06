@@ -1,0 +1,85 @@
+<!--
+  cenario.html — página intermédia do percurso de especialistas, entre a
+  entrevista (entrevista.html) e o Instrumento 1. Dá a escolher entre
+  percorrer os instrumentos de forma autónoma (em branco) ou partir de
+  um de três cenários de PME europeia, que pré-preenche o diagnóstico
+  do Instrumento 1 — as respostas continuam editáveis a partir daí (ver
+  js/cenario.js e a nota sobre comparabilidade entre especialistas).
+-->
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title data-i18n="cenario-titulo-pagina">Escolher um cenário · LLM em PME</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link rel="stylesheet" href="css/style.css?v=20260807">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="seletor-idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <span class="eyebrow" data-i18n="cenario-eyebrow">Antes do Instrumento 1</span>
+    <h1 data-i18n="cenario-h1">Como quer percorrer os instrumentos?</h1>
+    <p class="lead" data-i18n="cenario-lead">Pode preencher o diagnóstico com as suas próprias respostas, ou partir de um cenário de PME já preenchido — em qualquer dos casos, todas as respostas continuam editáveis nos instrumentos seguintes.</p>
+
+    <div class="escolha-entrada" id="grelha-escolhas">
+      <button type="button" class="cartao-escolha" id="escolha-autonomo">
+        <span class="area-tag" data-i18n="cenario-autonomo-tag">Percurso livre</span>
+        <h3 data-i18n="cenario-autonomo-titulo">Continuar de forma autónoma</h3>
+        <p class="nota" data-i18n="cenario-autonomo-texto">Percorra os instrumentos e preencha o diagnóstico com as suas próprias respostas, sem partir de nenhum exemplo.</p>
+        <span class="cartao-escolha-cta" data-i18n="cenario-autonomo-cta">Continuar →</span>
+      </button>
+
+      <!-- Os 3 cartões de cenário são gerados por js/cenario.js, a partir
+           de CENARIOS — assim a ficha mostrada aqui nunca diverge dos
+           dados que realmente são aplicados ao estado ao escolher um. -->
+      <div id="cartoes-cenarios" style="display:contents;"></div>
+    </div>
+
+    <p class="nota" data-i18n="cenario-nota-rodape" style="max-width:640px; margin-top:8px;">Estes três cenários são exemplos fictícios — servem apenas para explorar os instrumentos com dados já preenchidos, sem ter de responder de forma aleatória só para ver como o framework reage.</p>
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto" data-i18n="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
+    <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-autor-titulo">Sobre o autor</h2>
+    <p data-i18n="sobre-autor-texto">Sou Ricardo Isaías Serafim, economista, licenciado em Gestão de Informação pela Universidade Nova de Lisboa. Trabalho para o Grupo Schwarz, no Lidl Portugal, e estou atualmente destacado no Lidl Chéquia. Sou responsável por Planeamento Financeiro, Reporting e Data Science, e lidero também a Transformação Digital na área de Controlo de Gestão. Este projeto cruza a minha experiência empresarial com a investigação académica em IA aplicada a PME — o mesmo tema que me entusiasmou a abraçar esta aventura académica. Caso tenha dúvidas, contacte-me através de <a href="mailto:m2302605@estudante.uab.pt">m2302605@estudante.uab.pt</a>.</p>
+  </div>
+</div>
+
+<script src="js/i18n.js?v=20260807"></script>
+<script src="js/modal.js?v=20260807"></script>
+<script src="js/data.js?v=20260807"></script>
+<script src="js/state.js?v=20260807"></script>
+<script src="js/cenario.js?v=20260807"></script>
+</body>
+</html>

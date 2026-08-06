@@ -1,0 +1,98 @@
+<!--
+  pme.html — o percurso para gestores de PME: um fluxo único e contínuo,
+  sem nomes de instrumentos à vista (ver js/pme.js). Por trás, usa
+  exatamente a mesma lógica de classificação (classificarBloco, em
+  data.js) e o mesmo conteúdo (Matriz, Fichas) que o percurso académico
+  em instrumento1/2/3.html — só a apresentação muda.
+-->
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title data-i18n="pme-titulo-pagina">Onde a IA pode ajudar o seu negócio · LLM em PME</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link rel="stylesheet" href="css/style.css?v=20260807">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="seletor-idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div id="barra-progresso" class="barra-progresso" aria-hidden="true"></div>
+      <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div id="ecra"></div>
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto" data-i18n="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
+    <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-autor-titulo">Sobre o autor</h2>
+    <p data-i18n="sobre-autor-texto">Sou Ricardo Isaías Serafim, economista, licenciado em Gestão de Informação pela Universidade Nova de Lisboa. Trabalho para o Grupo Schwarz, no Lidl Portugal, e estou atualmente destacado no Lidl Chéquia. Sou responsável por Planeamento Financeiro, Reporting e Data Science, e lidero também a Transformação Digital na área de Controlo de Gestão. Este projeto cruza a minha experiência empresarial com a investigação académica em IA aplicada a PME — o mesmo tema que me entusiasmou a abraçar esta aventura académica. Caso tenha dúvidas, contacte-me através de <a href="mailto:m2302605@estudante.uab.pt">m2302605@estudante.uab.pt</a>.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-confirmar-concluir" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-confirmar-titulo">
+    <h2 id="modal-confirmar-titulo" data-i18n="modal-concluir-titulo">Concluir a sessão?</h2>
+    <p class="nota" data-i18n="sessao-terminar-confirmar">Ao concluir, os seus dados são enviados e depois apagados deste navegador — não será possível recuperá-los. Se ainda não descarregou os resultados, faça-o antes de continuar.</p>
+    <div class="acoes-rodape" style="border-top:none; justify-content:flex-end;">
+      <button type="button" class="botao secundario" id="btn-cancelar-concluir" data-i18n="modal-cancelar">Cancelar</button>
+      <button type="button" class="botao" id="btn-confirmar-concluir" data-i18n="modal-sim">Sim</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-email-pme" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-email-titulo">
+    <h2 id="modal-email-titulo" data-i18n="sintese-email-titulo">Receber os resultados finais do estudo</h2>
+    <p class="nota" data-i18n="sintese-email-texto">Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu email. É usado exclusivamente para esse fim. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).</p>
+    <div class="campo" style="margin-top:16px;">
+      <label for="email-pme" data-i18n="sintese-email-label">Email (opcional)</label>
+      <input type="email" id="email-pme" placeholder="nome@exemplo.com">
+    </div>
+    <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer; margin-bottom:0;">
+      <input type="checkbox" id="consentimento-email-pme" style="margin-top:4px;">
+      <span data-i18n="pme-email-consentimento">Aceito que o meu email seja utilizado exclusivamente para me contactar com os resultados finais deste estudo.</span>
+    </label>
+    <div class="acoes-rodape" style="border-top:none; justify-content:space-between; margin-top:20px;">
+      <button type="button" class="botao secundario" id="btn-email-nao" data-i18n="pme-email-nao">Agora não, só descarregar</button>
+      <button type="button" class="botao" id="btn-email-sim" data-i18n="pme-email-sim">Guardar e descarregar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/i18n.js?v=20260807"></script>
+<script src="js/modal.js?v=20260807"></script>
+<script src="js/data.js?v=20260807"></script>
+<script src="js/state.js?v=20260807"></script>
+<script src="js/relatorio-utils.js?v=20260807"></script>
+<script src="js/pme.js?v=20260807"></script>
+</body>
+</html>

@@ -31,7 +31,7 @@ function opcoesEscala(blocoId, eixo, valores) {
     <label>
       <input type="radio" name="${blocoId}-${eixo}" value="${v}"
         ${estadoAtual.diagnostico[blocoId] && estadoAtual.diagnostico[blocoId][eixo] == v ? 'checked' : ''}>
-      <span><strong>${v}</strong> — ${valores[v]}</span>
+      <span><strong>${v}</strong></span>
     </label>
   `).join('');
 }
@@ -49,9 +49,7 @@ function renderBlocoExpandido(bloco, guardado) {
           <span class="area-tag">${tArea(bloco.area)}${bloco.ficha ? t('i1-com-ficha') : ''}</span>
           <h3>${conteudo.nome}</h3>
         </div>
-        <span class="selo" id="selo-${bloco.id}" ${guardado ? `data-p="${guardado.prioridade}"` : ''}>
-          ${guardado ? tPrioridade(guardado.prioridade) : t('i1-por-avaliar')}
-        </span>
+        ${guardado ? `<span class="selo-respondido" aria-hidden="true">&#10003;</span>` : ''}
       </div>
 
       <ul class="indicadores">
@@ -71,7 +69,7 @@ function renderBlocoExpandido(bloco, guardado) {
   `;
 }
 
-/** Um bloco já respondido, resumido a uma linha (nome + selo de prioridade) — clicável para reabrir e editar a resposta. */
+/** Um bloco já respondido, resumido a uma linha (só o nome — sem revelar a prioridade, que só aparece na tabela final) — clicável para reabrir e editar a resposta. */
 function renderBlocoColapsado(bloco, guardado) {
   const conteudo = tBloco(bloco);
   return `
@@ -81,9 +79,7 @@ function renderBlocoColapsado(bloco, guardado) {
           <span class="area-tag">${tArea(bloco.area)}${bloco.ficha ? t('i1-com-ficha') : ''}</span>
           <h3>${conteudo.nome}</h3>
         </div>
-        <span class="selo" ${guardado ? `data-p="${guardado.prioridade}"` : ''}>
-          ${guardado ? tPrioridade(guardado.prioridade) : t('i1-por-avaliar')}
-        </span>
+        <span class="selo-respondido" aria-hidden="true">&#10003;</span>
       </div>
     </div>
   `;

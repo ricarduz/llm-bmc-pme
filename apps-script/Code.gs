@@ -9,11 +9,12 @@
  *      tem acesso: Qualquer pessoa).
  *   2. O URL dessa implementação cola-se em GOOGLE_SHEETS_URL, no topo
  *      de js/resultados.js, no repositório do site.
- *   3. A partir daí, o site faz um POST para esse URL sempre que: a
- *      pessoa avança do Passo 1 para o Passo 2 (para garantir que os
- *      dados chegam mesmo que não descarregue nada), quando descarrega
- *      o resumo, quando termina a sessão, e quando guarda um contacto
- *      por email — ver enviarParaGoogleSheets() em resultados.js.
+ *   3. A partir daí, o site faz um POST para esse URL em diferentes
+ *      momentos consoante o percurso: o painel de especialistas envia
+ *      "avaliacao" (página de resultados, ver resultados.js); o percurso
+ *      PME (pme.html, sem nomes de instrumentos à vista) envia
+ *      "diagnostico"; e "contacto" sempre que alguém deixa o email para
+ *      receber os resultados do estudo.
  *
  * IMPORTANTE: sempre que editares este código, tens de voltar a fazer
  * Implementar → Gerir implementações → ✏️ → Versão: Nova versão →
@@ -38,6 +39,8 @@ function doPost(e) {
     guardarContacto(dados);
   } else if (dados.tipo === 'diagnostico') {
     guardarDiagnostico(dados);
+  } else if (dados.tipo === 'avaliacao') {
+    guardarAvaliacao(dados);
   }
   // Não há "else" com erro — se chegar um tipo desconhecido, ignora-se
   // em silêncio. O site nunca lê a resposta desta função (usa
@@ -91,11 +94,26 @@ const NOMES_BLOCOS_BMC = [
 ];
 
 /**
- * Devolve a folha com o nome dado, criando-a (com o cabeçalho indicado)
- * se ainda não existir. Também escreve o cabeçalho se a folha já existir
- * mas estiver vazia (por exemplo, se alguém limpar o conteúdo sem apagar
- * a folha) — sem isto, uma folha "existente mas vazia" nunca recebia
- * cabeçalho, só linhas de dados por baixo de nada.
+ * Devolve a folha com o nome dado, criando-a se ainda não existir, e
+ * garante SEMPRE que a linha 1 tem exatamente o cabeçalho atual —
+ * não só na primeira vez.
+ *
+ * Isto corrige um problema real: como o código já mudou várias vezes
+ * a estrutura de colunas (acrescentar "Perfil do especialista",
+ * remover "Blocos aprofundados", etc.), e a versão anterior desta
+ * função só escrevia o cabeçalho quando a folha estava completamente
+ * vazia, cada mudança de estrutura deixava o cabeçalho existente
+ * "congelado" na versão antiga, enquanto as linhas novas continuavam a
+ * ser escritas na estrutura atual — cabeçalho e conteúdo desalinhavam-
+ * -se a cada alteração. Agora a linha 1 é sempre reescrita para bater
+ * certo com o cabecalho[] que o código está de facto a usar.
+ *
+ * Não apaga nem reordena as linhas de dados já existentes — só corrige
+ * os rótulos da linha 1. Se a estrutura de colunas mudar (nº de colunas
+ * diferente), as linhas antigas continuam com os valores nas posições
+ * antigas, agora só com os rótulos certos por cima; não há forma de
+ * corrigir retroativamente dados escritos com uma estrutura diferente
+ * sem os reveres à mão.
  */
 function obterOuCriarFolha(nome, cabecalho) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -103,29 +121,61 @@ function obterOuCriarFolha(nome, cabecalho) {
   if (!aba) {
     aba = ss.insertSheet(nome);
   }
-  if (aba.getLastRow() === 0) {
-    aba.appendRow(cabecalho);
-    aba.setFrozenRows(1);
-  }
+  aba.getRange(1, 1, 1, cabecalho.length).setValues([cabecalho]);
+  aba.setFrozenRows(1);
   return aba;
 }
 
 /**
  * Grava uma linha na folha "Contacto" — email de quem quer receber os
- * resultados finais do estudo. `sessionId` permite, se precisares,
- * cruzar este contacto com a respetiva sessão de diagnóstico na folha
- * "Diagnostico" (não é obrigatório para nada, só útil para análise).
+ * resultados finais do estudo. `origem` distingue se veio do percurso
+ * PME (pme.html) ou do painel de especialistas (resultados.html).
+ * `sessionId` permite, se precisares, cruzar este contacto com a
+ * respetiva linha de "Diagnostico" ou "Avaliacao".
  */
 function guardarContacto(dados) {
-  const aba = obterOuCriarFolha('Contacto', ['Data', 'Email', 'Consentimento', 'ID da sessão']);
-  aba.appendRow([dados.data, dados.email, dados.consentimento ? 'Sim' : 'Não', dados.sessionId || '']);
+  const aba = obterOuCriarFolha('Contacto', ['Data', 'Origem', 'Email', 'Consentimento', 'ID da sessão']);
+  aba.appendRow([dados.data, dados.origem || '', dados.email, dados.consentimento ? 'Sim' : 'Não', dados.sessionId || '']);
+}
+
+/**
+ * Grava uma linha na folha "Avaliacao" — a resposta de um especialista
+ * do painel aos 4 critérios (utilidade percebida, aplicabilidade,
+ * consistência com a literatura, completude, cada um numa escala 1-5,
+ * com comentário opcional) e à reflexão livre da entrevista. Inclui o
+ * perfil do especialista (Gestor PME / Profissional de TI / Académico)
+ * para se poder cruzar as respostas por perfil, tal como previsto na
+ * Tabela 4 da dissertação.
+ */
+function guardarAvaliacao(dados) {
+  const cabecalho = [
+    'Concluído em', 'Origem do envio', 'ID da sessão', 'Perfil do especialista',
+    'Utilidade percebida', 'Comentário (utilidade)',
+    'Aplicabilidade', 'Comentário (aplicabilidade)',
+    'Consistência com a literatura', 'Comentário (consistência)',
+    'Completude', 'Comentário (completude)',
+    'Reflexão livre'
+  ];
+  const aba = obterOuCriarFolha('Avaliacao', cabecalho);
+
+  aba.appendRow([
+    dados.concluidoEm,
+    dados.origem || '',
+    dados.sessionId || '',
+    dados.perfilEspecialista || '',
+    dados.utilidade || '', dados.utilidadeComentario || '',
+    dados.aplicabilidade || '', dados.aplicabilidadeComentario || '',
+    dados.consistencia || '', dados.consistenciaComentario || '',
+    dados.completude || '', dados.completudeComentario || '',
+    dados.reflexao || ''
+  ]);
 }
 
 /**
  * Grava uma linha na folha "Diagnostico" com o resultado completo de
- * uma sessão. Como há três momentos em que o site pode enviar isto
- * (Seguinte / Descarregar / Terminar — ver dados.origem), a mesma pessoa
- * pode gerar mais do que uma linha; usa `sessionId` para identificares
+ * uma sessão. Como há dois momentos em que o site pode enviar isto
+ * (Descarregar / Terminar — ver dados.origem), a mesma pessoa pode
+ * gerar mais do que uma linha; usa `sessionId` para identificares
  * quais pertencem à mesma sessão (por exemplo, filtrando para manter só
  * a última linha de cada sessionId antes de analisar os dados).
  */
@@ -134,8 +184,7 @@ function guardarDiagnostico(dados) {
     'Concluído em', 'Origem do envio', 'ID da sessão', 'Consentimento inicial',
     'Percebeu o resultado', 'Considera útil',
     'Setor', 'Colaboradores', 'Faturação', 'Classificação PME', 'País', 'Região',
-    ...NOMES_BLOCOS_BMC,
-    'Blocos aprofundados'
+    ...NOMES_BLOCOS_BMC
   ];
   const aba = obterOuCriarFolha('Diagnostico', cabecalho);
 
@@ -157,7 +206,6 @@ function guardarDiagnostico(dados) {
     perfil.regiao || '',
     // uma coluna por bloco do BMC, na ordem fixa de NOMES_BLOCOS_BMC —
     // fica em branco se esse bloco não tiver sido respondido
-    ...NOMES_BLOCOS_BMC.map(nome => diagnostico[nome] || ''),
-    dados.blocosAprofundados || ''
+    ...NOMES_BLOCOS_BMC.map(nome => diagnostico[nome] || '')
   ]);
 }

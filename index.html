@@ -1,28 +1,27 @@
 <!--
-  index.html — página inicial, em 3 passos (ver js/index.js):
-    Passo 1: perfil da empresa (setor, dimensão, país/região)
-    Passo 2: grelha explicativa dos 9 blocos do BMC
-    Passo 3: os três instrumentos + consentimento + botão de início
-  Os três passos ficam todos no DOM ao mesmo tempo, cada um numa secção
-  própria; só se mostra/esconde com o atributo "hidden" (sem isto, cada
-  passo teria de ser uma página à parte, e perdia-se o estado ao navegar
-  entre elas).
+  index.html — página de entrada, com bifurcação em dois públicos:
+    PME / gestor        -> pme.html (o "jogo": fluxo contínuo, sem
+                            nomes de instrumentos à vista)
+    Especialista (painel de avaliação) -> entrevista.html (explica o
+                            que se pretende da sessão, espaço para
+                            vídeo, autorização) -> instrumento1.html
+  A escolha fica gravada no estado (perfilUtilizador), para as páginas
+  seguintes saberem qual caminho seguir sem terem de perguntar outra vez.
 -->
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="titulo-pagina">Framework de adoção de LLM em PME</title>
+<meta name="color-scheme" content="light">
+<title data-i18n="titulo-pagina">LLM em PME — Framework de adoção de LLM em PME</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
 <meta id="meta-descricao" name="description" content="Ferramenta interativa de demonstração do framework de adoção de Large Language Models por PME, estruturado no Business Model Canvas.">
-<link rel="stylesheet" href="css/style.css?v=20260719d">
+<link rel="stylesheet" href="css/style.css?v=20260807">
 </head>
 <body>
 
-<!-- Cabeçalho, igual em todas as páginas: marca, seletor PT/EN, e a
-     mini-grelha BMC que também funciona como botão do modal "Sobre". -->
 <header class="topo">
   <div class="topo-inner">
     <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
@@ -41,132 +40,24 @@
 <main>
   <div class="container">
     <span class="eyebrow" data-i18n="eyebrow">Instrumento de demonstração · dissertação de Mestrado</span>
-    <h1 data-i18n="h1">Um percurso guiado para decidir onde os LLM fazem sentido na sua PME</h1>
-    <p class="lead" data-i18n="lead">
-      Esta ferramenta instancia sequencialmente os três instrumentos do framework de apoio à adoção de Large Language Models (LLM) por Pequenas e Médias
-      Empresas, estruturado no Business Model Canvas (BMC). Responda a estes passos iniciais.
-    </p>
+    <h1 data-i18n="index-h1">Descubra onde a IA pode ajudar o seu negócio</h1>
+    <p class="lead" data-i18n="index-lead">Uma análise estruturada de 9 áreas do seu negócio, para identificar onde a implementação de AI [Large Language Models (LLM)] faz mais sentido, e como avançar. Esta ferramenta é o resultado prático de uma dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta e UTAD): as perguntas e recomendações que vai encontrar baseiam-se numa revisão científica da literatura.</p>
 
-    <div class="passos" aria-hidden="true">
-      <span id="passo-dot-1"></span><span id="passo-dot-2"></span><span id="passo-dot-3"></span>
+    <div class="escolha-entrada">
+      <button type="button" class="cartao-escolha" id="escolha-pme">
+        <span class="area-tag" data-i18n="escolha-pme-tag">Para gestores de PME</span>
+        <h3 data-i18n="escolha-pme-titulo">Analisar o meu negócio</h3>
+        <p class="nota" data-i18n="escolha-pme-texto">Responda a um conjunto de perguntas simples sobre o seu negócio e receba, no final, um relatório personalizado — cerca de 10 minutos.</p>
+        <span class="cartao-escolha-cta" data-i18n="escolha-pme-cta">Começar →</span>
+      </button>
+
+      <button type="button" class="cartao-escolha" id="escolha-especialista">
+        <span class="area-tag" data-i18n="escolha-especialista-tag">Painel de avaliação académica</span>
+        <h3 data-i18n="escolha-especialista-titulo">Sou especialista do painel</h3>
+        <p class="nota" data-i18n="escolha-especialista-texto">Percorra os três instrumentos do framework tal como descritos na dissertação, e registe a sua avaliação no final.</p>
+        <span class="cartao-escolha-cta" data-i18n="escolha-especialista-cta">Continuar →</span>
+      </button>
     </div>
-
-    <!-- PASSO 1 — Perfil da empresa -->
-    <section id="passo-1">
-      <h2 data-i18n="passo1-titulo">Passo 1 — Perfil da empresa</h2>
-      <p class="nota" data-i18n="passo1-lead">Estes dados servem apenas para caracterizar a sua PME e garantir a qualidade da análise — não são recolhidos dados pessoais.</p>
-
-      <div class="cartao">
-        <div class="campo">
-          <label for="setor" data-i18n="perfil-setor-label">Setor de atividade</label>
-          <select id="setor">
-            <option value="" data-i18n="perfil-opcao-escolher">Escolha uma opção</option>
-            <option value="comercio" data-i18n="perfil-setor-comercio">Comércio</option>
-            <option value="servicos" data-i18n="perfil-setor-servicos">Serviços</option>
-            <option value="industria" data-i18n="perfil-setor-industria">Indústria e Produção</option>
-            <option value="construcao" data-i18n="perfil-setor-construcao">Construção</option>
-            <option value="tecnologia" data-i18n="perfil-setor-tecnologia">Tecnologia e Informação</option>
-            <option value="turismo" data-i18n="perfil-setor-turismo">Turismo e Restauração</option>
-            <option value="agricultura" data-i18n="perfil-setor-agricultura">Agricultura e Pescas</option>
-            <option value="saude" data-i18n="perfil-setor-saude">Saúde e Ação Social</option>
-            <option value="educacao" data-i18n="perfil-setor-educacao">Educação</option>
-            <option value="outro" data-i18n="perfil-setor-outro">Outro</option>
-          </select>
-        </div>
-
-        <div class="campo">
-          <label for="colaboradores" data-i18n="perfil-colaboradores-label">Número de colaboradores</label>
-          <input type="number" id="colaboradores" min="0" step="1" inputmode="numeric">
-        </div>
-
-        <div class="campo">
-          <label data-i18n="perfil-faturacao-label">Faturação anual — escolha o critério que preferir reportar (Recomendação 2003/361/CE)</label>
-          <div class="opcoes-inline">
-            <label><input type="radio" name="criterio-financeiro" value="volume" checked><span data-i18n="perfil-criterio-volume">Volume de negócios</span></label>
-            <label><input type="radio" name="criterio-financeiro" value="balanco"><span data-i18n="perfil-criterio-balanco">Balanço total</span></label>
-          </div>
-          <select id="escalao-financeiro"></select>
-          <p class="classificacao" id="classificacao-sme" hidden></p>
-          <p class="aviso-bloqueio" id="aviso-nao-pme" data-i18n="aviso-nao-pme" hidden>Este estudo aplica-se apenas a Pequenas e Médias Empresas (PME). Não é possível avançar com os dados indicados.</p>
-        </div>
-
-        <div class="campo">
-          <label for="pais" data-i18n="perfil-pais-label">País</label>
-          <select id="pais">
-            <option value="pt" data-i18n="perfil-pais-pt">Portugal</option>
-            <option value="europa" data-i18n="perfil-pais-europa">Outro país da Europa</option>
-          </select>
-        </div>
-
-        <div class="campo" id="campo-regiao" style="margin-bottom:0;">
-          <label for="regiao" data-i18n="perfil-regiao-label">Região (NUTS II)</label>
-          <select id="regiao">
-            <option value="" data-i18n="perfil-opcao-escolher">Escolha uma opção</option>
-            <option value="norte" data-i18n="perfil-regiao-norte">Norte</option>
-            <option value="centro" data-i18n="perfil-regiao-centro">Centro</option>
-            <option value="lisboa" data-i18n="perfil-regiao-lisboa">Área Metropolitana de Lisboa</option>
-            <option value="alentejo" data-i18n="perfil-regiao-alentejo">Alentejo</option>
-            <option value="algarve" data-i18n="perfil-regiao-algarve">Algarve</option>
-            <option value="acores" data-i18n="perfil-regiao-acores">Região Autónoma dos Açores</option>
-            <option value="madeira" data-i18n="perfil-regiao-madeira">Região Autónoma da Madeira</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="acoes-rodape" style="border-top:none; justify-content:space-between;">
-        <button type="button" class="botao secundario" id="limpar-perfil" data-i18n="perfil-limpar">Limpar respostas</button>
-        <button class="botao" id="ir-passo-2" data-i18n="seguinte" disabled>Seguinte →</button>
-      </div>
-    </section>
-
-    <!-- PASSO 2 — Grelha explicativa do BMC -->
-    <section id="passo-2" hidden>
-      <h2 data-i18n="passo2-titulo">Passo 2 — Os nove blocos do Business Model Canvas</h2>
-      <p class="nota" data-i18n="passo2-lead">O diagnóstico do Instrumento 1 vai perguntar-lhe sobre cada um destes blocos. Esta grelha explica o que cada um significa, para orientar as suas respostas.</p>
-
-      <div class="bmc-diagrama" id="grelha-bmc"></div>
-
-      <div class="acoes-rodape" style="border-top:none; justify-content:space-between;">
-        <button type="button" class="botao secundario" id="voltar-passo-1" data-i18n="voltar">← Voltar</button>
-        <button type="button" class="botao" id="ir-passo-3" data-i18n="seguinte">Seguinte →</button>
-      </div>
-    </section>
-
-    <!-- PASSO 3 — Os instrumentos e o início -->
-    <section id="passo-3" hidden>
-      <h2 data-i18n="passo3-titulo">Passo 3 — Os três instrumentos</h2>
-
-      <div class="cartao cartao-clicavel" data-modal-trigger="instrumento1">
-        <h3 data-i18n="card1-titulo">1. A minha empresa está pronta?</h3>
-        <p class="nota" data-i18n="card1-nota">Instrumento 1 — Diagnóstico de Pré-requisitos. Avalia, bloco a bloco, a prontidão operacional e a criticidade de cada área do seu negócio.</p>
-      </div>
-      <div class="cartao cartao-clicavel" data-modal-trigger="instrumento2">
-        <h3 data-i18n="card2-titulo">2. Onde faz sentido para a minha PME?</h3>
-        <p class="nota" data-i18n="card2-nota">Instrumento 2 — Matriz LLM × BMC. Mapeia aplicações, oportunidades e riscos nos blocos identificados como prioritários.</p>
-      </div>
-      <div class="cartao cartao-clicavel" data-modal-trigger="instrumento3">
-        <h3 data-i18n="card3-titulo">3. Como avanço neste bloco?</h3>
-        <p class="nota" data-i18n="card3-nota">Instrumento 3 — Fichas de Decisão. Orientação tecnológica e ações concretas para os blocos com maior densidade de evidência empírica.</p>
-      </div>
-
-      <div class="cartao" style="border-color: var(--ink); margin-top: 32px;">
-        <h3 data-i18n="antes-titulo">Antes de começar</h3>
-        <p class="nota" data-i18n="antes-texto">
-          As respostas ficam guardadas neste navegador enquanto usa a ferramenta. No final, pode descarregar um resumo dos resultados; os dados do
-          diagnóstico (sem identificação pessoal) poderão também ser enviados para um repositório central de apoio à investigação. Não é recolhido
-          nenhum dado pessoal identificativo, a não ser que opte por deixar o seu email para receber os resultados do estudo.
-        </p>
-        <label style="display:flex; gap:10px; align-items:flex-start; margin-top:16px; cursor:pointer;">
-          <input type="checkbox" id="consentimento" style="margin-top:4px;">
-          <span data-i18n="antes-consentimento">Li o parágrafo acima e pretendo iniciar o diagnóstico.</span>
-        </label>
-      </div>
-
-      <div class="acoes-rodape">
-        <button type="button" class="botao secundario" id="voltar-passo-2" data-i18n="voltar">← Voltar</button>
-        <button class="botao" id="iniciar" data-i18n="botao-iniciar" disabled>Iniciar diagnóstico →</button>
-      </div>
-    </section>
   </div>
 </main>
 
@@ -183,44 +74,15 @@
 <div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
     <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
-    <h2 id="modal-sobre-titulo" data-i18n="sobre-titulo">Sobre este projeto</h2>
-
-    <h3 data-i18n="sobre-tese-titulo">Sobre a tese em curso</h3>
-    <p data-i18n="sobre-tese-texto">Esta ferramenta é o artefacto central da dissertação.</p>
-
-    <h3 data-i18n="sobre-autor-titulo">Sobre o autor</h3>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-autor-titulo">Sobre o autor</h2>
     <p data-i18n="sobre-autor-texto">Sou Ricardo Isaías Serafim, economista, licenciado em Gestão de Informação pela Universidade Nova de Lisboa. Trabalho para o Grupo Schwarz, no Lidl Portugal, e estou atualmente destacado no Lidl Chéquia. Sou responsável por Planeamento Financeiro, Reporting e Data Science, e lidero também a Transformação Digital na área de Controlo de Gestão. Este projeto cruza a minha experiência empresarial com a investigação académica em IA aplicada a PME — o mesmo tema que me entusiasmou a abraçar esta aventura académica. Caso tenha dúvidas, contacte-me através de <a href="mailto:m2302605@estudante.uab.pt">m2302605@estudante.uab.pt</a>.</p>
   </div>
 </div>
 
-<div class="modal-backdrop" data-modal="instrumento1" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-i1-titulo">
-    <button type="button" class="modal-fechar" aria-label="Fechar">&times;</button>
-    <h2 id="modal-i1-titulo" data-i18n="exp-i1-titulo">Instrumento 1 — Diagnóstico de Pré-requisitos</h2>
-    <p data-i18n="exp-i1-texto">Constitui o ponto de entrada obrigatório do framework.</p>
-  </div>
-</div>
-
-<div class="modal-backdrop" data-modal="instrumento2" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-i2-titulo">
-    <button type="button" class="modal-fechar" aria-label="Fechar">&times;</button>
-    <h2 id="modal-i2-titulo" data-i18n="exp-i2-titulo">Instrumento 2 — Matriz LLM × BMC</h2>
-    <p data-i18n="exp-i2-texto">Mapeia panoramicamente as aplicações, oportunidades e riscos.</p>
-  </div>
-</div>
-
-<div class="modal-backdrop" data-modal="instrumento3" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-i3-titulo">
-    <button type="button" class="modal-fechar" aria-label="Fechar">&times;</button>
-    <h2 id="modal-i3-titulo" data-i18n="exp-i3-titulo">Instrumento 3 — Fichas de Decisão por Bloco BMC</h2>
-    <p data-i18n="exp-i3-texto">O instrumento operacional mais aprofundado do framework.</p>
-  </div>
-</div>
-
-<script src="js/i18n.js?v=20260719d"></script>
-<script src="js/modal.js?v=20260719d"></script>
-<script src="js/data.js?v=20260719d"></script>
-<script src="js/state.js?v=20260719d"></script>
-<script src="js/index.js?v=20260719d"></script>
+<script src="js/i18n.js?v=20260807"></script>
+<script src="js/modal.js?v=20260807"></script>
+<script src="js/data.js?v=20260807"></script>
+<script src="js/state.js?v=20260807"></script>
+<script src="js/index.js?v=20260807"></script>
 </body>
 </html>
