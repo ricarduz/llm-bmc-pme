@@ -55,13 +55,13 @@ function renderBlocoMatriz(bloco) {
         <span class="selo" data-p="${resultado.prioridade}">${tPrioridade(resultado.prioridade)}</span>
       </div>
 
-      <table>
+      <table class="tabela-matriz">
         <thead><tr><th>${t('th-aplicacoes')}</th><th>${t('th-oportunidades')}</th><th>${t('th-riscos')}</th></tr></thead>
         <tbody>
           <tr>
-            <td>${listaMatriz(conteudo.matriz.aplicacoes)}</td>
-            <td>${listaMatriz(conteudo.matriz.oportunidades)}</td>
-            <td>${listaMatriz(conteudo.matriz.riscos)}</td>
+            <td data-rotulo="${t('th-aplicacoes')}">${listaMatriz(conteudo.matriz.aplicacoes)}</td>
+            <td data-rotulo="${t('th-oportunidades')}">${listaMatriz(conteudo.matriz.oportunidades)}</td>
+            <td data-rotulo="${t('th-riscos')}">${listaMatriz(conteudo.matriz.riscos)}</td>
           </tr>
         </tbody>
       </table>

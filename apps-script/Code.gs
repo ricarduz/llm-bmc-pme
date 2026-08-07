@@ -127,6 +127,35 @@ function obterOuCriarFolha(nome, cabecalho) {
 }
 
 /**
+ * Grava `linha` na folha, substituindo uma linha já existente com o
+ * mesmo sessionId (na coluna `colunaSessionId`, numerada a partir de 1)
+ * em vez de acrescentar sempre uma linha nova — evita registos
+ * fragmentados quando a mesma sessão envia dados mais do que uma vez
+ * (ex: uma vez ao descarregar o relatório, outra vez ao concluir).
+ *
+ * Procura só nas primeiras 5000 linhas (SpreadsheetApp não tem um
+ * índice/pesquisa nativa eficiente para isto) — mais do que suficiente
+ * para o volume de respostas esperado neste estudo; se a folha alguma
+ * vez crescer muito para lá disso, passa a acrescentar sempre no fim
+ * em vez de dar erro.
+ */
+function gravarLinha(aba, colunaSessionId, sessionId, linha) {
+  if (sessionId) {
+    const ultimaLinha = Math.min(aba.getLastRow(), 5000);
+    if (ultimaLinha >= 2) {
+      const valoresColuna = aba.getRange(2, colunaSessionId, ultimaLinha - 1, 1).getValues();
+      for (let i = 0; i < valoresColuna.length; i++) {
+        if (valoresColuna[i][0] === sessionId) {
+          aba.getRange(i + 2, 1, 1, linha.length).setValues([linha]);
+          return;
+        }
+      }
+    }
+  }
+  aba.appendRow(linha);
+}
+
+/**
  * Grava uma linha na folha "Contacto" — email de quem quer receber os
  * resultados finais do estudo. `origem` distingue se veio do percurso
  * PME (pme.html) ou do painel de especialistas (resultados.html).
@@ -135,7 +164,7 @@ function obterOuCriarFolha(nome, cabecalho) {
  */
 function guardarContacto(dados) {
   const aba = obterOuCriarFolha('Contacto', ['Data', 'Origem', 'Email', 'Consentimento', 'ID da sessão']);
-  aba.appendRow([dados.data, dados.origem || '', dados.email, dados.consentimento ? 'Sim' : 'Não', dados.sessionId || '']);
+  gravarLinha(aba, 5, dados.sessionId, [dados.data, dados.origem || '', dados.email, dados.consentimento ? 'Sim' : 'Não', dados.sessionId || '']);
 }
 
 /**
@@ -158,7 +187,7 @@ function guardarAvaliacao(dados) {
   ];
   const aba = obterOuCriarFolha('Avaliacao', cabecalho);
 
-  aba.appendRow([
+  gravarLinha(aba, 3, dados.sessionId, [
     dados.concluidoEm,
     dados.origem || '',
     dados.sessionId || '',
@@ -174,10 +203,9 @@ function guardarAvaliacao(dados) {
 /**
  * Grava uma linha na folha "Diagnostico" com o resultado completo de
  * uma sessão. Como há dois momentos em que o site pode enviar isto
- * (Descarregar / Terminar — ver dados.origem), a mesma pessoa pode
- * gerar mais do que uma linha; usa `sessionId` para identificares
- * quais pertencem à mesma sessão (por exemplo, filtrando para manter só
- * a última linha de cada sessionId antes de analisar os dados).
+ * (Descarregar / Terminar — ver dados.origem), a mesma sessão pode
+ * chamar esta função duas vezes; gravarLinha() substitui a linha
+ * anterior da mesma sessão em vez de duplicar.
  */
 function guardarDiagnostico(dados) {
   const cabecalho = [
@@ -191,7 +219,7 @@ function guardarDiagnostico(dados) {
   const perfil = dados.perfil || {};
   const diagnostico = dados.diagnostico || {};
 
-  aba.appendRow([
+  gravarLinha(aba, 3, dados.sessionId, [
     dados.concluidoEm,
     dados.origem || '',
     dados.sessionId || '',

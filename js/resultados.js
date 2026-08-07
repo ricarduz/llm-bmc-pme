@@ -25,7 +25,7 @@ const estadoR = lerEstado();
  * pronto (o payload inclui "tipo": "avaliacao", para
  * encaminhar para folhas diferentes na mesma folha de cálculo).
  */
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwWeHTrITtp3lAA4RsfNMEG0ZOajQTKbwJNQvZor6O3sJzEwehLwx-R1Z31u__wur4/exec';
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyxCM6rhINk_XpIJvqoUC4UUmz1CMEHsA19lLqf7ktTB0R4bidqpD3QFqgO9qE60r8T/exec';
 
 /** Envio "melhor esforço": se falhar (sem rede, URL por preencher, etc.), só regista no console — nunca impede o utilizador de continuar a usar a página. `mode: 'no-cors'` evita o preflight de CORS, ao custo de não se conseguir ler a resposta (aceitável, porque não se precisa dela). */
 function enviarParaGoogleSheets(payload) {
@@ -432,8 +432,8 @@ async function construirResumoHTML() {
   </table>
 
   <p class="nota" style="margin-top:24px;">${idioma === 'pt'
-    ? 'Em caso de dúvidas sobre este estudo, pode contactar o autor através de m2302605@estudante.uab.pt.'
-    : 'If you have any questions about this study, you can contact the author at m2302605@estudante.uab.pt.'}</p>
+    ? 'Em caso de dúvidas sobre este estudo, pode contactar o autor através de 2302605@estudante.uab.pt.'
+    : 'If you have any questions about this study, you can contact the author at 2302605@estudante.uab.pt.'}</p>
 
   <footer>
     <div class="logos">

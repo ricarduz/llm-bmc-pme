@@ -24,6 +24,20 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Desativa o "flash" cinzento/azul nativo que Android/iOS mostram ao
+   tocar num elemento clicável. Sem isto, sempre que se toca numa opção
+   e o ecrã seguinte substitui o DOM na mesma posição (como acontece nas
+   perguntas do jogo PME), esse realce nativo pode ficar visualmente
+   "colado" ao botão novo por uma fração de segundo, dando a falsa
+   impressão de que a opção já vem selecionada. O feedback visual de
+   seleção passa a ser só o que controlamos nós (.opcao-jogo--selecionada,
+   :focus-visible, etc.), não o comportamento por defeito do telemóvel.
+   Aplica-se a toda a página porque o mesmo efeito nativo pode acontecer
+   em qualquer botão, não só nas perguntas do jogo. */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 :root {
   color-scheme: light;
   --uab-preto: #000000;
@@ -479,6 +493,38 @@ th {
   color: var(--ink-soft);
 }
 
+/* Tabela da Matriz (Instrumento 2) — 3 colunas com listas de frases
+   inteiras (aplicações/oportunidades/riscos) ficam demasiado apertadas
+   lado a lado em ecrãs estreitos (~150px cada a 375px de largura). Em
+   vez de encolher mais, empilha-se cada célula a largura total, com um
+   rótulo (repetindo o cabeçalho da coluna) acima do conteúdo. */
+@media (max-width: 640px) {
+  .tabela-matriz, .tabela-matriz tbody, .tabela-matriz tr, .tabela-matriz td {
+    display: block;
+    width: 100%;
+  }
+  .tabela-matriz thead { display: none; }
+  .tabela-matriz td {
+    padding: 8px 0;
+    border-bottom: none;
+  }
+  .tabela-matriz td:not(:last-child) {
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 8px;
+    padding-bottom: 14px;
+  }
+  .tabela-matriz td::before {
+    content: attr(data-rotulo);
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+}
+
 /* Abas genéricas — usadas na navegação entre Fichas de Decisão no
    Instrumento 3 (.aba-ficha). Sublinhado em vez de pílula com fundo —
    uma pílula com borda à volta lê-se facilmente como "botão" (ação),
@@ -709,6 +755,36 @@ th {
 }
 
 .video-placeholder-conteudo span { font-size: 2rem; }
+
+/* Link para o PDF de cada instrumento, na página de materiais
+   (materiais.html) — mesma linguagem visual do placeholder de vídeo,
+   mas com borda sólida (não tracejada): ao contrário do vídeo, que
+   ainda está por gravar, os PDFs já existem e o link já funciona. */
+.pdf-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 160px;
+  background: var(--paper-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 24px;
+  margin: 16px 0 20px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.pdf-placeholder:hover, .pdf-placeholder:focus-visible {
+  border-color: var(--uab-azul);
+  box-shadow: 0 2px 10px rgba(109, 130, 151, 0.15);
+}
+
+.pdf-placeholder span { font-size: 2rem; }
 
 .escolha-entrada {
   display: grid;
