@@ -156,33 +156,19 @@ function configurarLinkVoltarInstrumento() {
   link.setAttribute('href', temFicha ? 'instrumento3.html' : 'instrumento2.html');
 }
 
-/** O botão "Concluir" só ativa quando os 4 critérios têm resposta — os comentários e a reflexão livre ficam sempre opcionais. */
 /**
- * Critérios esperados por perfil de especialista, tal como definido na
- * Tabela 4 da dissertação ("Painel de especialistas: perfis, critérios
- * de seleção e contribuição esperada") — cada perfil só é confrontado
- * com os 2 critérios para os quais tem melhor posição para se
- * pronunciar; os outros 2 cartões ficam escondidos, não desativados,
- * para não sugerir uma pergunta que não se pretende fazer a este perfil.
+ * Os quatro critérios de avaliação DSR (Hevner et al., 2004) são
+ * apresentados a todos os especialistas, independentemente do perfil,
+ * de modo a assegurar n = 6 em cada critério no cálculo do I-CVI.
+ * O perfil (Tabela 4) é metadado de caracterização: identifica de quem
+ * se espera o contributo substantivo em cada critério, orientando a
+ * ponderação na análise de conteúdo — não restringe o âmbito da resposta.
  */
-const CRITERIOS_POR_PERFIL = {
-  'gestor-pme': ['aplicabilidade', 'utilidade'],
-  'profissional-ti': ['completude', 'utilidade'],
-  'academico': ['consistencia', 'completude']
-};
+const CRITERIOS = ['utilidade', 'aplicabilidade', 'consistencia', 'completude'];
 
-/** Devolve os critérios a mostrar a este especialista — se o perfil não tiver sido definido (sessões antigas, antes deste campo existir), mostra os 4, por segurança. */
+/** Fonte única de verdade para os critérios avaliados. */
 function criteriosAtivos() {
-  const perfil = estadoR.perfilEspecialista;
-  return CRITERIOS_POR_PERFIL[perfil] || ['utilidade', 'aplicabilidade', 'consistencia', 'completude'];
-}
-
-/** Esconde os cartões de critério que não se aplicam a este perfil de especialista — chamada uma vez, ao carregar a página. */
-function aplicarCriteriosPorPerfil() {
-  const ativos = criteriosAtivos();
-  document.querySelectorAll('[data-criterio]').forEach(cartao => {
-    cartao.hidden = !ativos.includes(cartao.dataset.criterio);
-  });
+  return CRITERIOS;
 }
 
 function validarAvaliacao() {
@@ -197,13 +183,13 @@ function contarPalavras(texto) {
   return texto.trim().split(/\s+/).filter(Boolean).length;
 }
 
-/** True só quando os critérios do perfil (2, conforme a Tabela 4 — ver criteriosAtivos()) têm resposta E a reflexão livre tem pelo menos MINIMO_PALAVRAS_REFLEXAO palavras — as duas condições para a secção "Resultados" desbloquear. */
+/** True só quando os quatro critérios têm resposta E a reflexão livre tem pelo menos MINIMO_PALAVRAS_REFLEXAO palavras — as duas condições para a secção "Resultados" desbloquear. */
 function avaliacaoCompleta() {
   const palavras = contarPalavras(document.getElementById('av-reflexao').value);
   return validarAvaliacao() && palavras >= MINIMO_PALAVRAS_REFLEXAO;
 }
 
-/** Atualiza o contador de palavras da reflexão, e mostra/esconde a secção "Resultados" (email + download) consoante a avaliação esteja completa — ver avaliacaoCompleta(). O botão "Concluir" segue a mesma regra. As mensagens ajustam-se ao número de critérios deste perfil (2, não sempre 4 — ver criteriosAtivos()). */
+/** Atualiza o contador de palavras da reflexão, e mostra/esconde a secção "Resultados" (email + download) consoante a avaliação esteja completa — ver avaliacaoCompleta(). O botão "Concluir" segue a mesma regra. */
 function atualizarDisponibilidadeResultados() {
   const palavras = contarPalavras(document.getElementById('av-reflexao').value);
   const contador = document.getElementById('contador-palavras');
@@ -350,7 +336,6 @@ async function construirResumoHTML() {
   // preenchida.
   const estadoAtual = lerEstado();
   const avaliacao = estadoAtual.avaliacao || {};
-  const ativos = criteriosAtivos();
 
   const PERFIS_LEGIVEIS = {
     'gestor-pme': idioma === 'pt' ? 'Gestor / Proprietário de PME' : 'SME Manager / Owner',
@@ -358,9 +343,6 @@ async function construirResumoHTML() {
     'academico': idioma === 'pt' ? 'Investigador / Académico' : 'Researcher / Academic'
   };
   const perfilLegivel = PERFIS_LEGIVEIS[estadoAtual.perfilEspecialista] || (idioma === 'pt' ? 'Não especificado' : 'Not specified');
-  const notaNaoAplicavel = idioma === 'pt'
-    ? 'Não aplicável — critério fora do âmbito deste perfil de especialista.'
-    : 'Not applicable — criterion outside the scope of this specialist profile.';
 
   const criteriosAvaliacao = [
     { chave: 'utilidade', label: 'Utilidade percebida' },
@@ -369,9 +351,6 @@ async function construirResumoHTML() {
     { chave: 'completude', label: 'Completude' }
   ];
   const avaliacaoHTML = criteriosAvaliacao.map(c => {
-    if (!ativos.includes(c.chave)) {
-      return `<tr><th>${c.label}</th><td><em>${notaNaoAplicavel}</em></td></tr>`;
-    }
     const comentario = avaliacao[c.chave + 'Comentario'];
     return `<tr><th>${c.label}</th><td>${avaliacao[c.chave] || '—'} / 5${comentario ? ` — ${escaparHTML(comentario)}` : ''}</td></tr>`;
   }).join('') + (avaliacao.reflexao ? `<tr><th>Reflexão livre</th><td>${escaparHTML(avaliacao.reflexao)}</td></tr>` : '');
@@ -558,7 +537,6 @@ document.getElementById('btn-confirmar-concluir').addEventListener('click', () =
   window.close();
 });
 
-aplicarCriteriosPorPerfil();
 atualizarMapa();
 restaurarAvaliacao();
 configurarLinkVoltarInstrumento();
