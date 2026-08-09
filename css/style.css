@@ -373,7 +373,8 @@ main {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 10px 12px;
-  font-size: 0.83rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
   color: var(--ink-soft);
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
@@ -383,8 +384,9 @@ main {
 
 .escala input { margin-right: 6px; }
 
+.escala input:checked + span strong { color: var(--ink); }
 .escala input:checked + span {
-  color: var(--ink);
+  color: var(--ink-soft);
   font-weight: 500;
 }
 

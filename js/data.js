@@ -399,7 +399,7 @@ const FICHAS = {
         consideracoes: 'Transforma documentação existente em recurso pesquisável; investimento moderado; alto retorno em PMEs intensivas em conhecimento'
       },
       {
-        opcao: 'Infraestrutura própria',
+        opcao: 'Open-source local',
         quando: 'PME com requisitos de privacidade elevados ou volume que justifica investimento',
         consideracoes: 'Maior controlo e independência; requer competências técnicas ou parceiro externo de suporte'
       }
@@ -488,6 +488,11 @@ const FICHAS = {
         opcao: 'Fine-tuning',
         quando: 'Tom e linguagem muito específicos da marca; volume elevado de interações justifica investimento',
         consideracoes: 'Maior investimento inicial; requer dados de treino de qualidade; adequado em fases de maturidade avançada'
+      },
+      {
+        opcao: 'Open-source local',
+        quando: 'Histórico de clientes, reclamações ou dados de saúde/financeiros que não podem ser processados por fornecedor externo',
+        consideracoes: 'Maior controlo sobre dados pessoais e menor exposição a transferências internacionais; requer infraestrutura própria ou parceiro técnico; considerar quando a AIPD identificar risco elevado'
       }
     ],
     acoes: [

@@ -883,7 +883,7 @@ const TRADUCOES_I1_EN = {
       orientacaoTecnologica: [
         { opcao: 'Commercial API as a base resource', quando: 'SMEs without in-house development capacity; speed of implementation is the priority', consideracoes: 'Lower upfront cost; external dependency; assess the provider\'s continuity and terms of service' },
         { opcao: 'RAG as a knowledge resource', quando: 'SMEs with valuable organisational knowledge scattered across documents', consideracoes: 'Turns existing documentation into a searchable resource; moderate investment; high return for knowledge-intensive SMEs' },
-        { opcao: 'In-house infrastructure', quando: 'SMEs with high privacy requirements, or volume that justifies the investment', consideracoes: 'Greater control and independence; requires technical skills or an external support partner' }
+        { opcao: 'Local open-source', quando: 'SMEs with high privacy requirements, or volume that justifies the investment', consideracoes: 'Greater control and independence; requires technical skills or an external support partner' }
       ],
       acoes: [
         'Audit existing technological resources against the minimum requirements for LLM adoption',
@@ -945,7 +945,8 @@ const TRADUCOES_I1_EN = {
       orientacaoTecnologica: [
         { opcao: 'Commercial API', quando: 'SMEs without their own infrastructure; need for a quick start; low to moderate interaction volume', consideracoes: 'Lowest barrier to entry; weigh recurring costs against expected volume' },
         { opcao: 'RAG over CRM', quando: 'SMEs with customer history structured in a CRM or internal database', consideracoes: 'Enables responses informed by customer history; recommended for SMEs with organised data' },
-        { opcao: 'Fine-tuning', quando: 'Very specific brand tone and language; high interaction volume justifies the investment', consideracoes: 'Higher upfront investment; requires quality training data; suited to more mature adoption stages' }
+        { opcao: 'Fine-tuning', quando: 'Very specific brand tone and language; high interaction volume justifies the investment', consideracoes: 'Higher upfront investment; requires quality training data; suited to more mature adoption stages' },
+        { opcao: 'Local open-source', quando: 'Customer history, complaints, or health/financial data that cannot be processed by an external provider', consideracoes: 'Greater control over personal data and reduced exposure to international transfers; requires own infrastructure or a technical partner; consider when the DPIA identifies elevated risk' }
       ],
       acoes: [
         'Map the customer touchpoints with the highest volume or repetition',
