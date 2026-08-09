@@ -160,7 +160,7 @@ function configurarLinkVoltarInstrumento() {
  * Os quatro critérios de avaliação DSR (Hevner et al., 2004) são
  * apresentados a todos os especialistas, independentemente do perfil,
  * de modo a assegurar n = 6 em cada critério no cálculo do I-CVI.
- * O perfil (Tabela 4) é metadado de caracterização: identifica de quem
+ * O perfil (Tabela 5) é metadado de caracterização: identifica de quem
  * se espera o contributo substantivo em cada critério, orientando a
  * ponderação na análise de conteúdo — não restringe o âmbito da resposta.
  */
@@ -171,6 +171,7 @@ function criteriosAtivos() {
   return CRITERIOS;
 }
 
+/** True quando os 4 critérios têm resposta na escala 1-5 — os comentários por critério continuam opcionais. */
 function validarAvaliacao() {
   return criteriosAtivos().every(c => document.querySelector(`input[name="av-${c}"]:checked`));
 }
@@ -189,6 +190,8 @@ function avaliacaoCompleta() {
   return validarAvaliacao() && palavras >= MINIMO_PALAVRAS_REFLEXAO;
 }
 
+let avaliacaoJaEnviadaAutomaticamente = false;
+
 /** Atualiza o contador de palavras da reflexão, e mostra/esconde a secção "Resultados" (email + download) consoante a avaliação esteja completa — ver avaliacaoCompleta(). O botão "Concluir" segue a mesma regra. */
 function atualizarDisponibilidadeResultados() {
   const palavras = contarPalavras(document.getElementById('av-reflexao').value);
@@ -204,6 +207,19 @@ function atualizarDisponibilidadeResultados() {
   document.getElementById('resultados-bloqueado').hidden = completa;
   document.getElementById('resultados-desbloqueado').hidden = !completa;
   document.getElementById('terminar').disabled = !completa;
+
+  // Mitigação de risco: sem isto, alguém que completasse os 4 critérios
+  // e a reflexão mas fechasse a aba antes de Descarregar/Terminar nunca
+  // teria a avaliação enviada — ficava só no localStorage do
+  // computador dela. Esta função corre a cada tecla/mudança, por isso
+  // a guarda evita reenviar em cada uma; só dispara na transição de
+  // incompleta para completa. gravarLinha() no Code.gs faz upsert por
+  // sessionId, por isso um envio posterior (Descarregar/Terminar)
+  // substitui esta linha em vez de duplicar.
+  if (completa && !avaliacaoJaEnviadaAutomaticamente) {
+    avaliacaoJaEnviadaAutomaticamente = true;
+    enviarParaGoogleSheets(construirRegisto('progresso'));
+  }
 }
 
 /** Grava a avaliação assim que os critérios têm resposta — não espera por um botão "Guardar" à parte. */
@@ -506,6 +522,7 @@ function abrirModalConfirmar() {
   document.getElementById('btn-cancelar-concluir').focus(); // o botão mais seguro (não destrutivo) recebe o foco por defeito
 }
 
+/** Fecha o modal de confirmação sem concluir a sessão, e devolve o foco ao botão Terminar. */
 function fecharModalConfirmar() {
   document.getElementById('modal-confirmar-concluir').hidden = true;
   document.getElementById('terminar').focus();

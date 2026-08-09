@@ -174,7 +174,7 @@ function guardarContacto(dados) {
  * com comentário opcional) e à reflexão livre da entrevista. Inclui o
  * perfil do especialista (Gestor PME / Profissional de TI / Académico)
  * para se poder cruzar as respostas por perfil, tal como previsto na
- * Tabela 4 da dissertação.
+ * Tabela 5 da dissertação.
  */
 function guardarAvaliacao(dados) {
   const cabecalho = [
@@ -202,10 +202,12 @@ function guardarAvaliacao(dados) {
 
 /**
  * Grava uma linha na folha "Diagnostico" com o resultado completo de
- * uma sessão. Como há dois momentos em que o site pode enviar isto
- * (Descarregar / Terminar — ver dados.origem), a mesma sessão pode
- * chamar esta função duas vezes; gravarLinha() substitui a linha
- * anterior da mesma sessão em vez de duplicar.
+ * uma sessão. Há três momentos em que o site pode enviar isto — assim
+ * que o diagnóstico fica completo ("progresso", mitigação contra fechar
+ * a aba sem descarregar/terminar), ao Descarregar, e ao Terminar (ver
+ * dados.origem) — a mesma sessão pode chamar esta função várias vezes;
+ * gravarLinha() substitui a linha anterior da mesma sessão em vez de
+ * duplicar.
  */
 function guardarDiagnostico(dados) {
   const cabecalho = [

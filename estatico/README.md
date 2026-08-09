@@ -1,33 +1,31 @@
 # estatico/
 
-⚠ **Os 5 ficheiros abaixo estão desatualizados.** Foram gerados antes
-da separação do site em dois percursos (PME e painel de
-especialistas) e descrevem a estrutura ANTIGA — um só `index.html`
-com o perfil da empresa, a grelha do BMC e os 3 instrumentos todos
-juntos numa página. Essa estrutura já não existe: hoje o site tem
-`index.html` (só a bifurcação), `pme.html` (o jogo + relatório),
-`entrevista.html` + `cenario.html` (apresentação do protocolo e
-escolha de cenário) e só depois os instrumentos.
+Versões estáticas de leitura, geradas a partir do conteúdo real do site
+(`js/data.js`) — sem depender de JavaScript para mostrar o conteúdo.
+Servem para leitura, partilha ou anexo à dissertação, onde uma
+ferramenta interativa não é o formato adequado.
 
-O propósito da pasta mantém-se válido — instantâneos HTML
-não-interativos, para leitura, partilha ou anexo à dissertação, sem
-depender de JavaScript nem de um diagnóstico real preenchido. Só
-precisam de ser regenerados para refletirem a estrutura atual.
+- `index-estatico.html` — visão geral do framework: os 9 blocos do BMC
+  por área, os 3 instrumentos explicados, os dois percursos (PME e
+  painel de especialistas), e um exemplo ilustrativo de um diagnóstico
+  completo (canvas + tabela de prioridades, valores fictícios).
+- `resultados-estatico.html` — o instrumento de avaliação preenchido
+  pelos especialistas do painel (os 4 critérios DSR + reflexão livre),
+  em branco — é o instrumento, não uma resposta preenchida.
 
-Versões estáticas das 5 páginas do site, geradas a partir do conteúdo
-real (`js/data.js`) — sem depender de JavaScript para mostrar o
-conteúdo. Servem para leitura, partilha ou anexo (ex: dissertação),
-onde uma ferramenta interativa não é o formato adequado.
-
-- `index-estatico.html` — perfil, grelha do BMC, os 3 instrumentos
-- `instrumento1-estatico.html` — os 9 blocos, todos abertos (Prontidão/Impacto)
-- `instrumento2-estatico.html` — os 9 blocos, com a Matriz completa
-- `instrumento3-estatico.html` — as 4 Fichas de Decisão, empilhadas
-- `resultados-estatico.html` — **com dados de exemplo**, claramente identificados como ilustrativos (a página não faz sentido vazia, por depender de um diagnóstico real)
+O conteúdo detalhado de cada um dos 3 instrumentos (Diagnóstico de
+Pré-requisitos, Matriz LLM × BMC, Fichas de Decisão) está em
+`assets/instrumento1.pdf`, `instrumento2.pdf` e `instrumento3.pdf` —
+não duplicado aqui, para não haver duas versões da mesma coisa a
+poderem divergir.
 
 **Não geradas automaticamente a partir do site** — se o conteúdo em
 `js/data.js` mudar (textos, indicadores, fichas), estes ficheiros têm
-de ser regenerados à parte; não se atualizam sozinhos.
+de ser regenerados à parte; não se atualizam sozinhos. O exemplo
+ilustrativo em `index-estatico.html` foi calculado com a função real
+de classificação (`classificarBloco()`), não valores inventados à mão
+— para nunca mostrar uma combinação Prontidão/Impacto/Prioridade que a
+ferramenta real não produziria.
 
 Cada ficheiro é autónomo (CSS embutido, à parte do `css/style.css` do
 site) — só depende dos logótipos em `../assets/`. Sem seletor de
