@@ -1,0 +1,89 @@
+<!--
+  instrumento1.html — Diagnóstico de Pré-requisitos (ver js/instrumento1.js).
+  Os 9 blocos do BMC abrem um a um: bloqueado -> expandido (a responder)
+  -> colapsado (já respondido, clicável para reabrir). Cabeçalho e rodapé
+  iguais em todas as páginas — ver o comentário em index.html.
+-->
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Instrumento 1 — Diagnóstico de Pré-requisitos · LLM em PME</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link rel="stylesheet" href="css/style.css?v=20261003">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="seletor-idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <span class="eyebrow" data-i18n="i1-eyebrow">Instrumento 1 de 3</span>
+    <h1 data-i18n="i1-h1">Diagnóstico de Pré-requisitos</h1>
+    <p class="nota" data-i18n="i1-proposito" style="margin-bottom:14px;">O Instrumento 1 — Diagnóstico de Pré-requisitos — identifica, para cada bloco do Business Model Canvas, se a sua PME já tem as condições e a urgência necessárias para avançar com LLM.</p>
+    <p class="lead" data-i18n="i1-lead">
+      Avalie cada bloco do BMC nos eixos <strong>Prontidão</strong> e
+      <strong>Impacto</strong>, numa escala de 1 (Baixo) a 3 (Alto), tendo a
+      sua PME como referência. Os indicadores servem apenas para orientar a
+      reflexão — a classificação final é a sua avaliação global do bloco.
+    </p>
+
+    <div id="lista-blocos"></div>
+
+    <div id="resumo-final" class="cartao" hidden>
+      <h3 data-i18n="i1-resumo-titulo">Resultado global do diagnóstico</h3>
+      <p class="nota" data-i18n="i1-resumo-lead">Perfil de prioridade dos nove blocos do BMC, resultante das suas respostas.</p>
+      <div id="tabela-resumo" class="bmc-diagrama"></div>
+    </div>
+
+    <div class="acoes-rodape">
+      <span class="nota" id="progresso">0 de 9 blocos avaliados</span>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="botao secundario" id="limpar" data-i18n="i1-limpar">Limpar respostas</button>
+        <button class="botao" id="continuar" data-i18n="i1-continuar" disabled>Continuar para o Instrumento 2 →</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto" data-i18n="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
+    <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-autor-titulo">Sobre o autor</h2>
+    <p data-i18n="sobre-autor-texto">Sou Ricardo Isaías Serafim, economista, licenciado em Gestão de Informação pela Universidade Nova de Lisboa. Trabalho para o Grupo Schwarz, no Lidl Portugal, e estou atualmente destacado no Lidl Chéquia. Sou responsável por Planeamento Financeiro, Reporting e Data Science, e lidero também a Transformação Digital na área de Controlo de Gestão. Este projeto cruza a minha experiência empresarial com a investigação académica em IA aplicada a PME — o mesmo tema que me entusiasmou a abraçar esta aventura académica. Caso tenha dúvidas, contacte-me através de <a href="mailto:2302605@estudante.uab.pt">2302605@estudante.uab.pt</a>.</p>
+  </div>
+</div>
+
+<script src="js/i18n.js?v=20261003"></script>
+<script src="js/modal.js?v=20261003"></script>
+<script src="js/data.js?v=20261003"></script>
+<script src="js/state.js?v=20261003"></script>
+<script src="js/instrumento1.js?v=20261003"></script>
+</body>
+</html>

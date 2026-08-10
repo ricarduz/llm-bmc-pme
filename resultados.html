@@ -1,0 +1,193 @@
+<!--
+  resultados.html — página final, em 2 passos (ver js/resultados.js):
+    Passo 1: duas perguntas de satisfação + contacto por email opcional
+    Passo 2: o resultado do diagnóstico, em 2 abas (Descarregar / Resultados)
+  "Terminar sessão" apaga os dados e tenta fechar a janela (nem sempre
+  funciona — ver o comentário junto a esse botão em resultados.js).
+-->
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Síntese da sessão · LLM em PME</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link rel="stylesheet" href="css/style.css?v=20261003">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="seletor-idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div id="conteudo-sessao">
+      <span class="eyebrow" data-i18n="sintese-eyebrow">Avaliação</span>
+      <h1 data-i18n="sintese-h1">A sua avaliação</h1>
+      <p class="lead" data-i18n="sintese-lead">Chegámos ao momento de avaliação. A sua opinião como especialista é uma peça central da validação desta dissertação — ajuda a perceber se o framework que desenvolvi é útil, aplicável e consistente com a literatura que o fundamenta. Responda com honestidade a cada critério; não há respostas certas ou erradas.</p>
+
+      <h2 data-i18n="sintese-secao-avaliacao">Avaliação</h2>
+
+      <div class="cartao" data-criterio="utilidade">
+        <div class="campo">
+          <label data-i18n="crit-utilidade">Utilidade percebida — este framework ajuda uma PME a decidir onde adotar LLM de forma estruturada.</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="av-utilidade" value="1"><span>1</span></label>
+            <label><input type="radio" name="av-utilidade" value="2"><span>2</span></label>
+            <label><input type="radio" name="av-utilidade" value="3"><span>3</span></label>
+            <label><input type="radio" name="av-utilidade" value="4"><span>4</span></label>
+            <label><input type="radio" name="av-utilidade" value="5"><span>5</span></label>
+          </div>
+          <textarea id="av-utilidade-comentario" rows="2" placeholder="Comentário (opcional)" style="width:100%; margin-top:8px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        </div>
+      </div>
+
+      <div class="cartao" data-criterio="aplicabilidade">
+        <div class="campo">
+          <label data-i18n="crit-aplicabilidade">Aplicabilidade — as fichas e a matriz são realistas e aplicáveis ao contexto de uma PME.</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="av-aplicabilidade" value="1"><span>1</span></label>
+            <label><input type="radio" name="av-aplicabilidade" value="2"><span>2</span></label>
+            <label><input type="radio" name="av-aplicabilidade" value="3"><span>3</span></label>
+            <label><input type="radio" name="av-aplicabilidade" value="4"><span>4</span></label>
+            <label><input type="radio" name="av-aplicabilidade" value="5"><span>5</span></label>
+          </div>
+          <textarea id="av-aplicabilidade-comentario" rows="2" placeholder="Comentário (opcional)" style="width:100%; margin-top:8px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        </div>
+      </div>
+
+      <div class="cartao" data-criterio="consistencia">
+        <div class="campo">
+          <label data-i18n="crit-consistencia">Consistência com a literatura — o conteúdo reflete de forma fiel a revisão de literatura subjacente.</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="av-consistencia" value="1"><span>1</span></label>
+            <label><input type="radio" name="av-consistencia" value="2"><span>2</span></label>
+            <label><input type="radio" name="av-consistencia" value="3"><span>3</span></label>
+            <label><input type="radio" name="av-consistencia" value="4"><span>4</span></label>
+            <label><input type="radio" name="av-consistencia" value="5"><span>5</span></label>
+          </div>
+          <textarea id="av-consistencia-comentario" rows="2" placeholder="Comentário (opcional)" style="width:100%; margin-top:8px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        </div>
+      </div>
+
+      <div class="cartao" data-criterio="completude">
+        <div class="campo" style="margin-bottom:0;">
+          <label data-i18n="crit-completude">Completude — o framework cobre adequadamente os aspetos relevantes da adoção de LLM numa PME.</label>
+          <div class="opcoes-inline">
+            <label><input type="radio" name="av-completude" value="1"><span>1</span></label>
+            <label><input type="radio" name="av-completude" value="2"><span>2</span></label>
+            <label><input type="radio" name="av-completude" value="3"><span>3</span></label>
+            <label><input type="radio" name="av-completude" value="4"><span>4</span></label>
+            <label><input type="radio" name="av-completude" value="5"><span>5</span></label>
+          </div>
+          <textarea id="av-completude-comentario" rows="2" placeholder="Comentário (opcional)" style="width:100%; margin-top:8px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        </div>
+      </div>
+
+      <div class="cartao">
+        <h3 data-i18n="sintese-reflexao-titulo">Reflexão livre</h3>
+        <p class="nota" data-i18n="sintese-reflexao-texto">Espaço aberto para qualquer observação adicional da entrevista — pontos fortes, limitações, sugestões de melhoria. Mínimo de 75 palavras.</p>
+        <textarea id="av-reflexao" rows="5" placeholder="Registe aqui as notas da reflexão livre..." style="width:100%; margin-top:10px; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius); font-family:var(--font-body); font-size:0.9rem;"></textarea>
+        <p class="nota" id="contador-palavras" style="margin-top:6px; margin-bottom:0;"></p>
+      </div>
+
+      <h2 data-i18n="sintese-secao-resultados">Resultados</h2>
+
+      <div class="cartao" id="resultados-bloqueado" style="text-align:center; padding:32px 24px;">
+        <p class="nota" style="margin:0;" id="texto-bloqueado"></p>
+      </div>
+
+      <div id="resultados-desbloqueado" hidden>
+        <div class="cartao">
+          <h3 data-i18n="sintese-email-titulo">Receber os resultados finais do estudo</h3>
+          <p class="nota" data-i18n="sintese-email-texto">Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu email. É usado exclusivamente para esse fim. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).</p>
+          <div class="campo" style="margin-top:16px;">
+            <label for="email-especialista" data-i18n="sintese-email-label">Email (opcional)</label>
+            <input type="email" id="email-especialista" placeholder="nome@exemplo.com">
+          </div>
+          <!--
+            O email só é enviado se esta aceitação estiver validada (ver
+            btn-confirmar-concluir, em resultados.js). Preencher o campo não
+            basta: a Comissão de Ética exige registo explícito de aceitação,
+            e o percurso PME já o faz da mesma maneira.
+          -->
+          <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer; margin:0;">
+            <input type="checkbox" id="email-consentimento" style="margin-top:4px;">
+            <span class="nota" data-i18n="sintese-email-consentimento">Aceito que o meu email seja utilizado exclusivamente para me contactar com os resultados finais deste estudo.</span>
+          </label>
+        </div>
+
+        <div class="cartao" style="border-color: var(--ink);">
+          <h3 data-i18n="sintese-download-titulo">Descarregar a sua avaliação</h3>
+          <p class="nota" data-i18n="sintese-download-texto">Um ficheiro com a sua avaliação, pronto a abrir em qualquer computador. Depois de descarregar, as respostas ficam fixas e deixam de poder ser editadas.</p>
+          <div style="margin-top:16px;">
+            <button class="botao" id="descarregar-resumo" data-i18n="sintese-download-botao">Descarregar resumo →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="acoes-rodape">
+        <a class="botao secundario" id="voltar-instrumento" href="instrumento3.html">← Voltar</a>
+        <button type="button" class="botao" id="terminar" disabled>Concluir</button>
+      </div>
+    </div>
+
+    <div class="cartao" id="ecra-fim" style="text-align:center; padding:56px 28px;" hidden>
+      <h2 data-i18n="sessao-terminada-titulo">Sessão concluída</h2>
+      <p class="nota" data-i18n="sessao-terminada-agradecimento">Obrigado por participar neste estudo — a sua contribuição é uma ajuda preciosa para esta investigação.</p>
+      <p class="nota" data-i18n="sessao-terminada-texto">Os dados desta sessão foram apagados deste navegador. Pode fechar esta janela.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto" data-i18n="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
+    <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-autor-titulo">Sobre o autor</h2>
+    <p data-i18n="sobre-autor-texto">Sou Ricardo Isaías Serafim, economista, licenciado em Gestão de Informação pela Universidade Nova de Lisboa. Trabalho para o Grupo Schwarz, no Lidl Portugal, e estou atualmente destacado no Lidl Chéquia. Sou responsável por Planeamento Financeiro, Reporting e Data Science, e lidero também a Transformação Digital na área de Controlo de Gestão. Este projeto cruza a minha experiência empresarial com a investigação académica em IA aplicada a PME — o mesmo tema que me entusiasmou a abraçar esta aventura académica. Caso tenha dúvidas, contacte-me através de <a href="mailto:2302605@estudante.uab.pt">2302605@estudante.uab.pt</a>.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-confirmar-concluir" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-confirmar-titulo">
+    <h2 id="modal-confirmar-titulo" data-i18n="modal-concluir-titulo">Concluir a sessão?</h2>
+    <p class="nota" data-i18n="sessao-terminar-confirmar">Ao concluir, os seus dados são enviados e depois apagados deste navegador — não será possível recuperá-los. Se ainda não descarregou o resumo, faça-o antes de continuar.</p>
+    <div class="acoes-rodape" style="border-top:none; justify-content:flex-end;">
+      <button type="button" class="botao secundario" id="btn-cancelar-concluir" data-i18n="modal-cancelar">Cancelar</button>
+      <button type="button" class="botao" id="btn-confirmar-concluir" data-i18n="modal-sim">Sim</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/i18n.js?v=20261003"></script>
+<script src="js/modal.js?v=20261003"></script>
+<script src="js/data.js?v=20261003"></script>
+<script src="js/state.js?v=20261003"></script>
+<script src="js/relatorio-utils.js?v=20261003"></script>
+<script src="js/resultados.js?v=20261003"></script>
+</body>
+</html>
