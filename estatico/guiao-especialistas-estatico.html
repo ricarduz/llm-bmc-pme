@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<title>Guião de entrevista ao painel de especialistas — transcrição integral</title>
+<style>
+  @page { size: A4; margin: 20mm 18mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; font-size: 10.5pt; line-height: 1.5; color: #111; max-width: 700px; margin: 0 auto; padding: 24px; background: #fff; }
+  header.capa { border-bottom: 2px solid #111; padding-bottom: 16px; margin-bottom: 24px; }
+  header.capa h1 { font-size: 16pt; margin: 0 0 6px; }
+  header.capa p { margin: 3px 0; font-size: 9.5pt; }
+  h2 { font-size: 12pt; border-bottom: 1px solid #111; padding-bottom: 4px; margin: 26px 0 10px; page-break-after: avoid; }
+  h3 { font-size: 13pt; margin: 6px 0 10px; }
+  h4 { font-size: 10.5pt; margin: 0 0 6px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  .eyebrow { font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: #555; margin-bottom: 2px; }
+  .caixa { border: 1px solid #999; padding: 12px 14px; margin: 12px 0 16px; page-break-inside: avoid; }
+  .caixa--consentimento { border: 2px solid #111; }
+  .legenda { border: 1px solid #111; padding: 12px 14px; margin: 0 0 20px; page-break-inside: avoid; }
+  .legenda dl { margin: 6px 0 0; }
+  .legenda dt { font-weight: bold; float: left; width: 34px; clear: left; }
+  .legenda dd { margin: 0 0 3px 34px; }
+  .pergunta { margin: 0 0 14px; padding-bottom: 10px; border-bottom: 1px dotted #bbb; page-break-inside: avoid; }
+  .destaque-e3 { border: 2px solid #111; border-bottom-style: solid; padding: 12px 14px; background: #f4f4f4; }
+  .opcoes { margin: 4px 0 0 18px; padding: 0; }
+  .opcoes li { margin: 2px 0; }
+  .campo { font-style: italic; color: #333; }
+  .checkbox { font-weight: bold; margin-bottom: 4px; }
+  .escala { font-size: 11pt; letter-spacing: 0.04em; margin: 4px 0 6px; }
+  .perfis { margin: 0 0 8px; font-size: 8pt; }
+  .badge { display: inline-block; border: 1px solid #111; padding: 0 5px; margin-right: 3px; font-weight: bold; font-size: 8pt; font-family: Arial, sans-serif; }
+  .badge--off { border-color: #ccc; color: #ccc; }
+  .perfis-texto { color: #555; font-style: italic; margin-left: 4px; }
+  .meta, .meta-inline { font-size: 8.5pt; color: #555; font-style: italic; }
+  .meta { border-left: 2px solid #ccc; padding-left: 8px; margin: 0 0 12px; }
+  .nota { font-size: 9pt; color: #444; }
+  a { color: #111; }
+  footer { margin-top: 28px; border-top: 1px solid #999; padding-top: 10px; font-size: 8.5pt; color: #555; }
+  @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+
+<header class="capa">
+  <h1>Guião de entrevista ao painel de especialistas — transcrição integral</h1>
+  <p><strong>Investigação:</strong> «Adoção de <em>Large Language Models</em> por Pequenas e Médias Empresas: Desafios e Oportunidades»</p>
+  <p><strong>Investigador:</strong> Ricardo Filipe Isaías da Silva Serafim, n.º 2302605 — Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta / UTAD)</p>
+  <p><strong>Instrumento online:</strong> <a href="https://ricarduz.github.io/llm-bmc-pme/">https://ricarduz.github.io/llm-bmc-pme/</a></p>
+  <p><strong>Documento gerado em:</strong> 15 de setembro de 2026</p>
+</header>
+
+<p class="meta">Este documento reproduz, em sequência linear, a totalidade do percurso do painel de especialistas — secção informativa e consentimento, documentos da sessão, percurso pelo artefacto, guião de avaliação e encerramento. É gerado automaticamente a partir do código-fonte da ferramenta, pelo que o seu conteúdo corresponde ao que o participante vê. A sessão é conduzida pelo investigador, em videoconferência ou presencialmente, com a duração aproximada de 60 minutos.</p>
+
+<div class="legenda">
+  <h4>Perfis do painel e leitura dos selos</h4>
+  <dl>
+    <dt>E1</dt><dd>Gestor / Proprietário de PME</dd>
+    <dt>E2</dt><dd>Profissional de TI / Transformação Digital</dd>
+    <dt>E3</dt><dd>Investigador / Académico</dd>
+  </dl>
+  <p class="nota" style="margin-top:8px;">Cada secção é marcada com os perfis a que se aplica. Selo a cheio significa que a secção é apresentada a esse perfil; selo esbatido significa que não é. Uma única secção deste percurso é diferenciada — a Síntese Teórica (B2), disponibilizada apenas ao estrato E3 e assinalada com moldura destacada. Tudo o resto é comum aos três estratos.</p>
+</div>
+
+
+<section>
+  <h2>A. Secção informativa e consentimento</h2>
+  <p class="perfis"><span class="badge ">E1</span><span class="badge ">E2</span><span class="badge ">E3</span>
+    <span class="perfis-texto">todos os perfis</span></p>
+  <p class="meta">Primeiro ecrã do percurso. O participante acede a esta página antes de qualquer contacto com o artefacto; a sessão só avança depois de escolhido o perfil e validada a autorização de participação.</p>
+  <p class="eyebrow">Painel de avaliação · dissertação de Mestrado</p>
+  <h3>Antes de começarmos</h3>
+  <p>Obrigado por aceitar participar nesta sessão de avaliação. Deixo-lhe aqui, em vídeo e por escrito, uma breve apresentação do que vamos fazer juntos.</p>
+  <p class="meta">Nesta página é também disponibilizado um vídeo de apresentação, com o mesmo conteúdo do texto abaixo.</p>
+
+  <div class="caixa">
+    <h4>O que vamos fazer</h4>
+    <p>Olá, sou o Ricardo, estudante de Mestrado, e proponho esta entrevista semiestruturada, no âmbito da validação do framework desenvolvido na minha dissertação em Engenharia Informática e Tecnologia Web. Esta sessão tem a duração aproximada de 60 minutos, estruturada em três momentos: uma apresentação do artefacto (~15 min), em que percorremos juntos os três instrumentos do framework — o Diagnóstico de Pré-requisitos, a Matriz LLM × BMC e as Fichas de Decisão — sem aplicação a um caso concreto (com a hipótese de utilizar exemplos pré-definidos); uma entrevista semiestruturada (~35 min), organizada pelos critérios de avaliação, pela ordem utilidade percebida, aplicabilidade, consistência com a literatura e completude; e um momento de reflexão livre (~10 min), para observações não cobertas pelo guião.</p>
+    <p>Não há respostas certas ou erradas — o que procuro é uma apreciação fundamentada com base na sua experiência profissional. Pode interromper a qualquer momento para colocar questões.</p>
+  </div>
+
+  <div class="caixa">
+    <h4>Antes de dar o seu consentimento</h4>
+    <p><strong>Quem faz este estudo:</strong> Ricardo Serafim, estudante de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta / UTAD). Contacto: <a href="mailto:2302605@estudante.uab.pt">2302605@estudante.uab.pt</a>.</p>
+    <p><strong>Participação voluntária:</strong> pode interromper a sessão ou desistir a qualquer momento, sem justificação e sem qualquer consequência. Pode ainda solicitar a eliminação da gravação e da transcrição até 30 de novembro de 2026, data a partir da qual os contributos são agregados e anonimizados para análise.</p>
+    <p><strong>Confidencialidade:</strong> a sua identidade é conhecida apenas pelo investigador. Na dissertação e em qualquer publicação, é identificado exclusivamente por um código de perfil, sem menção de nome, organização ou cargo, e os excertos citados são previamente anonimizados. A gravação é eliminada logo após a validação da transcrição; as transcrições, seis meses após as provas públicas.</p>
+    <p><strong>Riscos:</strong> reduzidos. Além do tempo despendido, existe um risco residual de um leitor com conhecimento do contexto associar um excerto a si — mitigado pela codificação dos participantes e pela supressão de referências a organizações, projetos ou clientes. As questões incidem sobre o artefacto, não sobre si ou sobre a sua organização.</p>
+    <p><strong>Resultados:</strong> apresentados na dissertação, depositada em acesso aberto no Repositório Aberto da Universidade Aberta, e em eventuais publicações científicas. Ser-lhe-á remetida a síntese das conclusões e, se o solicitar, a transcrição da sua sessão.</p>
+    <p>Ler a informação completa ao participante (PDF) → <span class="meta-inline">(assets/consentimento-especialistas.pdf)</span></p>
+  </div>
+
+  <div class="pergunta">
+    <h4>A1. Qual o seu perfil?</h4>
+    <p class="nota">Esta informação ajuda a organizar as respostas por perfil de especialista, tal como previsto no protocolo de avaliação da dissertação.</p>
+    <ol class="opcoes">
+      <li>Gestor / Proprietário de PME <span class="meta-inline">— estrato E1</span></li>
+      <li>Profissional de TI / Transformação Digital <span class="meta-inline">— estrato E2</span></li>
+      <li>Investigador / Académico <span class="meta-inline">— estrato E3</span></li>
+    </ol>
+  </div>
+
+  <div class="caixa caixa--consentimento">
+    <p class="checkbox">☐ Li e compreendi a informação acima e autorizo a minha participação nesta sessão de avaliação, bem como a utilização das minhas respostas, de forma anonimizada, no âmbito desta dissertação de Mestrado.</p>
+    <p class="meta">Obrigatória: sem esta validação, e sem perfil escolhido, o botão de continuação permanece inativo.</p>
+    <p class="checkbox">☐ Autorizo que a sessão seja objeto de gravação áudio, exclusivamente para transcrição pelo investigador, com eliminação do ficheiro após a validação da transcrição. (Facultativo — pode participar sem autorizar a gravação.)</p>
+    <p class="meta">Facultativa e independente da anterior: quem não a valide participa na mesma, com registo escrito em vez de gravação.</p>
+  </div>
+</section>
+
+<section>
+  <h2>B. Documentos da sessão</h2>
+  <p class="meta">Segundo ecrã. É aqui que o material difere entre estratos.</p>
+
+  <div class="pergunta">
+    <h4>B1. Nota de Sessão</h4>
+    <p class="perfis"><span class="badge ">E1</span><span class="badge ">E2</span><span class="badge ">E3</span>
+    <span class="perfis-texto">todos os perfis</span></p>
+    <p class="nota">Objetivo da sessão, estrutura dos 60 minutos, o que vai fazer na ferramenta, consentimento e proteção de dados. Comum aos três perfis do painel.</p>
+    <p class="campo">Documento em PDF, incorporado na página e disponível para abrir em separado <span class="meta-inline">(assets/nota-sessao-especialistas.pdf)</span></p>
+  </div>
+
+  <div class="pergunta destaque-e3">
+    <h4>B2. Síntese Teórica</h4>
+    <p class="perfis"><span class="badge badge--off">E1</span><span class="badge badge--off">E2</span><span class="badge ">E3</span>
+    <span class="perfis-texto">apenas E3</span></p>
+    <p class="nota">Fundamentação teórica do framework — o problema, o Business Model Canvas, a distinção entre camada analítica e camada de implantação, e a correspondência entre a Matriz LLM × BMC e a revisão de literatura, por área. Enviada só ao especialista de perfil académico, para apoiar a avaliação do critério consistência com a literatura.</p>
+    <p class="campo">Documento em PDF, incorporado na página e disponível para abrir em separado <span class="meta-inline">(assets/sintese-teorica-E3.pdf)</span></p>
+    <p class="meta">Único material diferenciado de todo o percurso. É disponibilizado apenas ao estrato E3 porque o critério de consistência com a literatura, que só a este estrato se pede que avalie com profundidade, exige o enquadramento teórico do framework. Os estratos E1 e E2 não veem este documento nem são informados da sua existência durante a sessão. Todos os participantes acedem aos mesmos instrumentos do artefacto e respondem ao mesmo guião de avaliação.</p>
+  </div>
+</section>
+
+<section>
+  <h2>C. Percurso pelo artefacto</h2>
+  <p class="perfis"><span class="badge ">E1</span><span class="badge ">E2</span><span class="badge ">E3</span>
+    <span class="perfis-texto">todos os perfis</span></p>
+  <p class="meta">Três ecrãs de apresentação e consulta, sem recolha de dados sobre o participante. Correspondem ao momento de apresentação do artefacto previsto no protocolo (cerca de 15 minutos).</p>
+
+  <div class="pergunta">
+    <h4>C1. Materiais de apoio a cada instrumento</h4>
+    <p class="nota">Um resumo de cada instrumento, com o respetivo documento em PDF — para consulta enquanto percorre a versão interativa, ou para ler antecipadamente.</p>
+    <p class="campo">Separadores: Instrumento 1 · Instrumento 2 · Instrumento 3, cada um com o respetivo PDF.</p>
+  </div>
+
+  <div class="pergunta">
+    <h4>C2. Como quer percorrer os instrumentos?</h4>
+    <p class="nota">Pode preencher o diagnóstico com as suas próprias respostas, ou partir de um cenário de PME já preenchido — em qualquer dos casos, todas as respostas continuam editáveis nos instrumentos seguintes.</p>
+    <p class="campo">Opções: «Continuar de forma autónoma» ou um de três cenários de PME pré-preenchidos.</p>
+    <p class="nota">Estes três cenários são exemplos fictícios — servem apenas para explorar os instrumentos com dados já preenchidos, sem ter de responder de forma aleatória só para ver como o framework reage.</p>
+    <p class="meta">Se o participante escolher um cenário pré-preenchido, as respostas do diagnóstico não lhe dizem respeito nem à sua organização — são dados fictícios de demonstração.</p>
+  </div>
+
+  <div class="pergunta">
+    <h4>C3. Instrumentos 1, 2 e 3</h4>
+    <p class="campo">Percurso pelo Diagnóstico de Pré-requisitos, pela Matriz LLM × BMC e pelas Fichas de Decisão.</p>
+    <p class="meta">Nenhum destes ecrãs recolhe dados pessoais. As respostas introduzidas dizem respeito a uma empresa hipotética ou ao cenário escolhido, e servem para o participante poder julgar o comportamento do artefacto.</p>
+  </div>
+</section>
+
+<section>
+  <h2>D. Guião de avaliação</h2>
+  <p class="perfis"><span class="badge ">E1</span><span class="badge ">E2</span><span class="badge ">E3</span>
+    <span class="perfis-texto">todos os perfis</span></p>
+  <p class="meta">Ecrã final da sessão e único ponto de recolha de dados de investigação sobre o participante. Corresponde ao momento de entrevista semiestruturada do protocolo (cerca de 35 minutos). As quatro questões de escala são de resposta obrigatória para desbloquear o encerramento; os comentários são opcionais.</p>
+  <p>Chegámos ao momento de avaliação. A sua opinião como especialista é uma peça central da validação desta dissertação — ajuda a perceber se o framework que desenvolvi é útil, aplicável e consistente com a literatura que o fundamenta. Responda com honestidade a cada critério; não há respostas certas ou erradas.</p>
+
+  
+  <div class="pergunta">
+    <h4>D1. Utilidade percebida — este framework ajuda uma PME a decidir onde adotar LLM de forma estruturada.</h4>
+    <p class="campo">Escala de 1 a 5 (resposta obrigatória) · 1 = discordo totalmente, 5 = concordo totalmente</p>
+    <p class="escala">☐ 1 &nbsp; ☐ 2 &nbsp; ☐ 3 &nbsp; ☐ 4 &nbsp; ☐ 5</p>
+    <p class="campo">Campo de texto livre — comentário (opcional)</p>
+  </div>
+  <div class="pergunta">
+    <h4>D2. Aplicabilidade — as fichas e a matriz são realistas e aplicáveis ao contexto de uma PME.</h4>
+    <p class="campo">Escala de 1 a 5 (resposta obrigatória) · 1 = discordo totalmente, 5 = concordo totalmente</p>
+    <p class="escala">☐ 1 &nbsp; ☐ 2 &nbsp; ☐ 3 &nbsp; ☐ 4 &nbsp; ☐ 5</p>
+    <p class="campo">Campo de texto livre — comentário (opcional)</p>
+  </div>
+  <div class="pergunta">
+    <h4>D3. Consistência com a literatura — o conteúdo reflete de forma fiel a revisão de literatura subjacente.</h4>
+    <p class="campo">Escala de 1 a 5 (resposta obrigatória) · 1 = discordo totalmente, 5 = concordo totalmente</p>
+    <p class="escala">☐ 1 &nbsp; ☐ 2 &nbsp; ☐ 3 &nbsp; ☐ 4 &nbsp; ☐ 5</p>
+    <p class="campo">Campo de texto livre — comentário (opcional)</p>
+  </div>
+  <div class="pergunta">
+    <h4>D4. Completude — o framework cobre adequadamente os aspetos relevantes da adoção de LLM numa PME.</h4>
+    <p class="campo">Escala de 1 a 5 (resposta obrigatória) · 1 = discordo totalmente, 5 = concordo totalmente</p>
+    <p class="escala">☐ 1 &nbsp; ☐ 2 &nbsp; ☐ 3 &nbsp; ☐ 4 &nbsp; ☐ 5</p>
+    <p class="campo">Campo de texto livre — comentário (opcional)</p>
+  </div>
+
+  <div class="pergunta">
+    <h4>D5. Reflexão livre</h4>
+    <p class="nota">Espaço aberto para qualquer observação adicional da entrevista — pontos fortes, limitações, sugestões de melhoria. Mínimo de 75 palavras.</p>
+    <p class="campo">Campo de texto livre (opcional)</p>
+    <p class="meta">Corresponde ao momento de reflexão livre do protocolo (cerca de 10 minutos).</p>
+  </div>
+</section>
+
+<section>
+  <h2>E. Contacto facultativo e encerramento</h2>
+  <p class="perfis"><span class="badge ">E1</span><span class="badge ">E2</span><span class="badge ">E3</span>
+    <span class="perfis-texto">todos os perfis</span></p>
+
+  <div class="pergunta">
+    <h4>E1. Receber os resultados finais do estudo</h4>
+    <p class="nota">Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu email. É usado exclusivamente para esse fim. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).</p>
+    <p class="campo">Email (opcional) — campo de correio eletrónico</p>
+    <p class="checkbox">☐ Aceito que o meu email seja utilizado exclusivamente para me contactar com os resultados finais deste estudo.</p>
+    <p class="meta">O endereço só é registado se esta aceitação for validada: um campo preenchido sem aceitação é descartado. O endereço é gravado em registo separado, sem qualquer ligação ao registo da avaliação, e utilizado exclusivamente para envio das conclusões finais do estudo.</p>
+  </div>
+
+  <div class="pergunta">
+    <h4>E2. Descarregar a sua avaliação</h4>
+    <p class="nota">Um ficheiro com a sua avaliação, pronto a abrir em qualquer computador. Depois de descarregar, as respostas ficam fixas e deixam de poder ser editadas.</p>
+  </div>
+
+  <div class="caixa">
+    <h4>Sessão concluída</h4>
+    <p class="nota">Ao concluir, os seus dados são enviados e depois apagados deste navegador — não será possível recuperá-los. Se ainda não descarregou os resultados, faça-o antes de continuar.</p>
+    <p>Obrigado por participar neste estudo — a sua contribuição é uma ajuda preciosa para esta investigação.</p>
+    <p class="nota">Os dados desta sessão foram apagados deste navegador. Pode fechar esta janela.</p>
+  </div>
+</section>
+
+<footer>
+  Gerado por <code>scripts/gerar-guiao-especialistas.js</code> a partir de <code>js/i18n.js</code>. Versão portuguesa; a ferramenta dispõe de versão inglesa com a mesma estrutura e conteúdo equivalente.
+</footer>
+
+</body>
+</html>

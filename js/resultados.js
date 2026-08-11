@@ -539,8 +539,11 @@ document.getElementById('btn-confirmar-concluir').addEventListener('click', () =
 
   const campoEmail = document.getElementById('email-especialista');
   const email = campoEmail.value.trim();
+  const aceitouContacto = document.getElementById('email-consentimento').checked;
 
-  if (email) {
+  // Sem aceitação validada, o email é descartado — nem é guardado no estado,
+  // nem enviado. Um campo preenchido sem consentimento não é consentimento.
+  if (email && aceitouContacto) {
     const estadoAtual = lerEstado();
     estadoAtual.contacto = { email, consentimento: true, guardadoEm: new Date().toISOString() };
     guardarEstado(estadoAtual);
