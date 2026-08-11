@@ -94,7 +94,17 @@ function render() {
   if (fase === 'concluido') { ecra.innerHTML = renderConcluido(); return; }
 }
 
-/** Ecrã inicial do jogo — título, duração, garantia de "sem julgamento" (ver t('pme-sem-julgamento')) e o consentimento explícito que desbloqueia o botão Começar. */
+/**
+ * Ecrã inicial do jogo — título, duração, garantia de "sem julgamento"
+ * (ver t('pme-sem-julgamento')), o bloco "Antes de começar" com a
+ * informação ao participante, e o consentimento explícito que desbloqueia
+ * o botão Começar.
+ *
+ * O bloco "Antes de começar" não é decorativo: é a introdução do
+ * questionário para efeitos do ponto 2 dos procedimentos da Comissão de
+ * Ética, e cada parágrafo responde a um item da checklist de análise.
+ * Se for preciso encurtar este ecrã, encurta-se outra coisa.
+ */
 function renderHook() {
   return `
     <div class="ecra-pme ecra-pme--hook" style="text-align:center;">
@@ -104,11 +114,25 @@ function renderHook() {
       <div class="valor-destaque">
         <span>${t('pme-tempo')}</span><span>${t('pme-areas')}</span>
       </div>
-      <p class="nota" style="max-width:440px; margin:0 auto 20px;">${t('pme-sem-julgamento')}</p>
-      <label style="display:flex; gap:10px; align-items:flex-start; text-align:left; cursor:pointer; max-width:440px; margin:0 auto 20px;">
+      <p class="nota" style="max-width:560px; margin:0 auto 20px;">${t('pme-sem-julgamento')}</p>
+
+      <div class="cartao" style="text-align:left; max-width:560px; margin:0 auto 20px;">
+        <h3 style="margin-top:0;">${t('pme-antes-titulo')}</h3>
+        <p class="nota">${t('pme-antes-quem')}</p>
+        <p class="nota">${t('pme-antes-porque')}</p>
+        <p class="nota">${t('pme-antes-perguntas')}</p>
+        <p class="nota">${t('pme-antes-voluntaria')}</p>
+        <p class="nota">${t('pme-antes-dados')}</p>
+        <p class="nota">${t('pme-antes-riscos')}</p>
+        <p class="nota">${t('pme-antes-divulgacao')}</p>
+        <p class="nota" style="margin-bottom:0;"><a href="assets/consentimento-pme.pdf" target="_blank" rel="noopener">${t('pme-antes-link')}</a></p>
+      </div>
+
+      <label style="display:flex; gap:10px; align-items:flex-start; text-align:left; cursor:pointer; max-width:560px; margin:0 auto 12px;">
         <input type="checkbox" id="consentimento-pme" style="margin-top:4px;">
         <span style="font-size:0.85rem; color:var(--ink-soft);">${t('pme-consentimento')}</span>
       </label>
+      <p class="nota" style="max-width:560px; margin:0 auto 20px; font-size:0.8rem;">${t('pme-nota-navegador')}</p>
       <button class="botao" id="btn-comecar" style="padding:14px 32px;" disabled>${t('pme-comecar')}</button>
     </div>`;
 }
@@ -567,7 +591,11 @@ document.getElementById('btn-email-sim').addEventListener('click', async () => {
     guardarEstado(estadoAtual);
     fetch(GOOGLE_SHEETS_URL_PME, {
       method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ tipo: 'contacto', origem: 'pme', sessionId: estadoAtual.sessionId, email, consentimento: true, data: new Date().toISOString() })
+      // sessionId deliberadamente omitido: ligar o email ao registo do
+      // diagnóstico tornaria a resposta reidentificável e contradiria a
+      // garantia de anonimato dada ao participante (e declarada à Comissão
+      // de Ética). O contacto vive isolado das respostas — não voltar a pôr.
+      body: JSON.stringify({ tipo: 'contacto', origem: 'pme', email, consentimento: true, data: new Date().toISOString() })
     }).catch(e => console.error('Envio do contacto para a folha de cálculo falhou:', e));
   }
 

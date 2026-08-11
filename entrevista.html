@@ -15,7 +15,7 @@
 <title>Sessão de avaliação · LLM em PME</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
-<link rel="stylesheet" href="css/style.css?v=20260913">
+<link rel="stylesheet" href="css/style.css?v=20260914">
 </head>
 <body>
 
@@ -56,6 +56,23 @@
       <p data-i18n="entrevista-fazer-texto-2">Não há respostas certas ou erradas — o que procuro é uma apreciação fundamentada com base na sua experiência profissional. Pode interromper a qualquer momento para colocar questões.</p>
     </div>
 
+    <!--
+      Informação ao participante. Complementa o cartão acima (que cobre
+      procedimentos e duração) com os restantes elementos do consentimento
+      informado exigidos pela Comissão de Ética: responsável e contacto,
+      voluntariedade e janela de desistência, confidencialidade e
+      conservação, riscos e divulgação dos resultados.
+    -->
+    <div class="cartao">
+      <h3 data-i18n="entrevista-antes-titulo">Antes de dar o seu consentimento</h3>
+      <p class="nota" data-i18n="entrevista-antes-quem">Quem faz este estudo: Ricardo Serafim, estudante de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta / UTAD). Contacto: 2302605@estudante.uab.pt.</p>
+      <p class="nota" data-i18n="entrevista-antes-voluntaria">Participação voluntária: pode interromper a sessão ou desistir a qualquer momento, sem justificação e sem qualquer consequência.</p>
+      <p class="nota" data-i18n="entrevista-antes-dados">Confidencialidade: a sua identidade é conhecida apenas pelo investigador.</p>
+      <p class="nota" data-i18n="entrevista-antes-riscos">Riscos: reduzidos.</p>
+      <p class="nota" data-i18n="entrevista-antes-divulgacao">Resultados: apresentados na dissertação, depositada em acesso aberto no Repositório Aberto da Universidade Aberta.</p>
+      <p class="nota" style="margin-bottom:0;"><a href="assets/consentimento-especialistas.pdf" target="_blank" rel="noopener" data-i18n="entrevista-antes-link">Ler a informação completa ao participante (PDF) →</a></p>
+    </div>
+
     <div class="cartao">
       <h3 data-i18n="entrevista-perfil-titulo">Qual o seu perfil?</h3>
       <p class="nota" data-i18n="entrevista-perfil-nota">Esta informação ajuda a organizar as respostas por perfil de especialista, tal como previsto no protocolo de avaliação da dissertação.</p>
@@ -78,7 +95,16 @@
     <div class="cartao" style="border-color: var(--ink);">
       <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer;">
         <input type="checkbox" id="autorizacao" style="margin-top:4px;">
-        <span data-i18n="entrevista-autorizacao">Autorizo a participação nesta sessão de avaliação e o registo das minhas respostas para fins de investigação académica, no âmbito desta dissertação de Mestrado.</span>
+        <span data-i18n="entrevista-autorizacao">Li e compreendi a informação acima e autorizo a minha participação nesta sessão de avaliação, bem como a utilização das minhas respostas, de forma anonimizada, no âmbito desta dissertação de Mestrado.</span>
+      </label>
+      <!--
+        Autorização de gravação separada e facultativa: não desbloqueia o
+        botão Continuar (ver validarEntrevista(), em entrevista.js). Quem
+        recusar a gravação participa na mesma, com registo escrito.
+      -->
+      <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer; margin-top:14px; margin-bottom:0;">
+        <input type="checkbox" id="autorizacao-audio" style="margin-top:4px;">
+        <span data-i18n="entrevista-autorizacao-audio">Autorizo que a sessão seja objeto de gravação áudio, exclusivamente para transcrição pelo investigador, com eliminação do ficheiro após a validação da transcrição. (Facultativo — pode participar sem autorizar a gravação.)</span>
       </label>
     </div>
 
@@ -106,10 +132,10 @@
   </div>
 </div>
 
-<script src="js/i18n.js?v=20260913"></script>
-<script src="js/modal.js?v=20260913"></script>
-<script src="js/data.js?v=20260913"></script>
-<script src="js/state.js?v=20260913"></script>
-<script src="js/entrevista.js?v=20260913"></script>
+<script src="js/i18n.js?v=20260914"></script>
+<script src="js/modal.js?v=20260914"></script>
+<script src="js/data.js?v=20260914"></script>
+<script src="js/state.js?v=20260914"></script>
+<script src="js/entrevista.js?v=20260914"></script>
 </body>
 </html>
