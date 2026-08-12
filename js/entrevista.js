@@ -15,33 +15,6 @@ const checkboxAudio = document.getElementById('autorizacao-audio');
 const botaoContinuar = document.getElementById('btn-continuar');
 
 /**
- * Tenta mostrar o vídeo de apresentação (assets/video-apresentacao.mp4).
- * Enquanto o ficheiro não existir, o <video> dispara 'error' e o
- * placeholder original fica visível — sem isto, um <video> com fonte
- * inexistente mostra uma caixa de erro do navegador, mais feia do que
- * o placeholder. Assim que colocares o ficheiro no caminho certo, isto
- * troca sozinho para o vídeo, sem precisares de mudar mais nada.
- */
-const video = document.getElementById('video-apresentacao');
-function mostrarVideoSeCarregado() {
-  video.style.display = 'block';
-  document.getElementById('video-placeholder-conteudo').style.display = 'none';
-}
-if (video.readyState >= 1) {
-  // o vídeo já tinha metadados carregados antes deste script correr
-  // (preload="metadata" começa assim que o HTML é interpretado, antes
-  // deste <script>, colocado no fim da página) — sem esta verificação,
-  // o evento 'loadedmetadata' já teria disparado e nunca mais dispara,
-  // e o placeholder ficaria visível por engano mesmo com o vídeo pronto.
-  mostrarVideoSeCarregado();
-} else {
-  video.addEventListener('loadedmetadata', mostrarVideoSeCarregado);
-}
-video.addEventListener('error', () => {
-  video.style.display = 'none';
-}, true);
-
-/**
  * O botão Continuar só ativa quando a autorização de participação estiver
  * marcada E um perfil de especialista tiver sido escolhido. A autorização
  * de gravação áudio NÃO entra nesta condição, de propósito: é facultativa,

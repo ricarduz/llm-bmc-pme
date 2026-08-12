@@ -64,7 +64,6 @@ const secaoInformativa = `
   <p class="eyebrow">${esc(t('entrevista-eyebrow'))}</p>
   <h3>${esc(t('entrevista-h1'))}</h3>
   <p>${esc(t('entrevista-lead'))}</p>
-  ${meta('Nesta página é também disponibilizado um vídeo de apresentação, com o mesmo conteúdo do texto abaixo.')}
 
   <div class="caixa">
     <h4>${esc(t('entrevista-fazer-titulo'))}</h4>

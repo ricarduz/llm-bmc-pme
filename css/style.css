@@ -730,34 +730,6 @@ th {
   color: var(--ink-soft);
 }
 
-/* Espaço reservado para o vídeo de apresentação (entrevista.html) —
-   substituir por um <iframe> (YouTube/Vimeo) ou uma tag <video> com o
-   ficheiro, mantendo a mesma proporção 16:9, quando o vídeo estiver
-   pronto. */
-.video-placeholder {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%;
-  background: var(--paper-alt);
-  border: 1px dashed var(--uab-cinza);
-  border-radius: var(--radius);
-  margin: 20px 0 28px;
-}
-
-.video-placeholder-conteudo {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
-}
-
-.video-placeholder-conteudo span { font-size: 2rem; }
-
 /* Pré-visualização do PDF de cada instrumento, na página de materiais
    (materiais.html). Só em ecrãs a partir de 700px: o suporte de PDF
    embutido em <iframe> é inconsistente em telemóvel (várias combinações

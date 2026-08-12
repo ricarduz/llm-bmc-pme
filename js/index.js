@@ -4,9 +4,9 @@
  * para o caminho certo.
  *   PME         -> pme.html (o "jogo", que recolhe o perfil da empresa
  *                  como parte do seu próprio fluxo contínuo)
- *   Especialista -> entrevista.html (explica a sessão, espaço para
- *                  vídeo, autorização — sem caracterizar nenhuma
- *                  empresa, o painel não precisa disso)
+ *   Especialista -> entrevista.html (explica a sessão, recolhe o perfil
+ *                  e a autorização — sem caracterizar nenhuma empresa,
+ *                  o painel não precisa disso)
  */
 
 document.getElementById('escolha-pme').addEventListener('click', () => {
