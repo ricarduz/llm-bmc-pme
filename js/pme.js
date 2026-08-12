@@ -799,7 +799,7 @@ function renderConcluido() {
 }
 
 /** URL do Apps Script — reutiliza o mesmo GOOGLE_SHEETS_URL definido em resultados.js (aqui duplicado por este ficheiro ser independente do resultados.js). Mantém o mesmo tipo "diagnostico" já usado pela folha de cálculo existente. */
-const GOOGLE_SHEETS_URL_PME = 'https://script.google.com/macros/s/AKfycbyxCM6rhINk_XpIJvqoUC4UUmz1CMEHsA19lLqf7ktTB0R4bidqpD3QFqgO9qE60r8T/exec';
+const GOOGLE_SHEETS_URL_PME = 'https://script.google.com/macros/s/AKfycbzgErYX4KspZxWXagqzHvtVcffYQ3a7aArh9KbyWIsn9PUjtU7Jy1y5s8RijKWNLYrG/exec';
 
 /** Envia o diagnóstico para o Google Sheets — só nos dois momentos em que é chamada (Descarregar / Terminar, ver origem), nunca a cada resposta. Traduz os valores internos para texto legível (ex: prioridade, escalão) antes de enviar, para a folha de cálculo não ter códigos internos. */
 function enviarParaGoogleSheetsPME(origem) {

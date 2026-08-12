@@ -469,7 +469,7 @@ avaliacao
 
 A folha `Diagnostico` contém o perfil da PME e uma coluna para cada um dos nove blocos do BMC.
 
-A folha `Avaliacao` contém o perfil do especialista, os critérios de avaliação e a reflexão.
+A folha `Avaliacao` contém o perfil do especialista, os critérios de avaliação, a reflexão e a autorização de gravação áudio (Sim/Não), registada como prova do consentimento.
 
 A folha `Contacto` contém os contactos autorizados para receber informação sobre os resultados finais.
 

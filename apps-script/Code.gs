@@ -186,7 +186,10 @@ function guardarContacto(dados) {
  * com comentário opcional) e à reflexão livre da entrevista. Inclui o
  * perfil do especialista (Gestor PME / Profissional de TI / Académico)
  * para se poder cruzar as respostas por perfil, tal como previsto na
- * Tabela 5 da dissertação.
+ * Tabela 5 da dissertação. Inclui ainda a autorização de gravação áudio
+ * (Sim / Não / vazio nas sessões anteriores a esta coluna), como prova
+ * do consentimento (art. 7.º, n.º 1, RGPD). A coluna fica no fim para
+ * não desalinhar as linhas já existentes.
  */
 function guardarAvaliacao(dados) {
   const cabecalho = [
@@ -195,7 +198,8 @@ function guardarAvaliacao(dados) {
     'Aplicabilidade', 'Comentário (aplicabilidade)',
     'Consistência com a literatura', 'Comentário (consistência)',
     'Completude', 'Comentário (completude)',
-    'Reflexão livre'
+    'Reflexão livre',
+    'Autorização de gravação áudio'
   ];
   const aba = obterOuCriarFolha('Avaliacao', cabecalho);
 
@@ -208,7 +212,8 @@ function guardarAvaliacao(dados) {
     dados.aplicabilidade || '', dados.aplicabilidadeComentario || '',
     dados.consistencia || '', dados.consistenciaComentario || '',
     dados.completude || '', dados.completudeComentario || '',
-    dados.reflexao || ''
+    dados.reflexao || '',
+    dados.autorizacaoGravacao || ''
   ]);
 }
 
