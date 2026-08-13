@@ -25,7 +25,7 @@ const estadoR = lerEstado();
  * pronto (o payload inclui "tipo": "avaliacao", para
  * encaminhar para folhas diferentes na mesma folha de cálculo).
  */
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyxCM6rhINk_XpIJvqoUC4UUmz1CMEHsA19lLqf7ktTB0R4bidqpD3QFqgO9qE60r8T/exec';
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzgErYX4KspZxWXagqzHvtVcffYQ3a7aArh9KbyWIsn9PUjtU7Jy1y5s8RijKWNLYrG/exec';
 
 /** Envio "melhor esforço": se falhar (sem rede, URL por preencher, etc.), só regista no console — nunca impede o utilizador de continuar a usar a página. `mode: 'no-cors'` evita o preflight de CORS, ao custo de não se conseguir ler a resposta (aceitável, porque não se precisa dela). */
 function enviarParaGoogleSheets(payload) {
@@ -292,6 +292,10 @@ function construirRegisto(origem) {
     sessionId: estadoAtual.sessionId,
     concluidoEm: new Date().toISOString(),
     perfilEspecialista: estadoAtual.perfilEspecialista || '',
+    // Prova do consentimento para gravação áudio (art. 7.º, n.º 1, RGPD): a gravação
+    // é eliminada após a validação da transcrição, pelo que a autorização fica registada aqui.
+    autorizacaoGravacao: estadoAtual.autorizacaoAudio === true ? 'Sim'
+                       : estadoAtual.autorizacaoAudio === false ? 'Não' : '',
     utilidade: avaliacao.utilidade || '',
     utilidadeComentario: avaliacao.utilidadeComentario || '',
     aplicabilidade: avaliacao.aplicabilidade || '',

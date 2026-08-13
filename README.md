@@ -191,23 +191,26 @@ Destinado ao painel académico de avaliação do artefacto.
 ```text
 index.html
     ↓
-entrevista.html
+entrevista.html (Perfil do especialista + consentimento)
     ↓
-Perfil do especialista + autorização
+sessao.html (Nota de sessão + Síntese teórica para perfil E3)
     ↓
-cenario.html
+materiais.html (Consulta opcional dos PDFs dos 3 instrumentos)
     ↓
-Instrumento 1
+cenario.html (Escolha de cenário de demonstração ou percurso autónomo)
     ↓
-Instrumento 2
+instrumento1.html (Diagnóstico de Pré-requisitos)
     ↓
-Instrumento 3
+instrumento2.html (Matriz LLM × BMC)
     ↓
-resultados.html
+instrumento3.html (Fichas de Decisão)
+    ↓
+resultados.html (Avaliação pelos 4 critérios DSRM + reflexão livre)
 ```
 
 O painel pode:
 
+- consultar os documentos de apoio à sessão e os PDFs dos instrumentos;
 - percorrer os instrumentos autonomamente;
 - utilizar um cenário pré-preenchido;
 - editar as respostas do cenário;
@@ -219,9 +222,9 @@ São disponibilizados **3 cenários de PME europeia** para facilitar a demonstra
 
 Os perfis de especialista utilizados na avaliação são:
 
-- Gestor / Proprietário de PME;
-- Profissional de TI / Transformação Digital;
-- Investigador / Académico.
+- **E1** — Gestor / Proprietário de PME;
+- **E2** — Profissional de TI / Transformação Digital;
+- **E3** — Investigador / Académico (inclui acesso adicional à Síntese Teórica de fundamentação do modelo em `sessao.html`).
 
 ---
 
@@ -285,27 +288,18 @@ O código inclui escaping do conteúdo introduzido pelo utilizador antes de o in
 
 ## 8. Arquitetura técnica
 
-A aplicação é deliberadamente simples e não utiliza frameworks de frontend nem um processo de build.
+A aplicação é deliberadamente simples e não utiliza frameworks de frontend nem um processo de build para execução no navegador.
 
 ### Tecnologias
 
 - HTML5
 - CSS3
-- JavaScript
+- JavaScript (Vanilla ES6+)
 - `localStorage`
 - Google Apps Script
 - Google Sheets
 
-Não existem:
-
-- `package.json`;
-- `node_modules`;
-- bundler;
-- transpiler;
-- framework JavaScript;
-- servidor backend próprio.
-
-A aplicação pode ser executada como um conjunto de ficheiros estáticos.
+Não existem dependências externas em runtime (`package.json`, `node_modules`, bundler ou servidor backend próprio). A aplicação pode ser executada diretamente como um conjunto de ficheiros estáticos.
 
 ---
 
@@ -317,12 +311,13 @@ llm-bmc-pme/
 ├── index.html
 ├── pme.html
 ├── entrevista.html
+├── sessao.html
+├── materiais.html
 ├── cenario.html
 ├── instrumento1.html
 ├── instrumento2.html
 ├── instrumento3.html
 ├── resultados.html
-├── materiais.html
 │
 ├── css/
 │   └── style.css
@@ -335,19 +330,24 @@ llm-bmc-pme/
 │   ├── index.js
 │   ├── pme.js
 │   ├── entrevista.js
+│   ├── sessao.js
+│   ├── materiais.js
 │   ├── cenario.js
 │   ├── instrumento1.js
 │   ├── instrumento2.js
 │   ├── instrumento3.js
 │   ├── resultados.js
-│   ├── relatorio-utils.js
-│   └── materiais.js
+│   └── relatorio-utils.js
 │
 ├── assets/
 │   ├── favicon.svg
 │   ├── favicon-180.png
 │   ├── logo-uab-placeholder.jpeg
 │   ├── logo-utad-placeholder.jpeg
+│   ├── consentimento-especialistas.pdf
+│   ├── consentimento-pme.pdf
+│   ├── nota-sessao-especialistas.pdf
+│   ├── sintese-teorica-E3.pdf
 │   ├── instrumento1.pdf
 │   ├── instrumento2.pdf
 │   └── instrumento3.pdf
@@ -359,8 +359,15 @@ llm-bmc-pme/
 ├── estatico/
 │   ├── index-estatico.html
 │   ├── resultados-estatico.html
+│   ├── questionario-estatico.html
+│   ├── guiao-especialistas-estatico.html
 │   └── README.md
 │
+├── scripts/
+│   ├── gerar-questionario-estatico.js
+│   └── gerar-guiao-especialistas.js
+│
+├── CITATION.cff
 ├── LICENSE
 └── README.md
 ```
@@ -369,26 +376,29 @@ llm-bmc-pme/
 
 | Ficheiro | Responsabilidade |
 |---|---|
-| `index.html` | Entrada e seleção do percurso |
-| `pme.html` | Percurso simplificado para gestores de PME |
-| `entrevista.html` | Introdução e autorização do painel |
-| `cenario.html` | Seleção dos cenários de demonstração |
-| `instrumento1.html` | Diagnóstico de pré-requisitos |
-| `instrumento2.html` | Matriz LLM × BMC |
-| `instrumento3.html` | Fichas de decisão |
-| `resultados.html` | Avaliação e síntese da sessão |
-| `materiais.html` | Consulta/download dos materiais dos instrumentos |
-| `js/data.js` | Dados, conteúdo dos instrumentos e regras de classificação |
+| `index.html` | Entrada e seleção do percurso (PME vs. Especialista) |
+| `pme.html` | Percurso simplificado e contínuo para gestores de PME |
+| `entrevista.html` | Enquadramento, seleção de perfil (E1/E2/E3) e consentimento do painel |
+| `sessao.html` | Apresentação da Nota de Sessão e Síntese Teórica (exclusiva E3) |
+| `materiais.html` | Consulta e download opcional dos PDFs dos três instrumentos |
+| `cenario.html` | Seleção dos cenários de demonstração ou percurso autónomo |
+| `instrumento1.html` | Diagnóstico de pré-requisitos (Prontidão × Impacto) |
+| `instrumento2.html` | Matriz LLM × BMC (Aplicações, Oportunidades e Riscos) |
+| `instrumento3.html` | Fichas de Decisão operacionais |
+| `resultados.html` | Avaliação pericial (4 critérios DSRM + reflexão) e síntese da sessão |
+| `js/data.js` | Dados científicos, conteúdo dos instrumentos e regras de classificação |
 | `js/state.js` | Persistência da sessão em `localStorage` |
-| `js/i18n.js` | Tradução e conteúdos PT/EN |
-| `js/pme.js` | Lógica do percurso PME e relatório |
-| `js/instrumento1.js` | Lógica do Instrumento 1 |
-| `js/instrumento2.js` | Lógica do Instrumento 2 |
-| `js/instrumento3.js` | Lógica do Instrumento 3 |
-| `js/resultados.js` | Avaliação do painel e relatório |
-| `js/relatorio-utils.js` | Funções comuns para exportação |
-| `js/cenario.js` | Cenários de demonstração |
-| `apps-script/Code.gs` | Endpoint Google Apps Script para recolha de dados |
+| `js/i18n.js` | Dicionário e lógica de internacionalização PT/EN |
+| `js/pme.js` | Lógica do percurso PME e geração do relatório empresarial |
+| `js/sessao.js` | Controlo condicional de exibição da Síntese Teórica para o perfil E3 |
+| `js/instrumento1.js` | Lógica interativa do Instrumento 1 |
+| `js/instrumento2.js` | Lógica de filtragem e seleção do Instrumento 2 |
+| `js/instrumento3.js` | Lógica de navegação por abas do Instrumento 3 |
+| `js/resultados.js` | Lógica de avaliação do painel e exportação de relatório |
+| `js/relatorio-utils.js` | Utilitários partilhados para geração de relatórios HTML autónomos |
+| `js/cenario.js` | Definição e aplicação dos 3 cenários de PME europeia |
+| `apps-script/Code.gs` | Endpoint Google Apps Script para recolha de dados em Google Sheets |
+| `scripts/*.js` | Geradores das transcrições lineares estáticas dos percursos para arquivo/ética |
 
 ---
 
@@ -409,6 +419,7 @@ O estado inclui, consoante o percurso:
 - diagnóstico dos nove blocos;
 - blocos selecionados;
 - perfil do especialista;
+- autorização de gravação áudio;
 - avaliação;
 - reflexão;
 - `sessionId`.
@@ -421,7 +432,7 @@ No final de uma sessão concluída, os dados da sessão são removidos do navega
 
 ## 11. Dados e privacidade
 
-A aplicação foi desenhada para minimizar a recolha de dados pessoais.
+A aplicação foi desenhada para minimizar a recolha de dados pessoais e assegurar conformidade ética e regulamentar.
 
 ### Dados locais
 
@@ -431,7 +442,7 @@ As respostas são mantidas no navegador durante a sessão.
 
 O email é opcional.
 
-Só é recolhido quando o participante escolhe deixar o contacto e aceita explicitamente a sua utilização para receber as conclusões finais do estudo.
+Só é recolhido quando o participante escolhe deixar o contacto e aceita explicitamente a sua utilização para receber as conclusões finais do estudo, sendo armazenado de forma desassociada das respostas do diagnóstico ou avaliação.
 
 ### Recolha para investigação
 
@@ -469,7 +480,7 @@ avaliacao
 
 A folha `Diagnostico` contém o perfil da PME e uma coluna para cada um dos nove blocos do BMC.
 
-A folha `Avaliacao` contém o perfil do especialista, os critérios de avaliação e a reflexão.
+A folha `Avaliacao` contém o perfil do especialista, os critérios de avaliação, a reflexão e a autorização de gravação áudio (Sim/Não), registada como prova do consentimento.
 
 A folha `Contacto` contém os contactos autorizados para receber informação sobre os resultados finais.
 
@@ -525,19 +536,19 @@ A tipografia web utiliza uma alternativa compatível com a identidade pretendida
 
 ---
 
-## 15. Materiais académicos
+## 15. Materiais académicos e documentação ética
 
-A pasta `assets/` inclui as versões PDF dos três instrumentos:
+A pasta `assets/` inclui os documentos PDF de suporte metodológico e ético:
 
-```text
-assets/instrumento1.pdf
-assets/instrumento2.pdf
-assets/instrumento3.pdf
-```
+- **Instrumentos do framework:** `instrumento1.pdf`, `instrumento2.pdf` e `instrumento3.pdf` (disponibilizados na interface através de `materiais.html`).
+- **Documentação de sessão e ética:** `consentimento-pme.pdf`, `consentimento-especialistas.pdf`, `nota-sessao-especialistas.pdf` e `sintese-teorica-E3.pdf` (apresentados em `entrevista.html`, `pme.html` e `sessao.html`).
 
-A página `materiais.html` disponibiliza estes materiais através da interface da aplicação.
+A pasta `estatico/` contém 4 versões HTML autónomas (sem dependência de JavaScript) para documentação, submissão à Comissão de Ética e anexo à dissertação:
 
-A pasta `estatico/` contém 2 versões HTML de leitura, sem dependência da lógica JavaScript da aplicação, para documentação ou anexo ao trabalho académico: `index-estatico.html` (visão geral do framework, os dois percursos, e um exemplo ilustrativo de diagnóstico completo) e `resultados-estatico.html` (o instrumento de avaliação do painel de especialistas, em branco). O conteúdo detalhado de cada instrumento já está coberto pelos PDFs em `assets/` — não duplicado aqui.
+- `index-estatico.html` — visão geral do framework, dos dois percursos e exemplo ilustrativo de diagnóstico completo.
+- `resultados-estatico.html` — formulário de avaliação do painel de especialistas em branco.
+- `questionario-estatico.html` — transcrição linear integral do percurso PME (gerada via `scripts/gerar-questionario-estatico.js`).
+- `guiao-especialistas-estatico.html` — transcrição linear integral do guião de entrevista do painel de especialistas (gerada via `scripts/gerar-guiao-especialistas.js`).
 
 ---
 
@@ -575,15 +586,13 @@ Isto é especialmente útil para testar o comportamento dos downloads e a comuni
 
 O projeto foi estruturado para publicação como site estático.
 
-A versão de produção atualmente associada ao projeto é:
+A versão de produção associada ao projeto é:
 
 ```text
-https://ricarduz.github.io/llm-bmc-pme/
+[https://ricarduz.github.io/llm-bmc-pme/](https://ricarduz.github.io/llm-bmc-pme/)
 ```
 
-Uma publicação GitHub Pages requer apenas que os ficheiros do repositório sejam disponibilizados como conteúdo estático.
-
-Não existe um processo de build.
+Uma publicação GitHub Pages requer apenas que os ficheiros do repositório sejam disponibilizados como conteúdo estático, sem processo de build.
 
 ---
 
@@ -606,20 +615,22 @@ Não existe um processo de build.
              Perfil da PME               Perfil / autorização
                     │                           │
                     ▼                           ▼
-             18 perguntas                  Cenário ou
-                    │                    preenchimento
+             18 perguntas                Documentos / materiais
                     │                           │
                     ▼                           ▼
-             Diagnóstico ───────────────► Instrumento 1
+             Diagnóstico ───────────────► Cenário ou autónomo
+                    │                           │
+                    │                           ▼
+                    │                     Instrumento 1
                     │                           │
                     │                           ▼
                     │                     Instrumento 2
                     │                           │
                     ▼                           ▼
-              Relatório                    Instrumento 3
+              Relatório                   Instrumento 3
                                                 │
                                                 ▼
-                                          Avaliação
+                                          Avaliação DSRM
                                                 │
                                                 ▼
                                             Síntese
@@ -661,7 +672,7 @@ O artefacto inclui mecanismos de demonstração, recolha de avaliação e geraç
 
 ## 20. Validação técnica
 
-O código JavaScript do projeto foi estruturado para execução direta no navegador e os ficheiros JavaScript podem ser validados com:
+O código JavaScript do projeto foi estruturado para execução direta no navegador e os ficheiros JavaScript podem ser validados sintaticamente com:
 
 ```bash
 node --check js/data.js
@@ -672,18 +683,7 @@ node --check js/instrumento3.js
 node --check js/resultados.js
 ```
 
-Não existe uma suite de testes automatizados dedicada no repositório.
-
-A validação funcional deve ser realizada através dos dois percursos da aplicação, incluindo:
-
-- navegação;
-- seleção dos nove blocos;
-- cálculo das prioridades;
-- cenários;
-- geração dos relatórios;
-- mudança de idioma;
-- limpeza do estado;
-- envio opcional para Google Sheets.
+A validação funcional abrange os dois percursos da aplicação, incluindo navegação, seleção dos nove blocos, cálculo das prioridades, cenários, geração dos relatórios, mudança de idioma, limpeza do estado e envio opcional para Google Sheets.
 
 ---
 
@@ -693,13 +693,10 @@ O projeto é um artefacto académico e não pretende ser uma plataforma empresar
 
 Entre as limitações atuais encontram-se:
 
-- ausência de backend próprio;
-- persistência baseada no navegador;
+- ausência de backend e base de dados próprios (persistência de sessão baseada no navegador);
 - dependência opcional de Google Apps Script para recolha dos dados;
 - ausência de autenticação de utilizadores;
-- ausência de base de dados própria;
 - tradução inglesa das Fichas de Decisão ainda indicativa;
-- versões estáticas HTML mantidas separadamente da aplicação interativa;
 - ausência de testes automatizados end-to-end.
 
 Estas características são compatíveis com o objetivo principal do projeto: **demonstrar e avaliar o framework desenvolvido no contexto da dissertação**.
@@ -719,6 +716,7 @@ A relação entre investigação e implementação pode ser resumida da seguinte
 | Instrumento 2 | `instrumento2.html` + `instrumento2.js` |
 | Instrumento 3 | `instrumento3.html` + `instrumento3.js` |
 | Diagnóstico PME simplificado | `pme.html` + `pme.js` |
+| Documentação de sessão e ética | `entrevista.html`, `sessao.html`, `materiais.html` + `assets/*.pdf` |
 | Cenários de demonstração | `cenario.html` + `cenario.js` |
 | Avaliação do artefacto | `resultados.html` + `resultados.js` |
 | Dados dos instrumentos | `js/data.js` |
@@ -761,5 +759,4 @@ Ao reutilizar o artefacto ou partes substanciais da sua implementação, recomen
 
 ## 25. Referência da dissertação
 
-> Serafim, R. F. I. S. — *Adoção de LLMs por PMEs – Desafios e Oportunidades*. Mestrado em Engenharia Informática e Tecnologia Web, Universidade Aberta / Universidade de Trás-os-Montes e Alto Douro.
-
+> Serafim, R. F. I. S. (2026). *Adoção de LLMs por PMEs – Desafios e Oportunidades* [Dissertação de Mestrado, Universidade Aberta / Universidade de Trás-os-Montes e Alto Douro].
