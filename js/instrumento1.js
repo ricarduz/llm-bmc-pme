@@ -31,7 +31,7 @@ function opcoesEscala(blocoId, eixo, valores) {
     <label>
       <input type="radio" name="${blocoId}-${eixo}" value="${v}"
         ${estadoAtual.diagnostico[blocoId] && estadoAtual.diagnostico[blocoId][eixo] == v ? 'checked' : ''}>
-      <span><strong>${v}</strong></span>
+      <span><strong>${v}</strong><br>${valores[v]}</span>
     </label>
   `).join('');
 }
