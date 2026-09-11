@@ -1089,6 +1089,7 @@ function obterIdioma() {
   return localStorage.getItem(IDIOMA_KEY) || 'pt';
 }
 
+/** Guarda a preferência de idioma — ver obterIdioma(); fica em localStorage, por isso aplica-se a todas as páginas do site, não só a esta. */
 function definirIdioma(idioma) {
   localStorage.setItem(IDIOMA_KEY, idioma);
 }

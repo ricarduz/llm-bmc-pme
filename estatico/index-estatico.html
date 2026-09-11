@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Página inicial · LLM em PME (versão estática)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -869,116 +868,57 @@ th {
 <main>
   <div class="container">
 
-    <div class="aviso-estatico">Versão estática desta página, gerada a partir do conteúdo real do site — sem JavaScript, por isso os campos do formulário e os cartões clicáveis não são funcionais aqui; servem só de referência de leitura.</div>
+    <div class="aviso-estatico"><strong>Atenção:</strong> versão estática de leitura, sem JavaScript — visão geral do framework e dos dois percursos da ferramenta interativa. Não substitui a ferramenta em <code>index.html</code>, nem os PDFs de referência de cada instrumento em <code>assets/</code>.</div>
 
     <span class="eyebrow">Instrumento de demonstração · dissertação de Mestrado</span>
-    <h1>Um percurso guiado para decidir onde os LLM fazem sentido na sua PME</h1>
-    <p class="lead">Esta ferramenta instancia sequencialmente os três instrumentos do framework de apoio à adoção de Large Language Models (LLM) por Pequenas e Médias Empresas, estruturado no Business Model Canvas (BMC). Responda a estes passos iniciais.</p>
+    <h1>Adoção de LLM por PMEs, estruturada no Business Model Canvas</h1>
+    <p class="lead">Framework para apoiar a identificação, priorização e aprofundamento de oportunidades de utilização de Large Language Models (LLM) em Pequenas e Médias Empresas (PME), organizado em torno dos 9 blocos do Business Model Canvas (BMC).</p>
 
-    <h2>Passo 1 — Perfil da empresa</h2>
-    <p class="nota">Estes dados servem apenas para caracterizar a sua PME e garantir a qualidade da análise — não são recolhidos dados pessoais.</p>
-    <div class="cartao">
-      <div class="campo">
-        <label>Setor de atividade</label>
-        <select disabled><option>Escolha uma opção</option></select>
-      </div>
-      <div class="campo">
-        <label>Número de colaboradores</label>
-        <input type="number" disabled>
-      </div>
-      <div class="campo">
-        <label>Faturação anual — escolha o critério que preferir reportar (Recomendação 2003/361/CE)</label>
-        <div class="opcoes-inline">
-          <label><input type="radio" disabled checked><span>Volume de negócios</span></label>
-          <label><input type="radio" disabled><span>Balanço total</span></label>
-        </div>
-        <select disabled><option>Escolha uma opção</option></select>
-      </div>
-      <div class="campo">
-        <label>País</label>
-        <select disabled><option>Portugal</option></select>
-      </div>
-      <div class="campo" style="margin-bottom:0;">
-        <label>Região (NUTS II)</label>
-        <select disabled><option>Escolha uma opção</option></select>
-      </div>
-    </div>
+    <h2>Os 9 blocos do BMC, por área</h2>
+    <table>
+      <thead><tr><th>Bloco</th><th>Área</th><th>O que avalia</th></tr></thead>
+      <tbody>
+        <tr><td data-label="Bloco">Segmentos de Clientes</td><td data-label="Área">Interface com o Cliente</td><td data-label="O que avalia">Os grupos de clientes que a empresa serve.</td></tr>
+        <tr><td data-label="Bloco">Proposta de Valor</td><td data-label="Área">Produto/Oferta</td><td data-label="O que avalia">O que a empresa oferece para resolver um problema do cliente.</td></tr>
+        <tr><td data-label="Bloco">Canais</td><td data-label="Área">Interface com o Cliente</td><td data-label="O que avalia">Como a empresa comunica e entrega valor aos clientes.</td></tr>
+        <tr><td data-label="Bloco">Relacionamento com Clientes</td><td data-label="Área">Interface com o Cliente</td><td data-label="O que avalia">O tipo de relação com cada segmento — apoio, fidelização, pós-venda.</td></tr>
+        <tr><td data-label="Bloco">Fontes de Receita</td><td data-label="Área">Aspetos Financeiros</td><td data-label="O que avalia">Como a empresa gera rendimento a partir dos clientes.</td></tr>
+        <tr><td data-label="Bloco">Atividades-Chave</td><td data-label="Área">Gestão de Infraestrutura</td><td data-label="O que avalia">As tarefas mais importantes para o modelo de negócio funcionar.</td></tr>
+        <tr><td data-label="Bloco">Recursos-Chave</td><td data-label="Área">Gestão de Infraestrutura</td><td data-label="O que avalia">Os ativos mais importantes de que a empresa precisa.</td></tr>
+        <tr><td data-label="Bloco">Parcerias-Chave</td><td data-label="Área">Gestão de Infraestrutura</td><td data-label="O que avalia">Fornecedores e parceiros externos que complementam recursos.</td></tr>
+        <tr><td data-label="Bloco">Estrutura de Custos</td><td data-label="Área">Aspetos Financeiros</td><td data-label="O que avalia">Os principais custos de operar o modelo de negócio.</td></tr>
+      </tbody>
+    </table>
 
-    <h2>Passo 2 — Os nove blocos do Business Model Canvas</h2>
-    <p class="nota">O diagnóstico do Instrumento 1 vai perguntar-lhe sobre cada um destes blocos. Esta grelha explica o que cada um significa, para orientar as suas respostas.</p>
-    <div class="bmc-diagrama">
-    <div class="bmc-bloco" data-bmc="segmentos-clientes">
-      <span class="area-tag">Interface com o Cliente</span>
-      <h4>Segmentos de Clientes</h4>
-      <p>Os grupos de clientes que a empresa serve. Diferentes segmentos podem ter necessidades distintas.</p>
-    </div>
-    <div class="bmc-bloco" data-bmc="proposta-valor">
-      <span class="area-tag">Produto/Oferta</span>
-      <h4>Proposta de Valor</h4>
-      <p>O que a empresa oferece para resolver um problema ou satisfazer uma necessidade do cliente.</p>
-    </div>
-    <div class="bmc-bloco" data-bmc="canais">
-      <span class="area-tag">Interface com o Cliente</span>
-      <h4>Canais</h4>
-      <p>Como a empresa comunica e entrega valor aos clientes — site, redes sociais, loja, apoio ao cliente.</p>
-    </div>
-    <div class="bmc-bloco" data-bmc="relacionamento-clientes">
-      <span class="area-tag">Interface com o Cliente</span>
-      <h4>Relacionamento com Clientes</h4>
-      <p>O tipo de relação estabelecida com cada segmento — apoio, fidelização, acompanhamento pós-venda.</p>
-    </div>
-    <div class="bmc-bloco" data-bmc="fontes-receita">
-      <span class="area-tag">Aspetos Financeiros</span>
-      <h4>Fontes de Receita</h4>
-      <p>Como a empresa gera rendimento a partir de cada segmento de clientes — vendas, subscrições, serviços.</p>
-    </div>
-    <div class="bmc-bloco" data-bmc="atividades-chave">
-      <span class="area-tag">Gestão de Infraestrutura</span>
-      <h4>Atividades-Chave</h4>
-      <p>As tarefas mais importantes para o modelo de negócio funcionar — produção, operações, comunicação.</p>
-    </div>
-    <div class="bmc-bloco" data-bmc="recursos-chave">
-      <span class="area-tag">Gestão de Infraestrutura</span>
-      <h4>Recursos-Chave</h4>
-      <p>Os ativos mais importantes de que a empresa precisa — pessoas, equipamento, conhecimento, infraestrutura.</p>
-    </div>
-    <div class="bmc-bloco" data-bmc="parcerias-chave">
-      <span class="area-tag">Gestão de Infraestrutura</span>
-      <h4>Parcerias-Chave</h4>
-      <p>Os fornecedores e parceiros externos com quem a empresa trabalha para complementar recursos ou reduzir riscos.</p>
-    </div>
-    <div class="bmc-bloco" data-bmc="estrutura-custos">
-      <span class="area-tag">Aspetos Financeiros</span>
-      <h4>Estrutura de Custos</h4>
-      <p>Os principais custos envolvidos em operar o modelo de negócio.</p>
-    </div></div>
+    <h2>Os três instrumentos</h2>
+    <p class="nota">Conteúdo completo de cada um em PDF, em <code>assets/instrumento1.pdf</code>, <code>instrumento2.pdf</code> e <code>instrumento3.pdf</code>.</p>
+    <p><strong>1. Diagnóstico de Pré-requisitos</strong> — para cada bloco, duas escalas independentes de 1 a 3: Prontidão (a PME já tem as condições?) e Impacto (quão crítico é este bloco?). O cruzamento classifica o bloco em Diferir, Relevante, Prioritário ou Investimento necessário.</p>
+    <p><strong>2. Matriz LLM × BMC</strong> — para cada um dos 9 blocos, aplicações concretas de LLM, oportunidades associadas e riscos a considerar.</p>
+    <p><strong>3. Fichas de Decisão</strong> — para os 4 blocos com maior densidade de evidência empírica na revisão de literatura (Canais, Relacionamento com Clientes, Atividades-Chave, Recursos-Chave), orientação tecnológica, ações concretas, critérios de avaliação e conformidade (RGPD, AI Act).</p>
 
-    <h2>Passo 3 — Os três instrumentos</h2>
-    <div class="cartao">
-      <h3>1. A minha empresa está pronta?</h3>
-      <p class="nota">Instrumento 1 — Diagnóstico de Pré-requisitos. Avalia, bloco a bloco, a prontidão operacional e a criticidade de cada área do seu negócio.</p>
-    </div>
-    <div class="cartao">
-      <h3>2. Onde faz sentido para a minha PME?</h3>
-      <p class="nota">Instrumento 2 — Matriz LLM × BMC. Mapeia aplicações, oportunidades e riscos nos blocos identificados como prioritários.</p>
-    </div>
-    <div class="cartao">
-      <h3>3. Como avanço neste bloco?</h3>
-      <p class="nota">Instrumento 3 — Fichas de Decisão. Orientação tecnológica e ações concretas para os blocos com maior densidade de evidência empírica.</p>
-    </div>
+    <h2>Dois percursos</h2>
+    <p><strong>PME</strong> (<code>pme.html</code>) — um fluxo contínuo tipo "jogo", em linguagem de gestor, sem nomes de instrumentos à vista: perfil da empresa, 18 perguntas (2 por bloco), e um relatório embutido com o canvas BMC e as oportunidades identificadas, pronto a descarregar.</p>
+    <p><strong>Painel de especialistas</strong> (<code>entrevista.html</code> → <code>materiais.html</code> → <code>cenario.html</code> → os 3 instrumentos → <code>resultados.html</code>) — protocolo de validação académica: apresentação do artefacto, escolha entre percurso autónomo ou um de 3 cenários de PME pré-preenchidos, os três instrumentos na íntegra, e avaliação final segundo 4 critérios DSR (Hevner et al., 2004).</p>
 
-    <div class="cartao" style="border-color: var(--ink); margin-top: 32px;">
-      <h3>Antes de começar</h3>
-      <p class="nota">As respostas ficam guardadas neste navegador enquanto usa a ferramenta. No final, pode descarregar um resumo dos resultados; os dados do diagnóstico (sem identificação pessoal) poderão também ser enviados para um repositório central de apoio à investigação. Não é recolhido nenhum dado pessoal identificativo, a não ser que opte por deixar o seu email para receber os resultados do estudo.</p>
-    </div>
+    <h2>Exemplo ilustrativo de um diagnóstico completo</h2>
+    <p class="nota">Valores fictícios, gerados para ilustrar como fica o canvas depois de um diagnóstico — não uma sessão real.</p>
+    <table>
+      <thead><tr><th>Bloco BMC</th><th>Prontidão</th><th>Impacto</th><th>Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td data-label="Bloco BMC">Segmentos de Clientes</td><td data-label="Prontidão">2</td><td data-label="Impacto">2</td><td data-label="Prioridade"><span class="selo" data-p="Relevante">Relevante</span></td></tr>
+        <tr><td data-label="Bloco BMC">Proposta de Valor</td><td data-label="Prontidão">3</td><td data-label="Impacto">1</td><td data-label="Prioridade"><span class="selo" data-p="Diferir">Diferir</span></td></tr>
+        <tr><td data-label="Bloco BMC">Canais</td><td data-label="Prontidão">3</td><td data-label="Impacto">3</td><td data-label="Prioridade"><span class="selo" data-p="Prioritário">Prioritário</span></td></tr>
+        <tr><td data-label="Bloco BMC">Relacionamento com Clientes</td><td data-label="Prontidão">1</td><td data-label="Impacto">3</td><td data-label="Prioridade"><span class="selo" data-p="Investimento necessário">Investimento necessário</span></td></tr>
+        <tr><td data-label="Bloco BMC">Fontes de Receita</td><td data-label="Prontidão">2</td><td data-label="Impacto">1</td><td data-label="Prioridade"><span class="selo" data-p="Diferir">Diferir</span></td></tr>
+        <tr><td data-label="Bloco BMC">Atividades-Chave</td><td data-label="Prontidão">3</td><td data-label="Impacto">2</td><td data-label="Prioridade"><span class="selo" data-p="Relevante">Relevante</span></td></tr>
+        <tr><td data-label="Bloco BMC">Recursos-Chave</td><td data-label="Prontidão">2</td><td data-label="Impacto">3</td><td data-label="Prioridade"><span class="selo" data-p="Prioritário">Prioritário</span></td></tr>
+        <tr><td data-label="Bloco BMC">Parcerias-Chave</td><td data-label="Prontidão">3</td><td data-label="Impacto">1</td><td data-label="Prioridade"><span class="selo" data-p="Diferir">Diferir</span></td></tr>
+        <tr><td data-label="Bloco BMC">Estrutura de Custos</td><td data-label="Prontidão">2</td><td data-label="Impacto">2</td><td data-label="Prioridade"><span class="selo" data-p="Relevante">Relevante</span></td></tr>
+      </tbody>
+    </table>
 
-    <h2>Sobre este projeto</h2>
-    <div class="cartao">
-      <h3>Sobre a tese em curso</h3>
-      <p>Esta dissertação desenvolve um framework operacional que apoia gestores de PME a decidir, de forma estruturada, onde e como adotar Large Language Models (LLM) no seu negócio. Construído a partir de uma revisão sistemática da literatura e da metodologia Design Science Research, articula três instrumentos — um diagnóstico de pré-requisitos, uma matriz de aplicações por bloco do Business Model Canvas, e fichas de decisão com orientação tecnológica — validados junto de um painel de especialistas. Esta ferramenta interativa é o artefacto central da investigação, desenvolvida para a obtenção do grau de Mestre em Engenharia Informática e Tecnologia Web pela Universidade Aberta e UTAD, sob orientação do Prof. Doutor Frederico Branco.</p>
-      <h3>Sobre o autor</h3>
-      <p>Sou Ricardo Isaías Serafim, economista, licenciado em Gestão de Informação pela Universidade Nova de Lisboa. Trabalho para o Grupo Schwarz, no Lidl Portugal, e estou atualmente destacado no Lidl Chéquia. Sou responsável por Planeamento Financeiro, Reporting e Data Science, e lidero também a Transformação Digital na área de Controlo de Gestão. Este projeto cruza a minha experiência empresarial com a investigação académica em IA aplicada a PME — o mesmo tema que me entusiasmou a abraçar esta aventura académica. Caso tenha dúvidas, contacte-me através de <a href="mailto:2302605@estudante.uab.pt">2302605@estudante.uab.pt</a>.</p>
-    </div>
+    <h2>Enquadramento académico</h2>
+    <p>Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta / UTAD), seguindo Design Science Research Methodology (DSRM), complementada por uma Systematic Literature Review (SLR): problema → objetivos → construção → demonstração → avaliação → comunicação.</p>
 
   </div>
 </main>

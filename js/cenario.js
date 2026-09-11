@@ -102,6 +102,7 @@ function renderCartoesCenarios() {
   });
 }
 
+/** Pré-preenche o estado da sessão com o cenário escolhido — perfil da empresa e os 9 blocos já classificados via classificarBloco() (nunca valores fixos escritos à mão, para nunca divergir da regra real de classificação). Fica tudo editável a partir daqui, no Instrumento 1. */
 function aplicarCenario(idCenario) {
   const definicao = CENARIOS[idCenario];
   if (!definicao) return;

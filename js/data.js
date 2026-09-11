@@ -307,7 +307,7 @@ const IMPACTO_DEF = {
   1: 'Bloco estável, sem problemas operacionais relevantes.'
 };
 
-// Tabela 7 — Quadro de classificações de prioridade (Instrumento 1)
+// Tabela 8 — Quadro de classificações de prioridade (Instrumento 1)
 const MATRIZ_PRIORIDADE = {
   3: { 1: 'Diferir', 2: 'Relevante', 3: 'Prioritário' },
   2: { 1: 'Diferir', 2: 'Relevante', 3: 'Prioritário' },
@@ -324,7 +324,7 @@ const DESCRICAO_PRIORIDADE = {
   'Diferir': 'Prioridade baixa no contexto atual da PME.'
 };
 
-/** Cruza Prontidão × Impacto (1 a 3) e devolve a prioridade do bloco, segundo a Tabela 7. */
+/** Cruza Prontidão × Impacto (1 a 3) e devolve a prioridade do bloco, segundo a Tabela 8. */
 function classificarBloco(prontidao, impacto) {
   return MATRIZ_PRIORIDADE[prontidao][impacto];
 }

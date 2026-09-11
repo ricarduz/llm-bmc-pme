@@ -15,7 +15,7 @@
 <title>Sessão de avaliação · LLM em PME</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
-<link rel="stylesheet" href="css/style.css?v=20260901">
+<link rel="stylesheet" href="css/style.css?v=20260912">
 </head>
 <body>
 
@@ -40,8 +40,11 @@
     <h1 data-i18n="entrevista-h1">Antes de começarmos</h1>
     <p class="lead" data-i18n="entrevista-lead">Obrigado por aceitar participar nesta sessão de avaliação. Deixo-lhe aqui, em vídeo e por escrito, uma breve apresentação do que vamos fazer juntos.</p>
 
-    <div class="video-placeholder" aria-label="Espaço reservado para vídeo de apresentação">
-      <div class="video-placeholder-conteudo">
+    <div class="video-placeholder" id="video-container" aria-label="Vídeo de apresentação">
+      <video id="video-apresentacao" controls preload="metadata" style="display:none; position:absolute; inset:0; width:100%; height:100%; border-radius:var(--radius); background:#000;">
+        <source src="assets/video-apresentacao.mp4" type="video/mp4">
+      </video>
+      <div class="video-placeholder-conteudo" id="video-placeholder-conteudo">
         <span>🎥</span>
         <p data-i18n="entrevista-video-placeholder">Espaço reservado para vídeo de apresentação</p>
       </div>
@@ -103,10 +106,10 @@
   </div>
 </div>
 
-<script src="js/i18n.js?v=20260901"></script>
-<script src="js/modal.js?v=20260901"></script>
-<script src="js/data.js?v=20260901"></script>
-<script src="js/state.js?v=20260901"></script>
-<script src="js/entrevista.js?v=20260901"></script>
+<script src="js/i18n.js?v=20260912"></script>
+<script src="js/modal.js?v=20260912"></script>
+<script src="js/data.js?v=20260912"></script>
+<script src="js/state.js?v=20260912"></script>
+<script src="js/entrevista.js?v=20260912"></script>
 </body>
 </html>

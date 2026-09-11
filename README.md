@@ -358,9 +358,6 @@ llm-bmc-pme/
 │
 ├── estatico/
 │   ├── index-estatico.html
-│   ├── instrumento1-estatico.html
-│   ├── instrumento2-estatico.html
-│   ├── instrumento3-estatico.html
 │   ├── resultados-estatico.html
 │   └── README.md
 │
@@ -540,7 +537,7 @@ assets/instrumento3.pdf
 
 A página `materiais.html` disponibiliza estes materiais através da interface da aplicação.
 
-A pasta `estatico/` contém versões HTML sem dependência da lógica JavaScript da aplicação. Estas versões destinam-se a documentação, arquivo ou utilização como anexos do trabalho académico.
+A pasta `estatico/` contém 2 versões HTML de leitura, sem dependência da lógica JavaScript da aplicação, para documentação ou anexo ao trabalho académico: `index-estatico.html` (visão geral do framework, os dois percursos, e um exemplo ilustrativo de diagnóstico completo) e `resultados-estatico.html` (o instrumento de avaliação do painel de especialistas, em branco). O conteúdo detalhado de cada instrumento já está coberto pelos PDFs em `assets/` — não duplicado aqui.
 
 ---
 

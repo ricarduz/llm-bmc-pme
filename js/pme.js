@@ -68,6 +68,7 @@ let perfilPasso = 0; // 0=setor, 1=colaboradores, 2=faturacao, 3=pais/regiao
 let perguntaIndice = 0;
 const respostasPerfil = {};
 
+/** Calcula a % preenchida da barra de progresso a partir da fase atual — cada passo do perfil conta 1, e cada pergunta do jogo conta 1, sobre o total de passos possível. */
 function atualizarBarraProgresso() {
   const totalPassos = 4 + PERGUNTAS.length;
   let passoAtual = 0;
@@ -79,6 +80,7 @@ function atualizarBarraProgresso() {
     `<div class="barra-progresso-preenchida" style="width:${percentagem}%;"></div>`;
 }
 
+/** Motor central do jogo PME: repinta #ecra consoante a variável `fase` (hook → perfil → pergunta → processando → relatorio → concluido), e liga os eventos do ecrã que acabou de entrar. Chamada sempre que algo muda (resposta dada, idioma trocado, passo seguinte) — não há routing por URL, é tudo dentro desta página. */
 function render() {
   atualizarBarraProgresso();
   const ecra = document.getElementById('ecra');
@@ -92,6 +94,7 @@ function render() {
   if (fase === 'concluido') { ecra.innerHTML = renderConcluido(); return; }
 }
 
+/** Ecrã inicial do jogo — título, duração, garantia de "sem julgamento" (ver t('pme-sem-julgamento')) e o consentimento explícito que desbloqueia o botão Começar. */
 function renderHook() {
   return `
     <div class="ecra-pme ecra-pme--hook" style="text-align:center;">
@@ -110,6 +113,7 @@ function renderHook() {
     </div>`;
 }
 
+/** Liga o ecrã inicial: o botão Começar só ativa com o consentimento marcado, e avança para o primeiro passo do perfil. */
 function ligarHook() {
   const checkbox = document.getElementById('consentimento-pme');
   const botao = document.getElementById('btn-comecar');
@@ -134,6 +138,7 @@ function rodapePerfil(textoContinuar, continuarDesativado) {
     </div>`;
 }
 
+/** Os 4 passos de perfilização da empresa (setor → colaboradores → faturação → país/região), antes das 18 perguntas do jogo. `perfilPasso` decide qual se mostra; cada passo guarda a resposta em `respostasPerfil` e só avança ao clicar em Continuar (ver rodapePerfil/ligarPerfil). */
 function renderPerfil() {
   if (perfilPasso === 0) {
     const setores = ['comercio','servicos','industria','construcao','tecnologia','turismo','agricultura','saude','educacao','outro'];
@@ -194,6 +199,7 @@ function selecionarPerfil(campo, valor) {
   render();
 }
 
+/** Fecha o perfil da empresa: grava-o no estado da sessão e classifica a empresa (Recomendação 2003/361/CE, via classificacaoSME()) — se der "grande", o framework não se aplica e vai para o ecrã de bloqueio em vez de para as perguntas. */
 function finalizarPerfil() {
   const estado = lerEstado();
   estado.perfilUtilizador = 'pme';
@@ -228,6 +234,7 @@ function voltarPerfil() {
   render();
 }
 
+/** Liga o passo do perfil atual: seleção de opção (setor/faturação), o campo numérico de colaboradores (Enter equivale a clicar Continuar), e o país/região no último passo — mudar de país limpa a região já escolhida, já que só faz sentido para Portugal. */
 function ligarPerfil() {
   document.querySelectorAll('#opcoes-perfil .opcao-jogo').forEach(botao => {
     botao.addEventListener('click', () => {
@@ -272,6 +279,7 @@ function ligarPerfil() {
   }
 }
 
+/** Ecrã final para quem preenche o perfil e a empresa não é classificada como PME — o framework não se aplica a empresas de maior dimensão; sem opção de continuar, só de voltar ao início. */
 function renderBloqueioNaoPME() {
   return `
     <div class="ecra-pme" style="text-align:center;">
@@ -281,6 +289,7 @@ function renderBloqueioNaoPME() {
     </div>`;
 }
 
+/** Uma das 18 perguntas do jogo (2 por bloco BMC: Prontidão, Impacto). Se esta pergunta já tinha sido respondida antes (voltar atrás e voltar a avançar), a opção anterior fica destacada — ver `respostaAnterior`. */
 function renderPergunta() {
   const p = perguntasAtivas()[perguntaIndice];
   const pPT = PERGUNTAS[perguntaIndice]; // ids (bloco/eixo) são iguais nos dois idiomas, só o texto muda
@@ -305,6 +314,7 @@ function renderPergunta() {
     </div>`;
 }
 
+/** Liga a pergunta atual: clicar numa opção grava o nível (1-3) no bloco+eixo certo em `_diagnosticoTemp`, e assim que os dois eixos de um bloco estiverem preenchidos, comete a prioridade real em atualizarDiagnostico(). O botão Voltar retrocede uma pergunta (ou volta ao perfil, se já estiver na primeira). */
 function ligarPergunta() {
   document.querySelectorAll('#opcoes-pergunta .opcao-jogo').forEach(botao => {
     botao.addEventListener('click', () => {
@@ -322,6 +332,16 @@ function ligarPergunta() {
       perguntaIndice++;
       if (perguntaIndice >= PERGUNTAS.length) {
         fase = 'processando';
+        // Mitigação de risco: sem isto, alguém que preenchesse as 18
+        // perguntas e fechasse a aba antes de chegar ao relatório (ou
+        // sem clicar Descarregar/Terminar aí) nunca teria os dados
+        // enviados — ficavam só no localStorage do computador dela,
+        // sem aviso nenhum. Isto envia assim que o diagnóstico fica
+        // completo, ainda antes do relatório aparecer. gravarLinha()
+        // no Code.gs faz upsert por sessionId, por isso um envio
+        // posterior (Descarregar/Terminar) substitui esta linha em vez
+        // de duplicar — nunca fica mais do que uma linha por sessão.
+        enviarParaGoogleSheetsPME('progresso');
       }
       render();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -340,6 +360,7 @@ function ligarPergunta() {
   });
 }
 
+/** Ecrã de transição entre a última pergunta e o relatório — só visual (ver o setTimeout em render()), não faz nenhum cálculo; dá tempo para a classificação parecer "processada", não instantânea. */
 function renderProcessando() {
   return `
     <div class="ecra-pme" style="text-align:center; padding:60px 0;">
@@ -347,10 +368,12 @@ function renderProcessando() {
     </div>`;
 }
 
+/** Lista com marcadores a partir de um array de strings — usada nas secções de aplicações/riscos do relatório embutido. */
 function listaItens(itens) {
   return `<ul style="margin:0; padding-left:18px;">${itens.map(i => `<li>${i}</li>`).join('')}</ul>`;
 }
 
+/** Relatório embutido no ecrã (não confundir com construirRelatorioHTMLPME(), que gera a versão exportável): canvas BMC pintado por prioridade real, oportunidades detalhadas por bloco prioritário, e as perguntas de satisfação que bloqueiam o download até estarem respondidas. */
 function renderRelatorio() {
   const estado = lerEstado();
   const diagnostico = estado.diagnostico;
@@ -471,6 +494,7 @@ function bloquearSatisfacaoPME() {
   document.querySelector('input[name="satisfacao-util"]').closest('.campo').after(aviso);
 }
 
+/** Liga o relatório: valida a satisfação a cada resposta, e liga os gatilhos dos dois modais (email, confirmação) — ver o comentário mais abaixo sobre porque só os gatilhos se ligam aqui, não os botões dos próprios modais. */
 function ligarRelatorio() {
   document.querySelectorAll('input[name="satisfacao-percebeu"], input[name="satisfacao-util"]').forEach(input => {
     input.addEventListener('change', validarSatisfacaoPME);
@@ -495,6 +519,7 @@ function abrirModalEmail() {
   document.getElementById('email-pme').focus();
 }
 
+/** Fecha o modal de email e devolve o foco ao botão que o abriu (acessibilidade — ver a auditoria de modais feita a este e ao de confirmação). */
 function fecharModalEmail() {
   document.getElementById('modal-email-pme').hidden = true;
   document.getElementById('btn-descarregar').focus();
@@ -506,6 +531,7 @@ function abrirModalConfirmar() {
   document.getElementById('btn-cancelar-concluir').focus();
 }
 
+/** Fecha o modal de confirmação sem concluir a sessão, e devolve o foco ao botão Concluir. */
 function fecharModalConfirmar() {
   document.getElementById('modal-confirmar-concluir').hidden = true;
   document.getElementById('btn-concluir-pme').focus();
@@ -734,6 +760,7 @@ async function construirRelatorioHTMLPME() {
 </html>`;
 }
 
+/** Ecrã final, depois de Concluir — os dados desta sessão já foram apagados do navegador (ver limparEstado() em ligarRelatorio) antes de chegar aqui. */
 function renderConcluido() {
   return `
     <div class="cartao" style="text-align:center; padding:56px 28px; max-width:560px; margin:40px auto;">
@@ -743,14 +770,10 @@ function renderConcluido() {
     </div>`;
 }
 
-/**
- * Envio ao Google Sheets — reutiliza o mesmo GOOGLE_SHEETS_URL definido
- * em resultados.js (aqui duplicado por este ficheiro ser independente
- * do resultados.js). Mantém o mesmo tipo "diagnostico" já usado pela
- * folha de cálculo existente.
- */
+/** URL do Apps Script — reutiliza o mesmo GOOGLE_SHEETS_URL definido em resultados.js (aqui duplicado por este ficheiro ser independente do resultados.js). Mantém o mesmo tipo "diagnostico" já usado pela folha de cálculo existente. */
 const GOOGLE_SHEETS_URL_PME = 'https://script.google.com/macros/s/AKfycbyxCM6rhINk_XpIJvqoUC4UUmz1CMEHsA19lLqf7ktTB0R4bidqpD3QFqgO9qE60r8T/exec';
 
+/** Envia o diagnóstico para o Google Sheets — só nos dois momentos em que é chamada (Descarregar / Terminar, ver origem), nunca a cada resposta. Traduz os valores internos para texto legível (ex: prioridade, escalão) antes de enviar, para a folha de cálculo não ter códigos internos. */
 function enviarParaGoogleSheetsPME(origem) {
   if (!GOOGLE_SHEETS_URL_PME) return;
   const estado = lerEstado();
