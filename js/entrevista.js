@@ -58,5 +58,5 @@ botaoContinuar.addEventListener('click', () => {
   estado.perfilEspecialista = perfilEscolhido ? perfilEscolhido.value : ''; // gestor-pme | profissional-ti | academico
   estado.consentimento = true; // a "autorização" desta página é o próprio consentimento, com uma redação mais direta do que o texto legal genérico
   guardarEstado(estado);
-  window.location.href = 'materiais.html';
+  window.location.href = 'sessao.html';
 });

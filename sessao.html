@@ -1,0 +1,99 @@
+<!--
+  sessao.html — página intermédia do percurso de especialistas, logo a
+  seguir à entrevista (entrevista.html) e antes dos materiais dos
+  instrumentos (materiais.html). Mostra os documentos de apoio à
+  sessão: a nota de sessão (comum aos três perfis) e, só para o
+  especialista de perfil académico, a síntese teórica enviada
+  previamente (ver js/sessao.js para a lógica de mostrar/esconder por
+  perfil, lida de estado.perfilEspecialista).
+
+  Os PDFs em assets/nota-sessao-especialistas.pdf e
+  assets/sintese-teorica-E3.pdf não são gerados por este projeto — são
+  para colocares tu, com o mesmo nome exato, ao lado dos PDFs dos
+  instrumentos. O código já está pronto a mostrá-los assim que
+  existirem, sem precisares de mudar mais nada.
+-->
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title data-i18n="sessao-titulo-pagina">Documentos da sessão · LLM em PME</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link rel="stylesheet" href="css/style.css?v=20260913">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-inner">
+    <a class="marca" href="index.html">LLM em PME<span>Framework LLM × BMC</span></a>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div class="seletor-idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="mapa-bmc" id="mapa" data-modal-trigger="sobre" aria-label="Sobre este projeto">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <span class="eyebrow" data-i18n="sessao-eyebrow">Antes de começar</span>
+    <h1 data-i18n="sessao-h1">Documentos da sessão</h1>
+    <p class="lead" data-i18n="sessao-lead">Dois documentos de apoio à entrevista — consulte-os antes de avançar para os instrumentos.</p>
+
+    <div id="doc-nota-sessao" class="painel-material">
+      <h2 data-i18n="sessao-nota-titulo">Nota de Sessão</h2>
+      <p class="nota" data-i18n="sessao-nota-desc">Objetivo da sessão, estrutura dos 60 minutos, o que vai fazer na ferramenta, consentimento e proteção de dados. Comum aos três perfis do painel.</p>
+      <iframe src="assets/nota-sessao-especialistas.pdf" class="pdf-preview" title="Pré-visualização da Nota de Sessão"></iframe>
+      <a href="assets/nota-sessao-especialistas.pdf" target="_blank" rel="noopener" class="pdf-link">
+        <span>📄</span>
+        <p data-i18n="sessao-nota-abrir">Abrir Nota de Sessão →</p>
+      </a>
+    </div>
+
+    <div id="doc-sintese-e3" class="painel-material" hidden>
+      <h2 data-i18n="sessao-sintese-titulo">Síntese Teórica</h2>
+      <p class="nota" data-i18n="sessao-sintese-desc">Fundamentação teórica do framework — o problema, o Business Model Canvas, a distinção entre camada analítica e camada de implantação, e a correspondência entre a Matriz LLM × BMC e a revisão de literatura, por área. Enviada só ao especialista de perfil académico, para apoiar a avaliação do critério consistência com a literatura.</p>
+      <iframe src="assets/sintese-teorica-E3.pdf" class="pdf-preview" title="Pré-visualização da Síntese Teórica"></iframe>
+      <a href="assets/sintese-teorica-E3.pdf" target="_blank" rel="noopener" class="pdf-link">
+        <span>📄</span>
+        <p data-i18n="sessao-sintese-abrir">Abrir Síntese Teórica →</p>
+      </a>
+    </div>
+
+    <div class="acoes-rodape" style="border-top:none; justify-content:flex-end;">
+      <button type="button" class="botao" id="continuar" data-i18n="sessao-continuar">Continuar →</button>
+    </div>
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-inner">
+    <div class="rodape-logos">
+      <img src="assets/logo-uab-placeholder.jpeg" alt="Universidade Aberta">
+      <img src="assets/logo-utad-placeholder.jpeg" alt="UTAD — Universidade de Trás-os-Montes e Alto Douro">
+    </div>
+    <p class="rodape-texto" data-i18n="rodape-texto">Dissertação de Mestrado em Engenharia Informática e Tecnologia Web (Universidade Aberta, Universidade de Trás-os-Montes e Alto Douro)</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal-sobre" data-modal="sobre" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-sobre-titulo">
+    <button type="button" class="modal-fechar" id="fechar-sobre" aria-label="Fechar">&times;</button>
+    <h2 id="modal-sobre-titulo" data-i18n="sobre-autor-titulo">Sobre o autor</h2>
+    <p data-i18n="sobre-autor-texto">Sou Ricardo Isaías Serafim, economista, licenciado em Gestão de Informação pela Universidade Nova de Lisboa. Trabalho para o Grupo Schwarz, no Lidl Portugal, e estou atualmente destacado no Lidl Chéquia. Sou responsável por Planeamento Financeiro, Reporting e Data Science, e lidero também a Transformação Digital na área de Controlo de Gestão. Este projeto cruza a minha experiência empresarial com a investigação académica em IA aplicada a PME — o mesmo tema que me entusiasmou a abraçar esta aventura académica. Caso tenha dúvidas, contacte-me através de <a href="mailto:2302605@estudante.uab.pt">2302605@estudante.uab.pt</a>.</p>
+  </div>
+</div>
+
+<script src="js/state.js?v=20260913"></script>
+<script src="js/i18n.js?v=20260913"></script>
+<script src="js/modal.js?v=20260913"></script>
+<script src="js/sessao.js?v=20260913"></script>
+</body>
+</html>
