@@ -162,9 +162,21 @@ function gravarLinha(aba, colunaSessionId, sessionId, linha) {
  * `sessionId` permite, se precisares, cruzar este contacto com a
  * respetiva linha de "Diagnostico" ou "Avaliacao".
  */
+/**
+ * Contactos: sem coluna de ID de sessão, por desenho. Ligar o email ao
+ * registo do diagnóstico tornaria a resposta reidentificável e contradiria
+ * a garantia de anonimato dada ao participante e declarada à Comissão de
+ * Ética. Sem sessionId não há deduplicação possível — se alguém submeter
+ * duas vezes, ficam duas linhas, o que é preferível ao contrário.
+ *
+ * ATENÇÃO: a folha "Contacto" já existente mantém a antiga coluna E ("ID
+ * da sessão") com os valores históricos. Essa coluna tem de ser apagada à
+ * mão na folha de cálculo — até lá, os contactos antigos continuam
+ * ligados às respetivas sessões.
+ */
 function guardarContacto(dados) {
-  const aba = obterOuCriarFolha('Contacto', ['Data', 'Origem', 'Email', 'Consentimento', 'ID da sessão']);
-  gravarLinha(aba, 5, dados.sessionId, [dados.data, dados.origem || '', dados.email, dados.consentimento ? 'Sim' : 'Não', dados.sessionId || '']);
+  const aba = obterOuCriarFolha('Contacto', ['Data', 'Origem', 'Email', 'Consentimento']);
+  aba.appendRow([dados.data, dados.origem || '', dados.email, dados.consentimento ? 'Sim' : 'Não']);
 }
 
 /**

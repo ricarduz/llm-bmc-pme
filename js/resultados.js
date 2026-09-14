@@ -544,7 +544,9 @@ document.getElementById('btn-confirmar-concluir').addEventListener('click', () =
     const estadoAtual = lerEstado();
     estadoAtual.contacto = { email, consentimento: true, guardadoEm: new Date().toISOString() };
     guardarEstado(estadoAtual);
-    enviarParaGoogleSheets({ tipo: 'contacto', origem: 'especialista', sessionId: estadoAtual.sessionId, email, consentimento: true, data: new Date().toISOString() });
+    // Sem sessionId, pela mesma razão que no percurso PME (ver pme.js): o
+    // contacto não pode ficar ligado ao registo da avaliação.
+    enviarParaGoogleSheets({ tipo: 'contacto', origem: 'especialista', email, consentimento: true, data: new Date().toISOString() });
   }
 
   enviarParaGoogleSheets(construirRegisto('terminar')); // tem de ser antes do limparEstado() — depois disso já não há dados para enviar

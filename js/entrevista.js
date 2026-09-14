@@ -11,6 +11,7 @@
  */
 
 const checkbox = document.getElementById('autorizacao');
+const checkboxAudio = document.getElementById('autorizacao-audio');
 const botaoContinuar = document.getElementById('btn-continuar');
 
 /**
@@ -40,7 +41,13 @@ video.addEventListener('error', () => {
   video.style.display = 'none';
 }, true);
 
-/** O botão Continuar só ativa quando a autorização estiver marcada E um perfil de especialista tiver sido escolhido. */
+/**
+ * O botão Continuar só ativa quando a autorização de participação estiver
+ * marcada E um perfil de especialista tiver sido escolhido. A autorização
+ * de gravação áudio NÃO entra nesta condição, de propósito: é facultativa,
+ * e condicionar o acesso à sessão à sua aceitação transformaria um
+ * consentimento livre num consentimento forçado.
+ */
 function validarEntrevista() {
   const perfilEscolhido = document.querySelector('input[name="perfil-especialista"]:checked');
   botaoContinuar.disabled = !(checkbox.checked && perfilEscolhido);
@@ -57,6 +64,7 @@ botaoContinuar.addEventListener('click', () => {
   estado.perfilUtilizador = 'especialista';
   estado.perfilEspecialista = perfilEscolhido ? perfilEscolhido.value : ''; // gestor-pme | profissional-ti | academico
   estado.consentimento = true; // a "autorização" desta página é o próprio consentimento, com uma redação mais direta do que o texto legal genérico
+  estado.autorizacaoAudio = checkboxAudio.checked; // facultativo — se for false, a sessão decorre sem gravação e o registo é escrito
   guardarEstado(estado);
   window.location.href = 'sessao.html';
 });
