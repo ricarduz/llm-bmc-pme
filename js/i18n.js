@@ -117,6 +117,10 @@ const TRADUCOES = {
     'sintese-email-titulo': 'Receber os resultados finais do estudo',
     'sintese-email-texto': 'Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu email. É usado exclusivamente para esse fim. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).',
     'sintese-email-label': 'Email (opcional)',
+    // Registo de aceitação autónomo: preencher o campo não é o mesmo que
+    // consentir. Espelha 'pme-email-consentimento' no percurso PME — se
+    // uma das redações mudar, mudar a outra.
+    'sintese-email-consentimento': 'Aceito que o meu email seja utilizado exclusivamente para me contactar com os resultados finais deste estudo.',
     'sintese-download-texto': 'Um ficheiro com a sua avaliação, pronto a abrir em qualquer computador. Depois de descarregar, as respostas ficam fixas e deixam de poder ser editadas.',
     'sintese-lead': 'Chegámos ao momento de avaliação. A sua opinião como especialista é uma peça central da validação desta dissertação — ajuda a perceber se o framework que desenvolvi é útil, aplicável e consistente com a literatura que o fundamenta. Responda com honestidade a cada critério; não há respostas certas ou erradas.',
     'sintese-canvas-titulo': 'Panorama do seu modelo de negócio',
@@ -443,6 +447,7 @@ const TRADUCOES = {
     'sintese-email-titulo': 'Receive the study\'s final results',
     'sintese-email-texto': 'If you\'d like to be contacted with the final conclusions of this research, leave your email. It is used exclusively for that purpose. It may be sent until 31 August 2027 (deadline for this dissertation\'s defence).',
     'sintese-email-label': 'Email (optional)',
+    'sintese-email-consentimento': 'I accept that my email will be used exclusively to contact me with the final results of this study.',
     'sintese-download-texto': 'A file with your evaluation, ready to open on any computer. Once downloaded, your answers become fixed and can no longer be edited.',
     'sintese-lead': 'This is the evaluation stage. Your opinion as a specialist is a central part of validating this dissertation — it helps establish whether the framework I developed is useful, applicable, and consistent with the literature it is grounded in. Please answer each criterion honestly; there are no right or wrong answers.',
     'sintese-canvas-titulo': 'Overview of your business model',

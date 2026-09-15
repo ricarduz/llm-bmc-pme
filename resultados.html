@@ -115,10 +115,20 @@
         <div class="cartao">
           <h3 data-i18n="sintese-email-titulo">Receber os resultados finais do estudo</h3>
           <p class="nota" data-i18n="sintese-email-texto">Se quiser ser contactado(a) com as conclusões finais desta investigação, deixe o seu email. É usado exclusivamente para esse fim. O envio poderá ocorrer até 31 de agosto de 2027 (data-limite para a defesa desta dissertação).</p>
-          <div class="campo" style="margin-top:16px; margin-bottom:0;">
+          <div class="campo" style="margin-top:16px;">
             <label for="email-especialista" data-i18n="sintese-email-label">Email (opcional)</label>
             <input type="email" id="email-especialista" placeholder="nome@exemplo.com">
           </div>
+          <!--
+            O email só é enviado se esta aceitação estiver validada (ver
+            btn-confirmar-concluir, em resultados.js). Preencher o campo não
+            basta: a Comissão de Ética exige registo explícito de aceitação,
+            e o percurso PME já o faz da mesma maneira.
+          -->
+          <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer; margin:0;">
+            <input type="checkbox" id="email-consentimento" style="margin-top:4px;">
+            <span class="nota" data-i18n="sintese-email-consentimento">Aceito que o meu email seja utilizado exclusivamente para me contactar com os resultados finais deste estudo.</span>
+          </label>
         </div>
 
         <div class="cartao" style="border-color: var(--ink);">
